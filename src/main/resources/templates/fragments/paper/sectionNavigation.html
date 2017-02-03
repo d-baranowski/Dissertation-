@@ -1,0 +1,49 @@
+<div class="col-md-3" id="accordionPanel" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default slickControl">
+            <div id="firstPanelHeading" class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse"
+                       data-parent="#accordion"
+                       th:text="${paper.referenceName}"></a>
+                </h4>
+            </div>
+        </div>
+        <div th:each="sectionKey : ${paper.sections.keySet()}">
+            <div class="panel panel-default slickControl">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse"
+                           data-parent="#accordion"
+                           th:href="${'#' + paper.sections.get(sectionKey).getId()}"
+                           th:text="${sectionKey + ': ' + paper.sections.get(sectionKey).getReferenceName()}">
+                        </a>
+                    </h4>
+                    <div class="heading-decorator-holder"><img class="heading-panel-decorator"
+                                                               src="/images/question_plus.svg"/></div>
+                </div>
+                <div class="panel-collapse collapse questionList"
+                     th:id="${paper.sections.get(sectionKey).getId()}"
+                     th:attr="sectionQuestionsToAnswer=${paper.sections.get(sectionKey).noOfQuestionsToAnswer}"
+                >
+                    <th:block th:each="questionKey : ${paper.sections.get(sectionKey).questions.keySet()}">
+                        <div class="collapse-decorator-holder">
+                            <a th:id="${sectionKey}">
+                                <div class="panel-body"
+                                     th:text="'Question ' + ${sectionKey} + '.' + ${questionKey}">
+                                </div>
+                                <div class="collapse-panel-decorator"></div>
+                            </a>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <th:block th:if="${answerable or inMarking}">
+            <div id="submitAllBtn" class="submit-all-btn"><p>Submit &amp; Complete</p></div>
+        </th:block>
+        <th:block th:if="${inMarking}">
+            <div id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+        </th:block>
+    </div>
+</div>

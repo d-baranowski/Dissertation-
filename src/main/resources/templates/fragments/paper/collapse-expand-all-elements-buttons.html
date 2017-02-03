@@ -1,0 +1,43 @@
+<span id="collapse-expand-element-buttons" xmlns:th="http://www.w3.org/1999/xhtml">
+    <th:block th:if="${inMarking}">
+        <span id="collapse-expand-all-candidate-answers" class="collapse-expand-element-button expanded" title="collapse / expand all candidate answers">
+            <svg width="24" height="24" viewBox="0 0 48 48" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                <g cursor="pointer">
+                    <circle cx="24" cy="24" r="20" class="blue" style="stroke:#000000; stroke-width: 4;"/>
+                    <!-- Shown on page load, hidden when clicked. -->
+                    <path class="plus" d="M32.56,21.902h-6.458l0.008-6.576c-0.026-0.454-0.221-1.354-1.331-1.356L23.2,13.968   c-1.181-0.001-1.282,1.165-1.288,1.47l-0.008,6.463h-6.607c-1.22,0-1.323,0.941-1.328,1.21v1.809   c0.006,0.247,0.107,1.178,1.328,1.178h6.602l-0.008,6.602c-0.002,1.219,0.939,1.324,1.209,1.33l1.809,0.002   c0.247-0.006,1.178-0.107,1.18-1.326l0.008-6.607h6.581c0.454-0.027,1.354-0.223,1.354-1.333v-1.578   C34.031,22.007,32.865,21.908,32.56,21.902z"/>
+                    <!-- Hidden on page load, shown when clicked. -->
+                    <path class="minus" d="M32.56,21.902 h-6.458 h-6.607 h-4.21 c-1.22,0-1.323,0.941-1.328,1.21 v1.809 c0.006,0.247,0.107,1.178,1.328,1.178 h6.602 h6.581 h4.21 c0.454-0.027,1.354-0.223,1.354-1.333v-1.578   C34.031,22.007,32.865,21.908,32.56,21.902z"/>
+                </g>
+            </svg>
+        </span>
+    </th:block>
+    <th:block th:unless="${answerable}">
+        <span id="collapse-expand-all-correct-answers" class="collapse-expand-element-button" title="collapse / expand all correct answers">
+            <svg width="24" height="24" viewBox="0 0 48 48"
+                 xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                <g cursor="pointer">
+                    <circle cx="24" cy="24" r="20" class="green" style="stroke:#000000; stroke-width: 4;"/>
+                    <!-- Shown on page load, hidden when clicked. -->
+                    <path class="plus" d="M32.56,21.902h-6.458l0.008-6.576c-0.026-0.454-0.221-1.354-1.331-1.356L23.2,13.968   c-1.181-0.001-1.282,1.165-1.288,1.47l-0.008,6.463h-6.607c-1.22,0-1.323,0.941-1.328,1.21v1.809   c0.006,0.247,0.107,1.178,1.328,1.178h6.602l-0.008,6.602c-0.002,1.219,0.939,1.324,1.209,1.33l1.809,0.002   c0.247-0.006,1.178-0.107,1.18-1.326l0.008-6.607h6.581c0.454-0.027,1.354-0.223,1.354-1.333v-1.578   C34.031,22.007,32.865,21.908,32.56,21.902z"/>
+                    <!-- Hidden on page load, shown when clicked. -->
+                    <path class="minus" d="M32.56,21.902 h-6.458 h-6.607 h-4.21 c-1.22,0-1.323,0.941-1.328,1.21 v1.809 c0.006,0.247,0.107,1.178,1.328,1.178 h6.602 h6.581 h4.21 c0.454-0.027,1.354-0.223,1.354-1.333v-1.578   C34.031,22.007,32.865,21.908,32.56,21.902z"/>
+                </g>
+            </svg>
+        </span>
+    </th:block>
+    <th:block th:if="${inMarking}">
+        <span id="collapse-expand-all-markers-comments" class="collapse-expand-element-button expanded" title="collapse / expand all markers comments">
+            <svg width="24" height="24" viewBox="0 0 48 48"
+                 xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+                <g cursor="pointer">
+                    <circle cx="24" cy="24" r="20" class="yellow" style="stroke:#000000; stroke-width: 4;"/>
+                    <!-- Shown on page load, hidden when clicked. -->
+                    <path class="plus" d="M32.56,21.902h-6.458l0.008-6.576c-0.026-0.454-0.221-1.354-1.331-1.356L23.2,13.968   c-1.181-0.001-1.282,1.165-1.288,1.47l-0.008,6.463h-6.607c-1.22,0-1.323,0.941-1.328,1.21v1.809   c0.006,0.247,0.107,1.178,1.328,1.178h6.602l-0.008,6.602c-0.002,1.219,0.939,1.324,1.209,1.33l1.809,0.002   c0.247-0.006,1.178-0.107,1.18-1.326l0.008-6.607h6.581c0.454-0.027,1.354-0.223,1.354-1.333v-1.578   C34.031,22.007,32.865,21.908,32.56,21.902z"/>
+                    <!-- Hidden on page load, shown when clicked. -->
+                    <path class="minus" d="M32.56,21.902 h-6.458 h-6.607 h-4.21 c-1.22,0-1.323,0.941-1.328,1.21 v1.809 c0.006,0.247,0.107,1.178,1.328,1.178 h6.602 h6.581 h4.21 c0.454-0.027,1.354-0.223,1.354-1.333v-1.578   C34.031,22.007,32.865,21.908,32.56,21.902z"/>
+                </g>
+            </svg>
+        </span>
+    </th:block>
+</span>

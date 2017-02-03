@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+    <head th:fragment="head">
+        <title>View Paper</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/dashboard.css}"/>
+        <link rel="stylesheet" href="/static/css/admin/testSetup.css" th:href="@{/css/admin/testSetup.css}"/>
+        <link rel="stylesheet" href="/static/css/admin/viewTests.css" th:href="@{/css/admin/viewTests.css}"/>
+        <link rel="stylesheet" href="/static/css/admin/settings.css" th:href="@{/css/admin/settings.css}"/>
+    </head>
+    <body>
+    <div layout:fragment="content" class="contentWrapper container">
+        <div class="dashboardWindow" id="dashboardWindow">
+            <div id="limit">
+                <div id="loadedContent" class="minimum-height">
+                    <div th:replace="/fragments/admin/dashboardSwitch"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+
+    <th:block layout:fragment="script">
+        <script src="dashboard.js" th:src="@{~/js/dashboard.js}"></script>
+    </th:block>
+</html>

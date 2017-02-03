@@ -1,0 +1,58 @@
+<form class="submitQuestion codeQuestion" role="form" method="post"
+      th:action="${submitAnswerForm.getENDPOINT()}"
+      th:object="${submitAnswerForm}" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:attr="questionIsSubmitted=${answers.isQuestionAnswered(sectionKey, questionKey)},
+      questionName=${'Question ' + sectionKey + '.' + questionKey}"
+>
+
+    <input type="hidden" name="attemptId" th:value="${attemptId}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
+
+    <label>Answer:</label>
+
+    <div class="aceContainer">
+        <div>
+            <select size="1">
+                <option value="actionscript">ActionScript</option>
+                <option value="ada">ADA</option>
+                <option value="c_cpp">C and C++</option>
+                <option value="cobol">Cobol</option>
+                <option value="coffee">CoffeeScript</option>
+                <option value="coldfusion">ColdFusion</option>
+                <option value="csharp">C#</option>
+                <option value="css">CSS</option>
+                <option value="curly">Curly</option>
+                <option value="html">HTML</option>
+                <option value="html_elixir">HTML (Elixir)</option>
+                <option value="html_ruby">HTML (Ruby)</option>
+                <option value="java">Java</option>
+                <option value="javascript">JavaScript</option>
+                <option value="json">JSON</option>
+                <option value="jsp">JSP</option>
+                <option value="lua">Lua</option>
+                <option value="mysql">MySQL</option>
+                <option value="objectivec">Objective-C</option>
+                <option value="ocaml">OCaml</option>
+                <option value="pascal">Pascal</option>
+                <option value="perl">Perl</option>
+                <option value="pgsql">pgSQL</option>
+                <option value="php">PHP</option>
+                <option value="powershell">Powershell</option>
+                <option value="python">Python</option>
+                <option value="razor">Razor</option>
+                <option value="ruby">Ruby</option>
+                <option value="scala">Scala</option>
+                <option value="sql">SQL</option>
+                <option value="sqlserver">SQLServer</option>
+                <option value="swift">Swift</option>
+                <option value="text">Text</option>
+                <option value="textile">Textile</option>
+            </select>
+            <div class="aceEditor" th:attr="code-language=${currentQuestion.language}"/>
+            <input type="hidden" name="text" th:value="${answers.getNotNullAnswerText(sectionKey, questionKey)}"/>
+        </div>
+    </div>
+    <br/>
+    <input value="Submit Question" type="submit"/>
+</form>

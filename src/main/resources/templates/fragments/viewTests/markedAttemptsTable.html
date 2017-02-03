@@ -1,0 +1,25 @@
+<table class="table table-striped" xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+        <tr>
+            <th th:each="title : ${tableHead}" th:text="${title}"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="reference : ${attemptReferences}">
+            <td th:text="${reference.getReferenceModel().getId()}"></td>
+            <td th:text="${reference.getReferenceModel().getCandidateName() + ' ' + reference.getReferenceModel().getCandidateSurname()}"></td>
+            <td><a
+                    th:text="${reference.getReferenceModel().getPaperRef().getReferenceName()}"
+                    th:href="${viewPaperPrefix} + '/'
+                     + ${reference.getReferenceModel().getPaperRef().getId()} + '/'
+                      + ${reference.getReferenceModel().getPaperRef().getVersionNo()}  + ${viewPaperView}"
+
+                    th:attr="title=${'Paper Id: ' + reference.getReferenceModel().getPaperRef().getId() + ' Version Number: ' + reference.getReferenceModel().getPaperRef().getVersionNo()}"
+            ></a></td>
+            <td th:text="${reference.getReferenceModel().getDate()}"></td>
+            <td th:text="${reference.getReferenceModel().getLocation()}"></td>
+            <td th:text="${reference.getMarkerFullName()}"></td>
+            <td th:text="${reference.getReferenceModel().getFinalMark()}"></td>
+        </tr>
+    </tbody>
+</table>

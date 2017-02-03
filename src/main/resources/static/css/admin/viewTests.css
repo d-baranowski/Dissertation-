@@ -1,0 +1,37 @@
+#testNavigationBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #2293D7;
+}
+
+#testNavigationBar li{
+    float: left;
+    list-style-type: none;
+}
+
+#testNavigationBar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+
+
+.active {
+    background-color: #0069A0;
+}
+
+#testsTableContent {
+    position: relative;
+    display: block;
+    height: 84%;
+    width: 90%;
+    margin-top: 1%;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: #EEEEEE;
+}

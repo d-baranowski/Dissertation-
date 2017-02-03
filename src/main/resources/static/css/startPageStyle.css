@@ -1,0 +1,18 @@
+.containerPanel{
+    width: 100%;
+}
+
+.instructionPanel {
+	background-color: #ffffff;
+    padding: 40px;
+    border: 5px solid gray;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+.infoTexts{
+    font-size:15px;
+    font-weight: bold;
+}

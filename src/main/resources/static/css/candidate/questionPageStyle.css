@@ -1,0 +1,376 @@
+ body {
+    padding-bottom: 50px; /** Prevents navbar from obscuring the content **/
+    padding-top: 50px; /** Prevents navbar from obscuring the content **/
+ }
+
+/** Accordion Style **/
+#accordionPanel {
+	max-height: 88%;
+	margin-top: 1%;
+    margin-left: -45px; /** I know this is ugly. Any suggestions?  **/
+}
+
+.accordion-active-question {
+    background-color: #F1F1F1;
+}
+
+/** This is a fix to prevent slide content from overflowing to the next slide **/
+@media screen\0 {
+    .slick-slide:not(.slick-current) textarea {
+        display: none;
+    }
+
+    .question .essayAnswerText, pre {
+        width: 99% !important;
+    }
+}
+
+.panel {
+    cursor:pointer;
+
+    /** Disable Text Selection in different browsers **/
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.panel a {
+    text-decoration: none;
+    outline:none;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    width:100%;
+    height: 100%;
+}
+
+.collapse-decorator-holder {
+    position:relative;
+    border-bottom: 1px solid #E1E1E1;
+}
+
+
+.collapse-panel-decorator {
+    background-color: #F1F1F1;
+    height: 98%;
+    width: 50px;
+    position:absolute;
+    top:0;
+    right: 0;
+}
+
+div.accordion-active-question + div.collapse-panel-decorator {
+    background-image: url("/images/question_arrow.svg");
+    background-repeat: no-repeat;
+    background-size: 60%;
+    background-position: right 8px center;
+}
+
+.panel .panel-heading {
+    padding-left: 10%;
+    padding-right: 10%;
+    height: 45px;
+    background-color: #2CA8DE;
+    position:relative;
+}
+
+.panel .panel-heading .selected {
+    background-color: #0069A0;
+}
+
+.heading-decorator-holder {
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    background-color: #0069A0;
+    height:100%;
+    width:50px;
+}
+
+.heading-panel-decorator {
+    height:66%;
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    margin-right: 10px;
+}
+
+#firstPanelHeading {
+    background-color: #0069A0;
+}
+
+.accordion-open .panel-heading {
+     background-color: #0069A0;
+}
+
+.panel .panel-body {
+    padding-left: 10%;
+    padding-right: 10%;
+    height: 45px;
+    border-bottom: 1px solid #E8E8E8;
+}
+
+.panel .panel-heading a {
+    color: #FFFFFF;
+    font-size: 12;
+    padding: 4;
+    font-weight: bold;
+}
+
+.panel a .panel-body {
+    color: #000000;
+    font-size: 13;
+    padding: 4;
+}
+
+#workspace {
+	border-top: 7px solid #1F84B8;
+    padding:0;
+	background-color: #ffffff;
+	height: 88%;
+	margin-top: 1%;
+	margin-right: 1%;
+	margin-left: 1%;
+	position:relative;
+}
+
+.progressBarContainer {
+    background-color: #1F84B8;
+}
+
+.bottom-nav-icon {
+    max-height: 40px;
+    max-width: 40px;
+}
+
+.slide-controller-btn {
+	background-color:#1F84B8;
+	display:inline-block;
+	cursor:pointer;
+	color:#C5DFEC;
+	font-family:Arial;
+	font-size:1.5vw;
+    height:100%;
+    padding: 5px;
+
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+}
+
+.slide-controller-btn:active:not(.slick-disabled) {
+	transform: translateY(1px);
+}
+
+.slick-disabled {
+    opacity: 0.6;
+}
+
+#prevQuestion {
+    float:left;
+}
+
+#prevQuestion p{
+    left:0;
+    margin-left: 60px;
+}
+
+#nextQuestion {
+    float:right;
+}
+
+#nextQuestion p {
+    right: 0;
+    margin-right: 60px;
+}
+
+#nextQuestion img {
+    float: right;
+}
+
+/** Flip arrow to point in the opposite side **/
+#nextQuestion img {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+.slide-controller-btn p {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/** Carousel style **/
+.slick-slider {
+    min-height: 100%;
+    min-width:100%;
+}
+
+.carousell-content {
+    max-height:90%;
+    min-height:90%;
+    padding: 10px;
+}
+
+.assetImage {
+    max-width: 500px;
+    max-height: 250px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.carousell {
+    padding: 2%;
+}
+
+.carousell {
+    font-size: 18px;
+}
+
+.questionHeader p {
+    color: #000000;
+    font-size: 35px;
+}
+
+.questionHeader {
+    border-bottom: 1px solid #000000;
+    width:100%;
+}
+
+/** Carousel style End **/
+#timer {
+    right:0;
+    top:0;
+    font-size: 35px;
+    color: WHITE;
+    max-height: 100%;
+    margin-right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#print-button {
+    height: 24px;
+    width: 24px;
+    padding: 0;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    border: none;
+    background: none;
+    background-image: url('/images/print.svg');
+}
+
+#upper-right-header-content {
+    position: absolute;
+    right: 0;
+    padding: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.collapse-expand-element-button {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.collapsible-element {
+    margin-bottom: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.collapsible-element textarea {
+    width: 100%;
+    height: 300px;
+    border: none;
+}
+
+.title {
+    padding: 10px;
+}
+
+.title a {
+    margin-left: 10px;
+    color: #FFFFFF;
+    font-size: 12;
+    font-weight: bold;
+}
+
+.correct-answer-section .title {
+    background-color: #92C741;
+}
+
+.panel-answer-section {
+    border-style: solid;
+    border-color: #92C741;
+}
+
+#loading {
+   width: 100%;
+   height: 100%;
+   top: 0px;
+   left: 0px;
+   position: fixed;
+   display: block;
+   background-color: #fff;
+   z-index: 99;
+   text-align: center;
+}
+
+#loading-image {
+    display: block;
+    margin-top: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 100;
+}
+
+div.accordion-question-submitted + div.collapse-panel-decorator {
+    background-image: url("/images/question_tick.svg");
+    background-repeat: no-repeat;
+    background-size: 60%;
+    background-position: right 8px center;
+}
+
+.submit-all-btn {
+  margin-top: 2px;
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 6;
+  -moz-border-radius: 6;
+  border-radius: 6px;
+  font-family: Georgia;
+  color: #ffffff;
+  font-size: 21px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  cursor: pointer;
+
+  /** Disable Text Selection in different browsers **/
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+}
+
+.submit-all-btn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}

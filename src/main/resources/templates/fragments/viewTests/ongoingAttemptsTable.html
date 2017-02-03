@@ -1,0 +1,23 @@
+<table class="table table-striped" xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+        <tr>
+            <th th:each="title : ${tableHead}" th:text="${title}"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="reference : ${attemptReferences}">
+            <td th:text="${reference.getId()}"></td>
+            <td th:text="${reference.getCandidateName() + ' ' + reference.getCandidateSurname()}"></td>
+            <td><a
+                    th:text="${reference.getPaperRef().getReferenceName()}"
+                    th:href="${viewPaperPrefix} + '/'
+                     + ${reference.getPaperRef().getId()} + '/'
+                      + ${reference.getPaperRef().getVersionNo()}  + ${viewPaperView}"
+
+                    th:attr="title=${'Paper Id: ' + reference.getPaperRef().getId() + ' Version Number: ' + reference.getPaperRef().getVersionNo()}"
+            ></a></td>
+            <td th:text="${reference.getDate()}"></td>
+            <td th:text="${reference.getLocation()}"></td>
+        </tr>
+    </tbody>
+</table>

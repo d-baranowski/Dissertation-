@@ -1,0 +1,46 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd"><!--'SYSTEM' needs to be there, or it won't work-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+<head lang="en">
+    <title>Start Exam</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="startPageStyle.css" th:href="@{~/css/startPageStyle.css}"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container containerPanel">
+        <div class="row containerPanel">
+            <div class="instructionPanel">
+                <h3>Please check your details and start test:</h3>
+                <br/>
+                <p class="infoTexts" th:text="|Name: ${model.candidateName} ${model.candidateSurname} |"></p>
+                <p class="infoTexts" th:text="|Test: ${model.paperRef.referenceName} |"></p>
+                <p class="infoTexts" th:text="|Time: ${timeAllowed} minutes |"></p>
+                <br/>
+                <p class="infoTexts">Terms and Conditions</p>
+                <p th:text="${termsAndConditions}"></p>
+                <p class="infoTexts" th:utext="${paperInstructions}"></p>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="checkBoxID"
+                                  onchange="document.getElementById('buttonID').disabled = !this.checked;"/>
+                        I have checked my details are correct and agree the Terms and Conditions</label>
+                </div>
+
+                <form id="setupExam" role="form" method="post"
+                      th:action="@{/test-attempt/begin}"
+                      th:object="${model}">
+
+                    <input type="hidden" th:field="${model.id}" th:value="${model.id}"/>
+                    <button type="submit" id="buttonID" class="btn btn-primary">Start Test</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+	document.getElementById("buttonID").disabled = true;
+</script>

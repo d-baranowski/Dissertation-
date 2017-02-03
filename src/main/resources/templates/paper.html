@@ -1,0 +1,110 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+<head th:fragment="head">
+    <title>View Paper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link th:href="@{/webjars/slick-carousel/1.5.9/slick/slick.css}" rel="stylesheet" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="questionPageStyle.css"
+          th:href="@{~/css/candidate/questionPageStyle.css}"/>
+    <link th:href="@{/webjars/google-code-prettify/1.0.4/loader/src/prettify.css}" rel="stylesheet"/>
+    <th:block th:if="${answerable}">
+        <link rel="stylesheet" type="text/css" th:href="@{~/js/lib/wColorPicker-2.1.7/wColorPicker.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{~/js/lib/wPaint-2.5.0/wPaint.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{~/css/candidate/questionPageStyleAnswerable.css}"/>
+    </th:block>
+    <th:block th:if="${inMarking}">
+        <link rel="stylesheet" type="text/css" th:href="@{~/css/marker/attempt-mark.css}"/>
+    </th:block>
+    <!-- print.css must always go last so its styles take precedence over others. -->
+    <link rel="stylesheet" th:href="@{~/css/print.css}"/>
+</head>
+<body>
+
+<th:block layout:fragment="headerText">
+    <th:block th:if="${answerable}">
+        <div class="injectInHeader headerText">
+            <p th:text="${paper.referenceName}"></p>
+            <p th:text="${candidateName}" class="small"></p>
+        </div>
+    </th:block>
+
+    <th:block th:unless="${answerable}">
+        <div class="injectInHeader headerText">
+            <p>Candidate Assessment System</p>
+        </div>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="upper-right-header-content">
+    <th:block th:unless="${answerable}">
+        <span th:replace="/fragments/paper/collapse-expand-all-elements-buttons"/>
+        <button id="print-button" type="button" title="print what is visible on this page"/>
+    </th:block>
+</th:block>
+
+<th:block layout:fragment="rightText">
+    <th:block th:if="${answerable}">
+        <div class="injectInHeader" id="timer">
+            <h4>Time Remaining</h4>
+            <h1 id="clockText">00:00</h1>
+        </div>
+    </th:block>
+</th:block>
+
+<div layout:fragment="content" id="content" class="contentWrapper container-fluid">
+    <div th:replace="/fragments/paper/sectionNavigation"/>
+    <div id="workspace" class="col-md-9">
+        <div class="carousell-content">
+            <div id="messageBanner"></div>
+            <div th:replace="/fragments/paper/content"/>
+        </div>
+        <div th:replace="/fragments/paper/progressBar"/>
+    </div>
+</div>
+
+<div layout:fragment="modals">
+    <div th:replace="/fragments/paper/areyousuremodal"></div>
+    <div id="loading">
+        <img id="loading-image" src="../images/ajax-loader.gif" alt="Loading..." />
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/webjars/slick-carousel/1.5.9/slick/slick.min.js}"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/prettify.js}"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/lang-sql.js}"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/run_prettify.js}"></script>
+
+    <script th:src="@{~/js/candidate/candidatePaper.js}"/>
+
+    <th:block th:if="${answerable}">
+        <script th:src="@{~/js/candidate/candidatePaperAnswerable.js}"/>
+        <script th:src="@{~/js/candidate/timer.js}"/>
+
+        <!-- Dependencies for wPaint to answer drawing questions -->
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/core.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/widget.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/widgets/mouse.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/widgets/draggable.js}"></script>
+        <script th:src="@{~/js/lib/wColorPicker-2.1.7/wColorPicker.min.js}"/>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/wPaint.min.js}"/>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/plugins/main/wPaint.menu.main.min.js}"></script>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/plugins/text/wPaint.menu.text.min.js}"></script>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/plugins/shapes/wPaint.menu.main.shapes.min.js}"></script>
+        <!-- Dependencies for wPaint to answer drawing questions -->
+
+        <script th:src="@{/webjars/ace/1.2.2/src-min-noconflict/ace.js}"></script>
+        <script th:src="@{/webjars/ace/ext-language_tools.js}"></script>
+    </th:block>
+
+    <th:block th:if="${inMarking}">
+        <script th:src="@{~/js/marker/markerPaper.js}"/>
+    </th:block>
+    <th:block th:unless="${answerable}">
+        <script th:src="@{~/js/question-page.js}"/>
+        <script th:src="@{~/js/candidate/print.js}"/>
+    </th:block>
+</th:block>
+</body>
+</html>

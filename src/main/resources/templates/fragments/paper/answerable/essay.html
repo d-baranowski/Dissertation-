@@ -1,0 +1,20 @@
+<form class="submitQuestion essayQuestion" role="form" method="post"
+      th:action="${submitAnswerForm.getENDPOINT()}"
+      th:object="${submitAnswerForm}"
+      th:attr="questionIsSubmitted=${answers.isQuestionAnswered(sectionKey, questionKey)},
+      questionName=${'Question ' + sectionKey + '.' + questionKey}"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+>
+
+    <input type="hidden" name="attemptId" th:value="${attemptId}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
+
+    <label th:for="${#ids.next('text')}">Answer:</label><br/>
+    <textarea rows="10" cols="170" class="essayAnswerText" type="text" name="text"
+              th:text="${answers.getNotNullAnswerText(sectionKey, questionKey)}"
+    />
+
+    <br/>
+    <input value="Submit Question" type="submit"/>
+</form>

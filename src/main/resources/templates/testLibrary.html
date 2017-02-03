@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+    <head th:fragment="head">
+        <title>View Paper</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/dashboard.css}"/>
+    </head>
+    <body>
+    <div layout:fragment="content" class="contentWrapper container">
+        <div class="dashboardWindow" id="dashboardWindow">
+            <div id="limit">
+                <div id="loadedContent" class="minimum-height padded">
+                    <table class="table table-striped" xmlns:th="http://www.w3.org/1999/xhtml">
+                        <thead>
+                        <tr>
+                            <th>Paper Id</th>
+                            <th>Paper Version No</th>
+                            <th>Name</th>
+                            <th>Link to View</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row : ${tableRows}">
+                            <th:box th:each="data : ${row}">
+                                <td th:utext="${data}"></td>
+                            </th:box>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>

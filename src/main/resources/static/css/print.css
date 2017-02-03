@@ -1,0 +1,84 @@
+@media print {
+
+    .question {
+        page-break-before: always;
+    }
+
+    .section-instructions {
+        page-break-before: always;
+    }
+
+    #accordionPanel {
+        display: none;
+    }
+
+    #progressbar {
+        display: none;
+    }
+
+    #areyousure {
+        display: none;
+    }
+
+    .tabPanel {
+        display: none;
+    }
+
+    .bars {
+        display: none;
+    }
+
+    .injectInHeader {
+        display: none;
+    }
+
+    #version {
+        display: none;
+    }
+
+    #workspace {
+        border: none;
+    }
+
+    #collapse-expand-element-buttons {
+        display: none;
+    }
+
+    #submit-mark-button{
+        display: none;
+    }
+
+    /* START - These styles are used to hide the title divs of collapsible elements
+               that are currently collapsed on the screen */
+    .collapsible-elements textarea {
+        overflow: visible;
+    }
+
+    .collapsible-element {
+        border-style: none;
+    }
+
+    /* When collapsed class="collapse", when expanded class="collapse in".
+       Therefore hide when has class 'collapse' but does not have class 'in'. */
+    .collapse:not(.in) {
+        display: none;
+    }
+
+    /* Hides clickable title bar that activates expand / collapse. */
+    .collapsed {
+        display: none;
+    }
+
+    /* END */
+
+    /* Some of the styles on the classes below mess up the print layout.
+       This next section is to undo the troublesome styles. */
+    .container {
+        overflow: visible;
+        position: initial;
+    }
+
+    .carousell-content {
+        overflow: visible;
+    }
+}

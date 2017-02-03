@@ -1,0 +1,27 @@
+<nav class="navbar navbar-default navbar-fixed-bottom progressBarContainer">
+    <div id="progressbar" class="slide-controller">
+        <div id="prevQuestion" class="slide-controller-btn col-md-3">
+            <img class="bottom-nav-icon" src="/images/question_next_previous.svg"/>
+            <p>Previous Question</p>
+        </div>
+
+        <div th:if="${answerable}" class="col-md-6 testProgress">
+            <div class="progress">
+                <div id="questionProgress"
+                     class="progress-bar progress-bar-info"
+                     role="progressbar"
+                     aria-valuenow="0"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     style="width: 0%;"
+                     th:attr="totalQuestionsToAnswer=${totalQuestionsToAnswer}">
+                </div>
+            </div>
+        </div>
+
+        <div id="nextQuestion" class="slide-controller-btn col-md-3">
+            <p>Next Question </p>
+            <img class="bottom-nav-icon" src="/images/question_next_previous.svg"/>
+        </div>
+    </div>
+</nav>

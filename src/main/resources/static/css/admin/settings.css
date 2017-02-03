@@ -1,0 +1,19 @@
+#termsAndConditionsWrapper textarea{
+    width:90%;
+    margin-left:5%;
+    height:190px;
+}
+
+#termsAndConditionsWrapper div{
+    width:90%;
+    margin-left:5%;
+}
+
+#termsAndConditionsWrapper input{
+    margin-left:5%;
+    margin-top: 2px;
+}
+
+#termsAndConditionsWrapper h3{
+    margin-left:2.5%;
+}

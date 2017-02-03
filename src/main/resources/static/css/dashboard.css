@@ -1,0 +1,30 @@
+.contentWrapper {
+	background-color: #EEEEEE;
+	height: 85%;
+	width: 95%;
+	margin-top: 3%;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.dashboardWindow {
+    position: relative;
+	height: auto%;
+	min-height: 80%;
+	width: 100%;
+	margin-top: 20px;
+	margin-bottom: 3%;
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #ffffff;
+    border-top: 5px solid #1F84B8;
+    border-bottom: 5px solid #1F84B8;
+}
+
+.minimum-height {
+    min-height: 500px;
+}
+
+.padded {
+    padding: 10px;
+}

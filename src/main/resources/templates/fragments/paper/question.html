@@ -1,0 +1,39 @@
+<div th:with="currentQuestion =${questions.get(questionKey)}" class="question" xmlns:th="http://www.w3.org/1999/xhtml">
+    <th:block th:if="${inMarking}">
+        <div class="info-banner">
+            <p th:text="${'Test: ' + paper.referenceName}"></p>
+            <p th:text="${'Candidate: ' + candidateName}" class="small"></p>
+            <p th:text="${'Date: ' + takenOnDate}"></p>
+        </div>
+    </th:block>
+
+    <div class="questionHeader">
+        <p th:text="${'Question ' + sectionKey + '.' + questionKey}"></p>
+    </div>
+
+    <b><p th:text="${'('  + currentQuestion.timeScale + ' minutes)'}"></p></b>
+
+    <p th:utext="${currentQuestion.text}"></p>
+
+    <th:block th:each="questionAsset : ${currentQuestion.assets}">
+        <img class="assetImage" th:src="${questionAsset.getBase64StringFile()}"/>
+    </th:block>
+
+    <th:block th:if="${answerable}">
+        <div th:replace="fragments/paper/answerBox"></div>
+    </th:block>
+
+    <th:block th:unless="${answerable}">
+        <th:box>
+            <div class="collapsible-elements">
+                <th:block th:if="${inMarking}">
+                    <div th:replace="/fragments/paper/inMarking/candidate-answer"/>
+                </th:block>
+                <div th:replace="/fragments/paper/correct-answer"/>
+                <th:block th:if="${inMarking}">
+                    <div th:replace="/fragments/paper/inMarking/markSubmissionForm"/>
+                </th:block>
+            </div>
+        </th:box>
+    </th:block>
+</div>

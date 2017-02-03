@@ -1,0 +1,48 @@
+<div class="setupWrapper" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="setuptitle">
+        <div id="titleText">Generate a Test</div>
+    </div>
+    <form id="setupExam" role="form" method="post"
+          th:action="${formBody.getENDPOINT()}"
+          th:object="${formBody}">
+
+        <div>
+            <label class="formLabel" th:for="${#ids.next('formBody.candidate.firstName')}">First Name:</label><br/>
+            <input type="text" class="form-control formItem" th:field="${formBody.candidate.firstName}"/>
+            <p th:if="${candidatefirstNameError != null}" th:class="text-error" th:text="${candidatefirstNameError}"></p>
+        </div>
+        <div class="createCandidate">
+            <label class="formLabel" th:for="${#ids.next('formBody.candidate.surname')}">Surname:</label><br/>
+            <input type="text" class="form-control formItem" th:field="${formBody.candidate.surname}"/>
+            <p th:if="${candidatesurnameError != null}" th:class="text-error" th:text="${candidatesurnameError}"></p>
+        </div>
+        <div>
+            <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Date:</label><br/>
+            <input type="text" id="datepicker" class="form-control formItem" th:field="${formBody.day.date}"/>
+            <p th:if="${daydateError != null}" th:class="text-error" th:text="${daydateError}"></p>
+        </div>
+        <div>
+            <label class="formLabel" th:for="${#ids.next('formBody.day.location')}">Location:</label><br/>
+            <input type="text" class="form-control formItem" th:field="${formBody.day.location}"/>
+            <p th:if="${daylocationError != null}" th:class="text-error" th:text="${daylocationError}"></p>
+        </div>
+        <div>
+            <label class="formLabel" th:for="${#ids.next('formBody.paperId')}">Exam Paper:</label><br/>
+            <select onchange="updateTimeAllowed(getSelectedPaperTimeAllowed())" id="pickPaperSelect" class="form-control formItem" th:field="${formBody.paperId}">
+                <option th:each="paperRef : ${paperReferences}"
+                        th:value="${paperRef.id}"
+                        th:text="${paperRef.referenceName}"
+                        th:attr="data-time-allowed=${paperRef.timeAllowed}">
+                </option>
+            </select>
+        </div>
+        <div>
+
+        </div>
+            <label class="formLabel" th:for="${#ids.next('formBody.timeAllowed')}">Time Allowed:</label><br/>
+            <input id="timeAllowedSelect" class="form-control formItem" type="number" th:field="${formBody.timeAllowed}" min="10" max="1000" step="10"/>
+        <div>
+            <button th:classappend="${disableNotAdmin}? disabled : btn" type="submit" class="btn btn-success formItem">CREATE TEST</button>
+        </div>
+    </form>
+</div>

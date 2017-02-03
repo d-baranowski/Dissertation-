@@ -1,0 +1,14 @@
+<th:block th:switch="${currentQuestion.type}" xmlns:th="http://www.w3.org/1999/xhtml">
+    <th:block th:case="'Code'">
+        <div th:replace="/fragments/paper/answerable/code"></div>
+    </th:block>
+    <th:block th:case="'Essay'">
+        <div th:replace="/fragments/paper/answerable/essay"></div>
+    </th:block>
+    <th:block th:case="'Multiple Choice'">
+        <div th:replace="/fragments/paper/answerable/multipleChoice"></div>
+    </th:block>
+    <th:block th:case="'Drawing'">
+        <div th:replace="/fragments/paper/answerable/draw"></div>
+    </th:block>
+</th:block>

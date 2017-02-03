@@ -1,0 +1,18 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+
+    <head th:fragment="head">
+        <title>Invalid Attempt Status Error</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/dashboard.css}"/>
+        <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/error.css}"/>
+    </head>
+
+    <div layout:fragment="content" id="content" class="contentWrapper container-fluid">
+        <div class="dashboardWindow" id="dashboardWindow">
+            <h1 th:text="${errorHeader}"></h1>
+            <p th:text="${errorMsg}"></p>
+            <img th:src="@{~/images/{imageSrc}(imageSrc=${imageSrc})}" class="img-responsive"/>
+        </div>
+    </div>
+</html>

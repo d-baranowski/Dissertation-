@@ -1,0 +1,37 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <!--  Each token will be replaced by their respective titles in the resulting page. -->
+    <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">Candidate Assessment System</title>
+    <link th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link href="/static/css/print.css" th:href="@{/css/print.css}" rel="stylesheet"/>
+    <link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" th:href="@{~/css/templatePageStyle.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{~/config/styles/colours.css}"/>
+    <link rel="shortcut icon" th:href="@{~/images/favicon.ico}" />
+    <link rel="icon" type="image/x-icon" th:href="@{~/images/favicon.ico}" />
+    <object layout:fragment="head" th:remove="tag"/>
+</head>
+<body>
+    <input type="hidden" id= "csrf-token" th:name="${_csrf.parameterName}" th:content="${_csrf.token}" />
+    <div th:replace="/fragments/main/header"></div>
+    <div>
+        <div id="alert" class="alert alert-dismissible" role="alert">
+            <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <p></p>
+        </div>
+        <div layout:fragment="content"/>
+    </div>
+
+    <div layout:fragment="modals"></div>
+    <script th:src="@{~/js/controllerEndpoints.js}"/>
+    <script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
+    <script th:src="@{~/js/main.js}"/>
+    <script th:src="@{~/js/common/util.js}"/>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.4/js/bootstrap.min.js}"></script>
+    <script src="https://cdn.jsdelivr.net/g/jquery.gritter@1.7.4(js/jquery.gritter.min.js+js/jquery.gritter.js)"></script>
+    <th:block layout:fragment="script"></th:block>
+</body>
+</html>
+

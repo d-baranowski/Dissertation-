@@ -1,0 +1,86 @@
+.form-mark-select {
+    margin-top: 5px;
+    padding: 3px;
+    background-color: #5A4A4A;
+    text-align: center;
+}
+
+.form-mark-select p {
+    color: #FFFFFF;
+    font-size: 12;
+    font-weight: bold;
+}
+
+.form-mark-select p,select{
+    display:inline-block;
+}
+
+.panel-comment-section {
+    border-style: solid;
+    border-color: #ECB60E;
+}
+
+.form-comment-section .title {
+    background-color: #ECB60E;
+}
+
+.panel-candidate-answer {
+    border-style: solid;
+    border-color: #1F84B8;
+}
+
+.candidate-answer .title {
+    background-color: #1F84B8;
+}
+
+.candidate-answer {
+    margin-top: 10px;
+}
+
+.candidate-answer .multiple-choice-tick {
+    margin-top: 10px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.candidate-answer .essay-answer {
+    margin: 10px;
+}
+
+input[type=submit] {
+    background-color: #3DB2D3;
+    background-image: url("/images/question_submit.svg");
+    background-repeat: no-repeat;
+    background-size: 15%;
+    background-position: right 5px center;
+
+    -webkit-border-radius: 6;
+    -moz-border-radius: 6;
+    border-radius: 6px;
+
+    font-family: Georgia;
+    color: #ffffff;
+    font-size: 21px;
+    padding: 10px 55px 10px 20px;
+    text-decoration: none;
+
+    float:right;
+    margin-bottom:10px;
+    margin-top:10px;
+}
+
+.info-banner {
+   background-color: #F5F5F5;
+   padding: 10px;
+   padding-top: 15px;
+   text-align: center;
+   border-radius: 5px;
+}
+
+.info-banner p {
+    display:inline-block;
+    margin-right:10px;
+    color: #685A5A;
+    font-weight: bold;
+    font-size: 20px;
+}

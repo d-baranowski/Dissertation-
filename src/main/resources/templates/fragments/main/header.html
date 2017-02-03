@@ -1,0 +1,33 @@
+<th:block th:if="${noNavigation} != true" xmlns:th="http://www.w3.org/1999/xhtml">
+    <nav class="navbar navbar-default navbar-fixed-top blueNavigation">
+        <div class="container">
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li th:classappend="${dashboardContent} == 'generateTest' ? active : ''">
+                        <a id="navGenTest" href="#" data-toggle="tab"><span class="tabText">Setup an Exam</span></a>
+                    </li>
+                    <li th:classappend="${dashboardContent} == 'viewTests' ? active : ''">
+                        <a id="navViewTest" href="#" data-toggle="tab"><span class="tabText">View Exams</span></a>
+                    </li>
+                    <li th:classappend="${dashboardContent} == 'testLibrary' ? active : ''">
+                        <a id="navTestLibrary" href="#" data-toggle="tab"><span class="tabText">Test Papers</span></a>
+                    </li>
+                    <li th:classappend="${dashboardContent} == 'settings' ? active : ''">
+                        <a id="navSettings" href="#" data-toggle="tab"><span class="tabText">Settings</span></a>
+                    </li>
+                    <li>
+                        <a id="logOut" href="/logout" data-toggle="tab">
+                            <th:block th:if="${userName} != null">
+                                <span class="tabText" th:text="${'Log Out ' + userName}">Log out</span>
+                            </th:block>
+
+                            <th:block th:unless="${userName} != null">
+                                <span class="tabText" th:text="${' Log Out'}">Log out</span>
+                            </th:block>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</th:block>

@@ -1,0 +1,35 @@
+<form class="submitMark codeQuestion" role="form" method="post"
+      th:action="${submitMarkForm.getENDPOINT()}"
+      th:object="${submitMarkForm}"
+       th:attr="questionName=${currentQuestion.referenceName},
+      isMarked=${answers.isQuestionMarked(sectionKey, questionKey)}"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <input type="hidden" name="testAttemptId" th:value="${attemptId}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
+
+    <div class="form-comment-section collapsible-element">
+        <div class="title" data-toggle="collapse" th:attr="data-target=${'#' + #ids.next('panel-comment-section')}">
+            <a>Markers Comment:</a>
+        </div>
+
+        <div class="panel-comment-section collapsible in" th:id="${#ids.seq('panel-comment-section')}">
+            <textarea th:text="${answers.getNonNullMarkComment(sectionKey, questionKey)}" type="text" name="comment" style="resize: none;"></textarea>
+        </div>
+    </div>
+
+    <div class="form-mark-select">
+        <p>Allocated Mark: </p>
+        <select name="mark">
+            <option th:text="${'Not Marked'}" th:value="${-1}" th:attr="selected=${-1 == answers.getNonNullMark(sectionKey, questionKey)}"></option>
+            <option th:each="i : ${#numbers.sequence( 0, currentQuestion.getTimeScale())}"
+                    th:value="${i}"
+                    th:attr="selected=${i == answers.getNonNullMark(sectionKey, questionKey)}"
+                    th:text="${i}"></option>
+        </select>
+    </div>
+
+    <br/>
+    <input id="submit-mark-button" value="Submit Mark" type="submit"/>
+</form>

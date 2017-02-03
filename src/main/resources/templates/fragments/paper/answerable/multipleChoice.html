@@ -1,0 +1,22 @@
+<form class="submitQuestion multipleChoiceQuestion" role="form" method="post"
+      th:action="${submitAnswerForm.getENDPOINT()}"
+      th:object="${submitAnswerForm}" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:attr="questionIsSubmitted=${answers.isQuestionAnswered(sectionKey, questionKey)},
+      questionName=${'Question ' + sectionKey + '.' + questionKey}"
+>
+
+    <input type="hidden" name="attemptId" th:value="${attemptId}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
+
+    <div class="multiple-choice-tick well well-sm" th:each="choice : ${currentQuestion.getAnswerLetters()}">
+        <label th:text="'Answer: ' + ${choice}"></label>
+        <input type="checkbox"
+               name="text"
+               th:value="${choice}"
+               th:checked="${answers.isChecked(sectionKey, questionKey, choice)}"
+        />
+    </div>
+    <br/>
+    <input value="Submit Question" type="submit"/>
+</form>

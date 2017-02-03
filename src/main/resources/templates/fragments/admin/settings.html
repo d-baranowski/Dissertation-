@@ -1,0 +1,9 @@
+<div id="termsAndConditionsWrapper" xmlns:th="http://www.w3.org/1999/xhtml">
+    <h3>Terms and Conditions</h3>
+    <form id="submitTerms" method="POST" action="../admin/newTerms">
+        <div th:if="${success}" class="alert alert-success" th:text="'Success: ' + ${success}" />
+        <textarea maxlength="10000" name="termsField" id="terms" th:text="${currentTerms}"></textarea>
+        <input type="hidden" id= "csrf-token" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="submit" value="Save and Apply"/>
+    </form>
+</div>

@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="/layouts/layout">
+<head th:fragment="head">
+    <title>Finished</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="templatePageStyle.css" th:href="@{~/css/templatePageStyle.css}" />
+    <link rel="stylesheet" type="text/css" href="startPageStyle.css" th:href="@{~/css/startPageStyle.css}" />
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container containerPanel">
+        <div class="row containerPanel">
+            <div class="instructionPanel">
+                <h3>Thank you for submitting your test.</h3>
+                <br/>
+
+                <p>Instructions to the Candidate as to what to do next - to be supplied by the client</p>
+                <ul>
+                    <li>In convallis magna non ante euismod porta</li>
+                    <li>Nam vitae ligula non enim egestas sollicitudin</li>
+                    <li>In convallis magna non ante euismod porta</li>
+                    <li>Lubue placki ziemniaczane</li>
+                    <li>Ciastka z kremem to moj ulubiony deser</li>
+                </ul>
+
+                <p>The button below will sign you out of the application.</p>
+                <form th:action="@{/logout}" >
+                    <button type="submit" id="buttonID" class="btn btn-primary">Log Out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<div class="correct-answer-section collapsible-element" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="title collapsed" data-toggle="collapse" th:attr="data-target=${'#' + #ids.next('panel-answer-section')}">
+        <a>Correct Answer:</a>
+    </div>
+
+    <div class="panel-answer-section collapsible collapse" th:id="${#ids.seq('panel-answer-section')}">
+        <textarea readonly="true" th:text="${currentQuestion.getCorrectAnswer()}" type="text" style="resize: none;"></textarea>
+    </div>
+</div>

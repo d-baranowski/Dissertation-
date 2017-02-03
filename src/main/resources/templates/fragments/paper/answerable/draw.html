@@ -1,0 +1,24 @@
+<form class="submitQuestion drawQuestion specialHandler" role="form" method="post"
+      th:action="${submitAnswerForm.getENDPOINT()}"
+      th:object="${submitAnswerForm}" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:attr="questionIsSubmitted=${answers.isQuestionAnswered(sectionKey, questionKey)},
+      questionName=${'Question ' + sectionKey + '.' + questionKey}"
+>
+
+    <input type="hidden" name="attemptId" th:value="${attemptId}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
+
+    <label>Answer:</label>
+
+    <div class="wPaint"></div>
+    <input type="hidden" name="base64imagePng" th:value=
+            "(
+                        ${answers.isQuestionAnswered(sectionKey, questionKey)} ?
+                            ${answers.get(sectionKey,questionKey).getBase64ImageStringOrEmpty()}
+                            : ''
+                    )"
+    />
+    <input type="hidden" name="text" th:value="'ImValid'"/>
+    <input value="Submit Question" type="submit"/>
+</form>

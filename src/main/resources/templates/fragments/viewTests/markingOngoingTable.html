@@ -1,0 +1,38 @@
+<table class="table table-striped" xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+        <tr>
+            <th th:each="title : ${tableHead}" th:text="${title}"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="reference : ${attemptReferences}">
+            <td th:text="${reference.getReferenceModel().getId()}"></td>
+            <td th:text="${reference.getReferenceModel().getCandidateName() + ' ' + reference.getReferenceModel().getCandidateSurname()}"></td>
+            <td><a
+                    th:text="${reference.getReferenceModel().getPaperRef().getReferenceName()}"
+                    th:href="${viewPaperPrefix} + '/'
+                     + ${reference.getReferenceModel().getPaperRef().getId()} + '/'
+                      + ${reference.getReferenceModel().getPaperRef().getVersionNo()}  + ${viewPaperView}"
+
+                    th:attr="title=${'Paper Id: ' + reference.getReferenceModel().getPaperRef().getId() + ' Version Number: ' + reference.getReferenceModel().getPaperRef().getVersionNo()}"
+            ></a></td>
+            <td th:text="${reference.getReferenceModel().getDate()}"></td>
+            <td th:text="${reference.getReferenceModel().getLocation()}"></td>
+            <td th:text="${reference.getMarkerFullName()}"></td>
+
+            <th:block th:if="${disableNotMarker != true and userId == reference.getMarkerReference().getId()}">
+                <td><a th:attr="href=${'/test-attempt/' + reference.getReferenceModel().getId() + '/mark'}">Mark</a></td>
+            </th:block>
+            <th:block th:if="${disableNotMarker or userId != reference.getMarkerReference().getId()}">
+                <td><p>Mark</p></td>
+            </th:block>
+
+            <th:block th:unless="${disableNotAdmin}">
+                <td><a class="force-unlock-btn" th:attr="data-endpoint=${'/test-attempt/' + reference.getReferenceModel().getId() + '/mark/force-unlock'}">Force Unlock</a></td>
+            </th:block>
+            <th:block th:if="${disableNotAdmin}">
+                <td><p>Force Unlock</p></td>
+            </th:block>
+        </tr>
+    </tbody>
+</table>

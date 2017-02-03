@@ -1,0 +1,13 @@
+<div id="carousell" class="carousell" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="test-paper-instructions">
+        <h1 th:text="${paper.referenceName}"></h1>
+        <p th:utext="${paper.instructionsText}"></p>
+    </div>
+    <th:block th:each="sectionKey : ${paper.sections.keySet()}">
+        <div th:replace="/fragments/paper/section"></div>
+        <th:block th:with="questions=${paper.sections.get(sectionKey).questions}"
+                  th:each="questionKey : ${paper.sections.get(sectionKey).questions.keySet()}">
+            <div th:replace="/fragments/paper/question"></div>
+        </th:block>
+    </th:block>
+</div>

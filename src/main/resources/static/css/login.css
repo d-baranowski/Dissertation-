@@ -1,0 +1,14 @@
+body {
+	background-color: #ED6738;
+	background-size: cover;
+	overflow: hidden;
+}
+
+.alert {
+    z-index: 99999;
+}
+
+.login-box {
+    background-color: #FFFFFF;
+    margin-top: 25%;
+}

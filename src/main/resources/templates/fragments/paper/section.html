@@ -1,0 +1,11 @@
+<div th:with="thisSection=${paper.sections.get(sectionKey)}" class="section-instructions"
+     xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="questionHeader">
+        <p th:text="${thisSection.referenceName}"></p>
+    </div>
+    <div class="info-banner">
+        <p th:text="${'We recommend you spend '  + thisSection.timeScale + ' minutes on this section.'}"></p>
+        <p th:text="${'You should answer '  + thisSection.noOfQuestionsToAnswer + ' questions from this section.'}"></p>
+        <p th:utext="${thisSection.instructionsText}"></p>
+    </div>
+</div>

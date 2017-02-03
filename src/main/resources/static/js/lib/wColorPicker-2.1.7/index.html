@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Websanova :: wColorPicker</title>
+
+    <!-- filestart -->
+    <link rel="icon" type="image/vnd.microsoft.icon" href="./demo/img/favicon.ico"/>
+    <link rel="Stylesheet" type="text/css" href="./demo/demo.css"/>
+    <script type="text/javascript" src="./lib/jquery.1.10.2.min.js"></script>
+    <!-- fileend -->
+</head>
+<body>
+<!-- headstart -->
+<header>
+    <a id="header-logo" href="http://websanova.com"></a>
+
+    <div id="header-links">
+        <a href="http://websanova.com">Blog</a>
+        <a href="http://websanova.com/plugins">Plugins</a>
+        <a href="http://websanova.com/extensions">Extensions</a>
+        <a href="http://websanova.com/services">Services</a>
+    </div>
+</header>
+<!-- headend -->
+
+<div id="content">
+    <h1 id="plugin-name">wColorPicker.js</h1>
+
+    <div class="content-box">
+        <div id="wColorPicker1" style="line-height:0px;font-size:0px;"></div>
+        Enter Color: <input id="wColorPicker-input1" type="text"/><br/>
+
+        <div id="wColorPicker2" class="hoverBox"></div>
+        <div id="wColorPicker3" class="hoverBox"></div>
+        <div id="wColorPicker4" class="hoverBox"></div>
+        <div id="wColorPicker5" class="hoverBox"></div>
+        <div id="wColorPicker6" class="hoverBox"></div>
+        <div id="wColorPicker7" class="hoverBox"></div>
+        <div id="wColorPicker8" class="hoverBox" title="testing123"></div>
+        <input type="button" value="setColor" onclick="$('#wColorPicker8').wColorPicker('color', '#000');"/>
+        <div style="clear:both;font-size:0px;line-height:0px;"></div>
+
+        <link rel="Stylesheet" type="text/css" href="./src/wColorPicker.css"/>
+        <script type="text/javascript" src="./src/rgbHex.min.js"></script>
+        <script type="text/javascript" src="./src/wColorPicker.js"></script>
+
+        <style>
+        #wColorPicker-input1 {
+          margin-top: 10px;
+          width: 75px;
+          border: solid #CACACA 1px;
+          border-radius: 5px;
+          font-size: 10px;
+          padding: 4px 5px;
+        }
+        .hoverBox{
+          position: relative;
+          float:left;
+          margin: 10px 10px 10px 0;
+          width: 25px;
+          height: 25px;
+        }
+        #wColorPicker8 {
+          width: 20px;
+          height: 20px;
+          border-radius: 5px;
+          border: solid #CACACA 1px;
+          cursor: pointer;
+        }
+
+
+        </style>
+
+        <script type="text/javascript">
+        // test callbacks
+        $("#wColorPicker1").wColorPicker({
+          color: '#FF00FF',
+          onSelect: function(color){
+              $("#wColorPicker-input1").css('background', color).val(color);
+          },
+          onMouseover: function(color){
+              $("#wColorPicker-input1").css('background', color).val(color);
+          },
+          onMouseout: function(color){
+              $("#wColorPicker-input1").css('background', color).val(color);
+          }
+        })
+
+        // test manual colour set
+        $('#wColorPicker-input1').keyup(function(){
+          var color = window.rgbHex($(this).val());
+
+          if(color) {
+            $("#wColorPicker1").wColorPicker('color', $(this).val());
+          }
+        });
+
+        // test modes/effects
+        $("#wColorPicker2").wColorPicker({mode:'hover', effect:'none'});
+        $("#wColorPicker3").wColorPicker({theme:'black', mode:'hover', effect:'fade', position:'lt'});
+        $("#wColorPicker4").wColorPicker({theme:'blue', mode:'hover', effect:'slide', position:'tl'});
+        $("#wColorPicker5").wColorPicker({theme:'red', mode:'click', effect:'none', position:'rb'});
+        $("#wColorPicker6").wColorPicker({theme:'green', mode:'click', effect:'fade', position:'rm'});
+        $("#wColorPicker7").wColorPicker({theme:'orange', mode:'click', effect:'slide', position: 'rt'});
+
+        $("#wColorPicker8").wColorPicker({
+          mode:'click',
+          generateButton:false,
+          dropperButton: true,
+          onSelect: function(color) {
+            $("#wColorPicker8").css('backgroundColor', color);
+          },
+          onDropper: function() {
+            console.log('dropper');
+            console.log(this.options.color);
+          }
+        });
+
+
+        </script>
+    </div>
+</div>
+
+<!-- footstart -->
+<footer>
+    <div id="footer-icons">
+        <!--a id="youtube-icon" href="http://websanova.com/youtube" target="_blank"></a-->
+        <a id="stumbleupon-icon" href="http://websanova.com/stumbleupon" target="_blank"></a>
+        <a id="linkedin-icon" href="http://websanova.com/linkedin" target="_blank"></a>
+        <a id="facebook-icon" href="http://websanova.com/facebook" target="_blank"></a>
+        <a id="googleplus-icon" href="http://websanova.com/googleplus" target="_blank"></a>
+        <a id="twitter-icon" href="http://websanova.com/twitter" target="_blank"></a>
+        <a id="github-icon" href="http://websanova.com/github" target="_blank"></a>
+        <a id="rss-icon" href="http://websanova.com/feed" target="_blank"></a>
+    </div>
+</footer>
+<!-- footend -->
+</body>
+</html>

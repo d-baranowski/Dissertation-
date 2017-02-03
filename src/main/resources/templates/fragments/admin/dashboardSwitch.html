@@ -1,0 +1,11 @@
+<th:block th:switch="${dashboardContent}" xmlns:th="http://www.w3.org/1999/xhtml">
+    <th:block th:case="'generateTest'">
+        <div th:replace="/fragments/admin/generateTest"></div>
+    </th:block>
+    <th:block th:case="'viewTests'">
+        <div th:replace="/fragments/admin/viewTests"></div>
+    </th:block>
+    <th:block th:case="'settings'">
+        <div th:replace="/fragments/admin/settings"></div>
+    </th:block>
+</th:block>
