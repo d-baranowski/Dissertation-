@@ -21,7 +21,7 @@ public class PaperDAOIntegrationTest {
 
     @Test
     public void canGetCount() {
-        assertEquals(2, paperDao.getCount());
+        assertEquals(3, paperDao.getCount());
     }
 
     @Test

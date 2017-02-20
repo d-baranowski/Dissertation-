@@ -1,19 +1,7 @@
 package tests;
 
 
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Answer;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.AnswerAsset;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Candidate;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Mark;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Paper;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.PaperVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Question;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersionAsset;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Role;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Section;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.User;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
 import uk.ac.ncl.daniel.baranowski.models.AnswerModel;
 import uk.ac.ncl.daniel.baranowski.models.AnswersMapModel;
 import uk.ac.ncl.daniel.baranowski.models.AssetModel;
@@ -71,6 +59,7 @@ class TestResources {
      **/
     static final Paper PAPER_ID_1;
     private static final Paper PAPER_ID_2;
+    static final Paper PAPER_ID_3;
 
     /**
      * PaperVersion resources
@@ -84,6 +73,7 @@ class TestResources {
     static final Role ROLE_ADMIN = new Role("Admin");
     static final Role ROLE_MARKER = new Role("Marker");
     static final Role ROLE_AUTHOR = new Role("Author");
+    static final Role ROLE_MODULE_LEADER = new Role("ModuleModel");
 
     /**
      * User resources
@@ -115,6 +105,16 @@ class TestResources {
             .setPassword("pass")
             .setName("Jack")
             .setSurname("Brown").build();
+
+    /**
+     *  Module Resources
+     */
+    static final Module MODULE_ONE = new Module.Builder()
+            .setModuleCode("CSC001")
+            .setId(1)
+            .setReferenceName("Sample Module 1")
+            .build();
+
 
     /**
      * QuestionVersionAsset Resources
@@ -167,6 +167,8 @@ class TestResources {
     static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_4;
     static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_5;
     static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_6;
+    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_7;
+
 
     /**
      * Section Questions resources
@@ -221,6 +223,7 @@ class TestResources {
      **/
     static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_1;
     static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_2;
+    static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_3;
 
     /**
      * PaperModel resources
@@ -255,6 +258,11 @@ class TestResources {
      */
 
     static final MarkModel SAMPLE_MARK_MODEL;
+
+    /**
+     * Exam resources
+     */
+    static final Exam SAMPLE_EXAM;
 
     static {
         /** Candidate resources **/
@@ -354,6 +362,12 @@ class TestResources {
                 .setId(2)
                 .setName("Interview Test-Graduate (C#)")
                 .setTimeAllowed(60)
+                .build();
+
+        PAPER_ID_3 = new Paper.Builder()
+                .setId(3)
+                .setName("Sample Multiple Choice Auto-Marking Test")
+                .setTimeAllowed(20)
                 .build();
 
         /** PaperVersion resources **/
@@ -669,6 +683,13 @@ class TestResources {
         SECTION_REFERENCE_MODEL_ID_6.setVersionNumber(1);
         SECTION_REFERENCE_MODEL_ID_6.setReferenceName("Test Case Design");
 
+
+        SECTION_REFERENCE_MODEL_ID_7 = new SectionReferenceModel();
+        SECTION_REFERENCE_MODEL_ID_7.setId(7);
+        SECTION_REFERENCE_MODEL_ID_7.setVersionNumber(1);
+        SECTION_REFERENCE_MODEL_ID_7.setReferenceName("Multiple Choice");
+
+
         /** Section Questions resources **/
         SECTION_QUESTIONS_FOR_ID_1_VER_1 = new HashMap<>();
         SECTION_QUESTIONS_FOR_ID_1_VER_1.put(1, QUESTION_MODEL_ID_1_VER_1);
@@ -828,6 +849,12 @@ class TestResources {
         PAPER_REFERENCE_MODEL_ID_2.setReferenceName(PAPER_ID_2.getName());
         PAPER_REFERENCE_MODEL_ID_2.setTimeAllowed(60);
 
+        PAPER_REFERENCE_MODEL_ID_3 = new PaperReferenceModel();
+        PAPER_REFERENCE_MODEL_ID_3.setId(3);
+        PAPER_REFERENCE_MODEL_ID_3.setVersionNo(1);
+        PAPER_REFERENCE_MODEL_ID_3.setReferenceName(PAPER_ID_3.getName());
+        PAPER_REFERENCE_MODEL_ID_3.setTimeAllowed(20);
+
         /** PaperModel resources **/
         PAPER_MODEL_ID_1_VER_1 = new PaperModel();
         PAPER_MODEL_ID_1_VER_1.setId(1);
@@ -859,7 +886,7 @@ class TestResources {
         TEST_ATTEMPT_MODEL_ID_1.setAnswerMap(ANSWERS_FOR_ATTEMPT_MODEL_ID_1);
         TEST_ATTEMPT_MODEL_ID_1.setStatus(null);
         TEST_ATTEMPT_MODEL_ID_1.setTimeAllowed(60);
-        TEST_ATTEMPT_MODEL_ID_1.setTermsandConditionsId(0);
+        TEST_ATTEMPT_MODEL_ID_1.setTermsAndConditionsId(0);
 
         TEST_ATTEMPT_MODEL_ID_2 = new AttemptModel();
         TEST_ATTEMPT_MODEL_ID_2.setId(2);
@@ -868,7 +895,7 @@ class TestResources {
         TEST_ATTEMPT_MODEL_ID_2.setPaper(PAPER_MODEL_ID_2_VER_1);
         TEST_ATTEMPT_MODEL_ID_2.setAnswerMap(ANSWERS_FOR_ATTEMPT_MODEL_ID_2);
         TEST_ATTEMPT_MODEL_ID_2.setTimeAllowed(60);
-        TEST_ATTEMPT_MODEL_ID_2.setTermsandConditionsId(0);
+        TEST_ATTEMPT_MODEL_ID_2.setTermsAndConditionsId(0);
 
         /** AttemptReferenceModel resources **/
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1 = new AttemptReferenceModel();
@@ -877,7 +904,7 @@ class TestResources {
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTestDayModel(SAMPLE_DAY);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setPaperRef(PAPER_REFERENCE_MODEL_ID_1);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTimeAllowed(60);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTermsandConditionsId(0);
+        TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTermsAndConditionsId(0);
 
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2 = new AttemptReferenceModel();
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setId(2);
@@ -885,7 +912,7 @@ class TestResources {
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTestDayModel(SAMPLE_DAY);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setPaperRef(PAPER_REFERENCE_MODEL_ID_2);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTimeAllowed(60);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTermsandConditionsId(0);
+        TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTermsAndConditionsId(0);
 
         /** Mark resources **/
         SAMPLE_MARK = new Mark.Builder()
@@ -900,6 +927,16 @@ class TestResources {
         SAMPLE_MARK_MODEL.setId(SAMPLE_MARK.getId());
         SAMPLE_MARK_MODEL.setComment(SAMPLE_MARK.getComment());
         SAMPLE_MARK_MODEL.setMark(SAMPLE_MARK.getActualMark());
+
+        /* Exam resources */
+        SAMPLE_EXAM = new Exam.Builder()
+                .setId(1)
+                .setTestDayId(1)
+                .setPaperId(1)
+                .setPaperVersionNo(1)
+                .setTermsAndConditionsId(1)
+                .setStatus("Finished")
+                .build();
 
     }
 

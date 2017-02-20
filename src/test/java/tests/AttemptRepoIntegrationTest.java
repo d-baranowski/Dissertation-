@@ -27,7 +27,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus.FINISHED;
+import static uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus.FINISHED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static tests.TestResources.SAMPLE_DAY;

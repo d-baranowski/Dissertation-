@@ -23,7 +23,7 @@ public class AttemptModelMapper {
         result.setStatus(attempt.getStatus());
         result.setFinalMark(attempt.getFinalMark());
         result.setTimeAllowed(attempt.getTimeAllowed());
-        result.setTermsandConditionsId(attempt.getTermsAndConditionsId());
+        result.setTermsAndConditionsId(attempt.getTermsAndConditionsId());
         return result;
     }
 
@@ -38,7 +38,7 @@ public class AttemptModelMapper {
         result.setStatus(attempt.getStatus());
         result.setFinalMark(attempt.getFinalMark());
         result.setTimeAllowed(attempt.getTimeAllowed());
-        result.setTermsandConditionsId(attempt.getTermsAndConditionsId());
+        result.setTermsAndConditionsId(attempt.getTermsAndConditionsId());
         return result;
     }
 }

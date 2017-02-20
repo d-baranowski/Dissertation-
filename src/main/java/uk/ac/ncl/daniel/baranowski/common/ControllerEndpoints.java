@@ -15,7 +15,7 @@ public class ControllerEndpoints {
     public static final String REDIRECT_PREFIX = "redirect:";
 
     public static final String ATTEMPT_PREFIX = "/test-attempt";
-    public static final String ATTEMPT_SETUP_COMPLETE = "/setup/confirm";
+    public static final String EXAM_SETUP_COMPLETE = "/setup/confirm";
     public static final String ATTEMPT_START = "/{testAttemptId}/start";
     public static final String ATTEMPT_ONGOING = "/ongoing";
     public static final String ATTEMPT_MARK = "/{testAttemptId}/mark";
@@ -28,6 +28,8 @@ public class ControllerEndpoints {
     public static final String ATTEMPT_FINISH_MARKING = "/{testAttemptId}/mark/finish";
     public static final String ATTEMPT_UNLOCK_MARKING = "/{testAttemptId}/mark/unlock";
     public static final String ATTEMPT_FORCE_UNLOCK_MARKING = "/{testAttemptId}/mark/force-unlock";
+
+    public static final String EXAM_PREFIX = "/exam";
 
     public static final String LOGIN_LOGIN = "/login";
     public static final String LOGIN_CREATE_SESSION = "/create-session";

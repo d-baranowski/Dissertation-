@@ -1,32 +1,21 @@
 INSERT INTO Role VALUES ('Author');
 INSERT INTO Role VALUES ('Marker');
 INSERT INTO Role VALUES ('Admin');
+INSERT INTO Role VALUES ('ModuleLeader');
+
 INSERT INTO User VALUES ('3ca33b4f-009a-4403-829b-e2d20b3d47c2','Bob','Smith','sampleMarker','pass');
 INSERT INTO User VALUES ('fba6a561-8999-4b19-9c57-232895d024c6','Grzegorz','Brzenczyszczykiewicz','sampleAuthor','pass');
 INSERT INTO User VALUES ('94cbbbc4-f94d-40d2-b0cf-e642eb36e73a','Sam','Armstrong','sampleAdmin','pass');
 INSERT INTO User VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','sampleAll','pass');
 
-INSERT INTO User VALUES ('9f4db0aa-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','A.r-76_@email.com','A.r-76_@email.com');
-INSERT INTO User VALUES ('9f4db0ab-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','A.r-76_29email.comA.r-76_email2','password');
-INSERT INTO User VALUES ('9f4db0ag-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','A.r-76_30email.comA.r-76_email30','password');
-INSERT INTO User VALUES ('9f4db0ad-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','A.r-76_31email.comA.r-76_email.31','password');
-INSERT INTO User VALUES ('9f4db0ae-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','!”£$%^&^&*()@.co.uk','password');
-INSERT INTO User VALUES ('9f4db0af-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','Username','!”£$%^&^&*()@.co.uk)');
-
 INSERT INTO UserRole VALUES ('3ca33b4f-009a-4403-829b-e2d20b3d47c2','Marker');
 INSERT INTO UserRole VALUES ('fba6a561-8999-4b19-9c57-232895d024c6','Author');
 INSERT INTO UserRole VALUES ('94cbbbc4-f94d-40d2-b0cf-e642eb36e73a','Admin');
+
 INSERT INTO UserRole VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d','Marker');
 INSERT INTO UserRole VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d','Author');
 INSERT INTO UserRole VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d','Admin');
-
-INSERT INTO UserRole VALUES ('9f4db0aa-b18a-4777-8b04-b72a0eeccf5d','Admin');
-INSERT INTO UserRole VALUES ('9f4db0ab-b18a-4777-8b04-b72a0eeccf5d','Admin');
-INSERT INTO UserRole VALUES ('9f4db0ag-b18a-4777-8b04-b72a0eeccf5d','Admin');
-INSERT INTO UserRole VALUES ('9f4db0ad-b18a-4777-8b04-b72a0eeccf5d','Admin');
-INSERT INTO UserRole VALUES ('9f4db0ae-b18a-4777-8b04-b72a0eeccf5d','Admin');
-INSERT INTO UserRole VALUES ('9f4db0af-b18a-4777-8b04-b72a0eeccf5d','Admin');
-
+INSERT INTO UserRole VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d','ModuleLeader');
 
 INSERT INTO TestPaper(referenceName, timeAllowed) VALUES ('ALTERNATE INTERVIEW JAVA', 60);
 INSERT INTO TestPaperVersion(authorId, versionNumber, testPaperId, instructionsText) VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 1, 1, '<b>Normal time Allowed: Up to 1 Hour </br>(all times indicative only)</b></br>Your interviewer will idicate: </br><ul><li> which questions of this set you should complete. The selected set will be relvant to your knowledge and experience</li><li>the time that you have to complete these in.</li></ul></br>The quelity / correctness of your answers is more important than the ammount of quetions answered. A timescale is provided with each question as a rough guide for how long the question should take to complete.');
@@ -52,9 +41,9 @@ INSERT INTO Question(language, referenceName, questionTypeId, difficulty) VALUES
 INSERT INTO Question(language, referenceName, questionTypeId, difficulty) VALUES ('Java', 'Explain appearance of a frame', 'Essay',5 );
 INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale) VALUES (1, 1,'You have been asked to develop a function called IsEven that return true if a given integer parameter is even, or false if odd. Write this function below.', 5);
 INSERT INTO QuestionVersionEntry VALUES (1,1,1,1,1);
-INSERT INTO Candidate(name,surname) VALUES ('Agent', 'Smith');
-INSERT INTO Candidate(name,surname) VALUES ('John', 'Brown');
-INSERT INTO TestDay(date,location) VALUES ('2014/01/02', 'Leeds Office');
+INSERT INTO Candidate(name,surname, hasExtraTime) VALUES ('Agent', 'Smith', FALSE );
+INSERT INTO Candidate(name,surname, hasExtraTime) VALUES ('John', 'Brown', FALSE );
+INSERT INTO TestDay(date,location,startTime,endTime) VALUES ('2014/01/02', 'Leeds Office',1485000000,1485000900);
 INSERT INTO TestDayEntry(testDayId, testPaperVersionNo, testPaperId, candidateId, termsAndConditionsId, timeAllowed) VALUES (1,1,1,1,0,60);
 
 INSERT INTO Answer(questionVersionNumber,questionId, testDayEntryId, text) VALUES (1,1,1,'Lorem ipsium dolor ...');
@@ -124,7 +113,7 @@ INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctA
 INSERT INTO QuestionVersionEntry VALUES (1,4,1,26,1);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sql products and invoices', 'Essay', 10);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (27, 1,'The questions section are based on the schema definitions defined below.</br><pre class="prettyprint lang-sql">CREATE TABLE Products(ProductId integer PRIMARY KEY, ProductName varchar(100));<br />CREATE TABLE Invoices(InvoiceNumber integer PRIMARY KEY, ProductId integer, InvoiceDate datetime, InvoiceCost decimal(6, 2)InvoiceComment varchar(200));</pre>a) What is the purpose of the following SQL statement:</br><pre class="prettyprint lang-sql">SELECT ProductId, SUM(InvoiceCost) FROM Invoices GROUP BY ProductId;</pre>b) The application programs using the tables allow a user to find an invoice by date and time range using a select statement of the form:</br><pre class="prettyprint lang-sql">SELECT InvoiceNumber, InvoiceCost FROM Invoices WHERE InvoiceDate &gt;= &lsquo;2000/05/23 15:00:00&rsquo; AND InvoiceDate &lt; &lsquo;2000/05/23 16:00:00&rsquo;;</pre>c) However as the Invoices table grew larger the execution times of these queries increased.Describe a change to the Database schema that would decrease the query execution time.</br>d) A test has been written to validate the query from question 2.1. The pseudo-code is:<pre class="prettyprint lang-sql">Connect to the database <br />FirstResult = Execute Query(&ldquo;SELECT ProductId, SUM(InvoiceCost) FROM Invoices GROUP BY ProductId&rdquo;) <br />Add a new invoice &nbsp;<br />SecondResult = Execute Query(&ldquo;SELECT ProductId, SUM(InvoiceCost) FROM Invoices GROUP BY ProductId&rdquo;) <br />Check that FirstResult and SecondResult differ by the added amount</pre> </br>But on a shared database the test keeps failing because someone else was running the same test so the second query picked up two invoices, what can we do to avoid this problem?</br>e)Write a query to return the product Name, number of the product sold and the highest price paid for it?', 10, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nulla est, mattis vel felis et, malesuada feugiat est. Mauris malesuada ex erat, ut consectetur felis iaculis interdum. Vivamus tempor semper turpis at maximus. Phasellus eu egestas enim, non ornare eros. Vivamus auctor rhoncus eros vel sollicitudin. Fusce vel magna id lectus tristique euismod. Curabitur facilisis cursus posuere. Aenean congue ligula est, vitae pellentesque massa rutrum ut. Donec nec facilisis magna, in viverra eros. Praesent enim sapien, consectetur congue risus in, condimentum elementum erat. Nam et ullamcorper ante. Duis lobortis volutpat scelerisque.');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (27, 1,'The questions section are based on the schema definitions defined below.</br><pre class="prettyprint lang-sql">CREATE TABLE Products(ProductId integer PRIMARY KEY, ProductName varchar(100));<br />CREATE TABLE Invoices(InvoiceNumber integer PRIMARY KEY, ProductId integer, InvoiceDate datetime, InvoiceCost decimal(6, 2)InvoiceComment varchar(200));</pre>a) What is the purpose of the following SQL statement:</br><pre class="prettyprint lang-sql">SELECT ProductId, SUM(InvoiceCost) FROM Invoices GROUP BY ProductId;</pre>b) The application programs using the tables allow a moduleLeader to find an invoice by date and time range using a select statement of the form:</br><pre class="prettyprint lang-sql">SELECT InvoiceNumber, InvoiceCost FROM Invoices WHERE InvoiceDate &gt;= &lsquo;2000/05/23 15:00:00&rsquo; AND InvoiceDate &lt; &lsquo;2000/05/23 16:00:00&rsquo;;</pre>c) However as the Invoices table grew larger the execution times of these queries increased.Describe a change to the Database schema that would decrease the query execution time.</br>d) A test has been written to validate the query from question 2.1. The pseudo-code is:<pre class="prettyprint lang-sql">Connect to the database <br />FirstResult = Execute Query(&ldquo;SELECT ProductId, SUM(InvoiceCost) FROM Invoices GROUP BY ProductId&rdquo;) <br />Add a new invoice &nbsp;<br />SecondResult = Execute Query(&ldquo;SELECT ProductId, SUM(InvoiceCost) FROM Invoices GROUP BY ProductId&rdquo;) <br />Check that FirstResult and SecondResult differ by the added amount</pre> </br>But on a shared database the test keeps failing because someone else was running the same test so the second query picked up two invoices, what can we do to avoid this problem?</br>e)Write a query to return the product Name, number of the product sold and the highest price paid for it?', 10, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nulla est, mattis vel felis et, malesuada feugiat est. Mauris malesuada ex erat, ut consectetur felis iaculis interdum. Vivamus tempor semper turpis at maximus. Phasellus eu egestas enim, non ornare eros. Vivamus auctor rhoncus eros vel sollicitudin. Fusce vel magna id lectus tristique euismod. Curabitur facilisis cursus posuere. Aenean congue ligula est, vitae pellentesque massa rutrum ut. Donec nec facilisis magna, in viverra eros. Praesent enim sapien, consectetur congue risus in, condimentum elementum erat. Nam et ullamcorper ante. Duis lobortis volutpat scelerisque.');
 INSERT INTO QuestionVersionEntry VALUES (1,4,1,27,2);
 
 INSERT INTO TestPaperSection(referenceName) VALUES ('Written Communication');
@@ -154,3 +143,158 @@ INSERT INTO QuestionVersionEntry VALUES (1,6,1,31,2);
 INSERT INTO TestDayEntry(testDayId, testPaperVersionNo, testPaperId, candidateId, termsAndConditionsId, timeAllowed) VALUES (1,1,2,1,0,60);
 
 INSERT INTO TermsAndConditions(termsAndConditions) VALUES ('Terms sample');
+
+INSERT INTO TestPaper(referenceName, timeAllowed) VALUES ('Sample Multiple Choice Auto-Marking Test', 20);
+INSERT INTO TestPaperVersion(authorId, versionNumber, testPaperId, instructionsText) VALUES ('fba6a561-8999-4b19-9c57-232895d024c6', 1, 3, 'Sample multiple choice');
+
+INSERT INTO TestPaperSection(referenceName) VALUES ('Multiple Choice');
+INSERT INTO TestPaperSectionVersion(noOfQuestionsToAnswer, versionNumber,timeScale,testPaperSectionId) VALUES (10,1,20,7);
+INSERT INTO TestPaperSectionVersionEntry VALUES (1,7,1,3,1);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 1', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (32, 1,'Correct answer is B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'B');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,32,1);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 2', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (33, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,33,2);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 3', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (34, 1,'Correct answer is C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'C');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,34,3);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 4', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (35, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,35,4);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 5', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (36, 1,'Correct answer are A,B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A,B');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,36,5);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 6', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (37, 1,'Correct answer are A,B,C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A,B,C');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,37,6);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 7', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (38, 1,'Correct answer are A,B,C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A,B,C');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,38,7);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 8', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (39, 1,'Correct answer is B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'B');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,39,8);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 9', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (40, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,40,9);
+
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 10', 'Multiple Choice', 1);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (41, 1,'Correct answer is C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'C');
+INSERT INTO QuestionVersionEntry VALUES (1,7,1,41,10);
+
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 1', 'CSC001');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 2', 'CSC002');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 3', 'CSC003');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 4', 'CSC004');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 5', 'CSC005');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 6', 'CSC006');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 7', 'CSC007');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 8', 'CSC008');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 9', 'CSC009');
+INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 10', 'CSC010');
+
+INSERT INTO ModuleLeader(userId, moduleId) VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 1);
+
+INSERT INTO User VALUES ('95818d99-492d-4c50-80b8-abae310bd2f3','Matthew','Collison','matthew.collison@ncl.ac.uk','pass');
+INSERT INTO UserRole VALUES ('95818d99-492d-4c50-80b8-abae310bd2f3','Marker');
+INSERT INTO UserRole VALUES ('95818d99-492d-4c50-80b8-abae310bd2f3','Author');
+INSERT INTO UserRole VALUES ('95818d99-492d-4c50-80b8-abae310bd2f3','ModuleLeader');
+INSERT INTO ModuleLeader(userId, moduleId) VALUES ('95818d99-492d-4c50-80b8-abae310bd2f3', 2);
+
+INSERT INTO User VALUES ('92f6e08a-2dba-467c-96e8-a1ec1c87940b','John','Colquhoun','john.colquhoun@newcastle.ac.uk','pass');
+INSERT INTO UserRole VALUES ('92f6e08a-2dba-467c-96e8-a1ec1c87940b','Marker');
+INSERT INTO UserRole VALUES ('92f6e08a-2dba-467c-96e8-a1ec1c87940b','Author');
+INSERT INTO UserRole VALUES ('92f6e08a-2dba-467c-96e8-a1ec1c87940b','ModuleLeader');
+INSERT INTO ModuleLeader(userId, moduleId) VALUES ('92f6e08a-2dba-467c-96e8-a1ec1c87940b', 3);
+
+INSERT INTO User VALUES ('1be448ff-1a2e-456f-9594-4042e7ef6ab2','Steve','Riddle',' steve.riddle@newcastle.ac.uk','pass');
+INSERT INTO UserRole VALUES ('1be448ff-1a2e-456f-9594-4042e7ef6ab2','Marker');
+INSERT INTO UserRole VALUES ('1be448ff-1a2e-456f-9594-4042e7ef6ab2','Author');
+INSERT INTO UserRole VALUES ('1be448ff-1a2e-456f-9594-4042e7ef6ab2','ModuleLeader');
+INSERT INTO ModuleLeader(userId, moduleId) VALUES ('1be448ff-1a2e-456f-9594-4042e7ef6ab2', 4);
+
+INSERT INTO User VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','Lindsay','Marshall','Lindsay.Marshall@newcastle.ac.uk','pass');
+INSERT INTO UserRole VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','Marker');
+INSERT INTO UserRole VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','Author');
+INSERT INTO UserRole VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','ModuleLeader');
+INSERT INTO ModuleLeader(userId, moduleId) VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a', 5);
+
+INSERT INTO Exam(`testPaperVersionNo`,
+                 `testPaperId`,
+                 `status`,
+                 `termsAndConditionsId`,
+                 `testDayId`
+            ) VALUES (1,1,'Finished',1,1);
+
+
+INSERT INTO Candidate (name, surname, hasExtraTime) VALUES ('Mercedes', 'Fedya', FALSE);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (1,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (2,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (3,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (4,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (5,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (6,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (7,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (8,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (9,1);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (10,1);
+
+INSERT INTO Candidate (name, surname, hasExtraTime) VALUES ('Stig', 'Ivan', FALSE);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (1,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (2,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (3,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (4,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (5,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (6,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (7,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (8,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (9,2);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (10,2);
+
+INSERT INTO Candidate (name, surname, hasExtraTime) VALUES ('Reva', 'Mihajlo', TRUE);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (1,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (2,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (3,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (4,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (5,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (6,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (7,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (8,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (9,3);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (10,3);
+
+INSERT INTO Candidate (name, surname, hasExtraTime) VALUES ('Vance', 'Bernie', FALSE);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (1,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (2,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (3,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (4,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (5,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (6,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (7,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (8,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (9,4);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (10,4);
+
+INSERT INTO Candidate (name, surname, hasExtraTime) VALUES ('Franciszek', 'Geglula', FALSE );
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (1,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (2,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (3,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (4,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (5,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (6,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (7,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (8,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (9,5);
+INSERT INTO CandidateModule(moduleId, candidateId) VALUES (10,5);
+
+
+

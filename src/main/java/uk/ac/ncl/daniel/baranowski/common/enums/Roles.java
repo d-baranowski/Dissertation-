@@ -3,7 +3,8 @@ package uk.ac.ncl.daniel.baranowski.common.enums;
 public enum Roles {
     MARKER("Marker"),
     ADMIN("Admin"),
-    AUTHOR("Author");
+    AUTHOR("Author"),
+    MODULE_LEADER("ModuleLeader");
 
     private final String roleName;
 
@@ -16,6 +17,7 @@ public enum Roles {
             case "Marker": return MARKER;
             case "Admin": return ADMIN;
             case "Author": return AUTHOR;
+            case "ModuleLeader": return MODULE_LEADER;
             default: return null;
         }
     }

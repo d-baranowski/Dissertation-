@@ -20,7 +20,11 @@ enum TableNames {
     TEST_PAPER_SECTION_VERSION_ENTRY("TestPaperSectionVersionEntry"),
     USER("User"),
     USERROLE("UserRole"),
-    TERMS_AND_CONDITIONS("TermsAndConditions");
+    TERMS_AND_CONDITIONS("TermsAndConditions"),
+    MODULE("Module"),
+    MODULE_LEADER("ModuleLeader"),
+    EXAM("Exam"),
+    CANDIDATE_MODULE("CandidateModule");
 
 
     private final String tableName;

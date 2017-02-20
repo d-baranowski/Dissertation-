@@ -25,7 +25,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import static uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus.FINISHED;
+import static uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus.FINISHED;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;

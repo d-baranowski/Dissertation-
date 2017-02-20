@@ -22,9 +22,29 @@ CREATE TABLE UserRole(
         REFERENCES Role(referenceName)
 );
 
+CREATE TABLE `Module` (
+    `_id` INT NOT NULL AUTO_INCREMENT,
+    `moduleCode` varchar(6) NOT NULL,
+    `referenceName` varchar(50) NOT NULL,
+    PRIMARY KEY (`_id`)
+);
+
+CREATE TABLE `ModuleLeader` (
+    `_id` INT NOT NULL AUTO_INCREMENT,
+    `userId` VARCHAR(36) NOT NULL,
+    `moduleId` INT NOT NULL,
+    PRIMARY KEY (`_id`),
+    FOREIGN KEY (`userId`)
+           REFERENCES User(`_id`),
+    FOREIGN KEY (`moduleId`)
+           REFERENCES Module(`_id`)
+);
+
 CREATE TABLE `TestDay` (
   `_id` INT NOT NULL AUTO_INCREMENT,
   `date` varchar(50) NOT NULL,
+  `startTime` BIGINT,
+  `endTime` BIGINT,
   `location` varchar(350),
   PRIMARY KEY (`_id`)
 );
@@ -33,6 +53,7 @@ CREATE TABLE `Candidate` (
   `_id` INT NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
+  `hasExtraTime` BOOL NOT NULL,
   PRIMARY KEY (`_id`)
 );
 
@@ -202,4 +223,30 @@ CREATE TABLE TermsAndConditions(
     `_id` INT NOT NULL AUTO_INCREMENT,
     `termsAndConditions` VARCHAR(10000),
     PRIMARY KEY (_id)
+);
+
+CREATE TABLE Exam(
+  `_id` INT NOT NULL AUTO_INCREMENT,
+  `testPaperVersionNo` INT,
+  `testPaperId` INT,
+  `status` VARCHAR(20),
+  `termsAndConditionsId` INT,
+  `testDayId` INT,
+  `moduleId` INT,
+  FOREIGN KEY (testDayId)
+  REFERENCES TestDay(_id),
+  FOREIGN KEY (testPaperId,testPaperVersionNo)
+  REFERENCES TestPaperVersion(testPaperId,versionNumber),
+  FOREIGN KEY (termsAndConditionsId) REFERENCES TermsAndConditions(`_id`),
+  FOREIGN KEY (moduleId) REFERENCES Module(`_id`),
+  PRIMARY KEY (`_id`)
+);
+
+CREATE TABLE CandidateModule(
+  `_id` INT NOT NULL AUTO_INCREMENT,
+  `moduleId` INT,
+  `candidateId` INT,
+  FOREIGN KEY (candidateId) REFERENCES Candidate(`_id`),
+  FOREIGN KEY (moduleId) REFERENCES Module(`_id`),
+  PRIMARY KEY (`_id`)
 )

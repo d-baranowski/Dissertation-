@@ -1,13 +1,13 @@
 package uk.ac.ncl.daniel.baranowski.common.enums;
 
-public enum AttemptStatus {
+public enum ExamStatus {
     CREATED(),
     STARTED(),
     FINISHED(),
     MARKING_ONGOING(),
     MARKED();
 
-    public static AttemptStatus getByName(String name) {
+    public static ExamStatus getByName(String name) {
         switch (name) {
             case "CREATED" : return CREATED;
             case "STARTED" : return STARTED;

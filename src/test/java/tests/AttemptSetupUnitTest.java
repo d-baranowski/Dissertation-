@@ -23,7 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
-import static uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus.CREATED;
+import static uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus.CREATED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;

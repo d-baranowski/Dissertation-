@@ -28,11 +28,11 @@ public class AttemptReferenceModel {
         this.timeAllowed = timeAllowed;
     }
 
-    public void setTermsandConditionsId(int termsandConditionsId){
-        this.termsAndConditionsId = termsandConditionsId;
+    public void setTermsAndConditionsId(int termsAndConditionsId){
+        this.termsAndConditionsId = termsAndConditionsId;
     }
 
-    public int getTermsandConditionsId(){return termsAndConditionsId;}
+    public int getTermsAndConditionsId(){return termsAndConditionsId;}
 
     public String getCandidateName() {
         return candidate == null ? "" : candidate.getFirstName();
@@ -55,7 +55,7 @@ public class AttemptReferenceModel {
     }
 
     public String getDate() {
-        return day == null ? "" : day.getDate();
+        return day == null ? "" : day.getDate().toString();
     }
 
     public String getLocation() {
@@ -102,7 +102,7 @@ public class AttemptReferenceModel {
                 Objects.equals(getStatus(), that.getStatus()) &&
                 Objects.equals(getFinalMark(), that.getFinalMark()) &&
                 Objects.equals(getTimeAllowed(), that.getTimeAllowed()) &&
-                Objects.equals(getTermsandConditionsId(), that.getTermsandConditionsId()) &&
+                Objects.equals(getTermsAndConditionsId(), that.getTermsAndConditionsId()) &&
                 that.canEqual(this);
     }
 
@@ -113,7 +113,7 @@ public class AttemptReferenceModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCandidate(), day, getPaperRef(), getStatus(), getFinalMark(), getTimeAllowed(), getTermsandConditionsId());
+        return Objects.hash(getId(), getCandidate(), day, getPaperRef(), getStatus(), getFinalMark(), getTimeAllowed(), getTermsAndConditionsId());
     }
 
     @Override

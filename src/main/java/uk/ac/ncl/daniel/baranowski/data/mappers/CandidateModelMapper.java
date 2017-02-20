@@ -13,6 +13,7 @@ public class CandidateModelMapper {
                 .setId(candidate.getId())
                 .setName(candidate.getFirstName())
                 .setSurname(candidate.getSurname())
+                .setHasExtraTime(candidate.getHasExtraTime())
                 .build();
     }
 
@@ -21,6 +22,7 @@ public class CandidateModelMapper {
         result.setId(candidate.getId());
         result.setFirstName(candidate.getName());
         result.setSurname(candidate.getSurname());
+        result.setHasExtraTime(candidate.getHasExtraTime());
         return result;
     }
 }

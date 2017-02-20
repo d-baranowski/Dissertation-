@@ -1,6 +1,6 @@
 package tests;
 
-import uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
 import uk.ac.ncl.daniel.baranowski.data.PaperRepo;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
@@ -30,7 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_ATTEMPT_ID;
 import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_START_TIME;
 import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_TIME_ALLOWED;
-import static uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus.STARTED;
+import static uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus.STARTED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -179,7 +179,7 @@ public class AttemptServiceUnitTest {
         ArgumentCaptor<Object> attributeValue = ArgumentCaptor.forClass(Object.class);
         doNothing().when(candidateSession).setAttribute(attributeName.capture(), attributeValue.capture());
 
-        ArgumentCaptor<AttemptStatus> attemptStatus = ArgumentCaptor.forClass(AttemptStatus.class);
+        ArgumentCaptor<ExamStatus> attemptStatus = ArgumentCaptor.forClass(ExamStatus.class);
         ArgumentCaptor<Integer> attemptId = ArgumentCaptor.forClass(Integer.class);
         doNothing().when(attemptRepo).setAttemptStatus(attemptStatus.capture(), attemptId.capture());
 
@@ -194,13 +194,13 @@ public class AttemptServiceUnitTest {
         HttpSession candidateSession = mock(HttpSession.class);
         when(candidateSession.getAttribute(SESSION_ATTEMPT_ID)).thenReturn(1);
 
-        ArgumentCaptor<AttemptStatus> attemptStatus = ArgumentCaptor.forClass(AttemptStatus.class);
+        ArgumentCaptor<ExamStatus> attemptStatus = ArgumentCaptor.forClass(ExamStatus.class);
         ArgumentCaptor<Integer> attemptId = ArgumentCaptor.forClass(Integer.class);
         doNothing().when(attemptRepo).setAttemptStatus(attemptStatus.capture(), attemptId.capture());
 
         service.finishAttempt(candidateSession);
         assertEquals(1, attemptId.getValue().intValue());
-        assertEquals(AttemptStatus.FINISHED.name(), attemptStatus.getValue().name());
+        assertEquals(ExamStatus.FINISHED.name(), attemptStatus.getValue().name());
     }
 
     @Test

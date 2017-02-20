@@ -1,33 +1,16 @@
 package uk.ac.ncl.daniel.baranowski.data;
 
-import uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Candidate;
-import uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper;
-import uk.ac.ncl.daniel.baranowski.models.AssetModel;
-import uk.ac.ncl.daniel.baranowski.models.MarkModel;
-import uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.AnswerDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.CandidateDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.MarkDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.PaperDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.TermsAndConditionsDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.TestDayDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.TestDayEntryDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Answer;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.AnswerAsset;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDay;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDayEntry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
+import uk.ac.ncl.daniel.baranowski.data.access.*;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
-import uk.ac.ncl.daniel.baranowski.models.AnswerModel;
-import uk.ac.ncl.daniel.baranowski.models.AnswersMapModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionModel;
-import uk.ac.ncl.daniel.baranowski.models.TestDayModel;
+import uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper;
+import uk.ac.ncl.daniel.baranowski.models.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +18,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AnswerModelMapper.mapAnswerFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AnswerModelMapper.mapAnswerModelFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AttemptModelMapper.mapAttempt;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AttemptModelMapper.mapAttemptReferenceModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.CandidateModelMapper.mapCandidateFrom;
@@ -78,16 +56,6 @@ public class AttemptRepo {
         this.candidateDao = candidateDao;
         this.paperDao = paperDao;
         this.termsAndConditionsDAO = termsAndConditionsDAO;
-    }
-
-    public int getTermsAndConditionsId(){
-        String id = termsAndConditionsDAO.getLatestId();
-        try{
-            return Integer.parseInt(id);
-        }catch(NumberFormatException nfe){
-            LOGGER.log(Level.WARNING,"Could not parse id " +  nfe);
-        }
-        return 0;
     }
 
     public AttemptReferenceModel getAttemptReferenceModel(int id) throws AccessException {
@@ -175,7 +143,7 @@ public class AttemptRepo {
         return result;
     }
 
-    public List<AttemptReferenceModel> getAttemptReferencesByStatus(AttemptStatus status) throws AccessException{
+    public List<AttemptReferenceModel> getAttemptReferencesByStatus(ExamStatus status) throws AccessException{
         final List<AttemptReferenceModel> result = new ArrayList<>();
 
         try {
@@ -331,7 +299,7 @@ public class AttemptRepo {
         try {
             TestDayEntry attempt = attemptDao.createAndGet(
                     new TestDayEntry.Builder()
-                            .setTestDayId(dayDao.getOrCreate(day.getDate(), day.getLocation()).getId())
+                            .setTestDayId(dayDao.getOrCreate(day).getId())
                             .setPaperId(paper.getId())
                             .setPaperVersionNo(paper.getVersionNo())
                             .setCandidateId(candidate.getId())
@@ -355,7 +323,7 @@ public class AttemptRepo {
         }
     }
 
-    public void setAttemptStatus(AttemptStatus status, int id) throws AccessException {
+    public void setAttemptStatus(ExamStatus status, int id) throws AccessException {
         try {
             attemptDao.updateStatus(status.name(), id);
         } catch (DataAccessException e) {

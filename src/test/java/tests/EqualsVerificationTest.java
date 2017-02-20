@@ -1,36 +1,7 @@
 package tests;
 
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Answer;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.AnswerAsset;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Candidate;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Mark;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Paper;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.PaperVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Question;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersionAsset;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Role;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Section;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDay;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDayEntry;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.User;
-import uk.ac.ncl.daniel.baranowski.models.AnswerModel;
-import uk.ac.ncl.daniel.baranowski.models.AnswersMapModel;
-import uk.ac.ncl.daniel.baranowski.models.AssetModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
-import uk.ac.ncl.daniel.baranowski.models.MarkModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.TestDayModel;
-import uk.ac.ncl.daniel.baranowski.models.UserModel;
-import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
+import uk.ac.ncl.daniel.baranowski.models.*;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
@@ -38,6 +9,9 @@ import org.junit.Test;
 public class EqualsVerificationTest {
     @Test
     public void equalsContractForDataObjects() {
+        EqualsVerifier.forClass(Module.class)
+                .verify();
+
         EqualsVerifier.forClass(Answer.class)
                 .verify();
 
@@ -84,10 +58,16 @@ public class EqualsVerificationTest {
         EqualsVerifier.forClass(User.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .verify();
+
+        EqualsVerifier.forClass(Exam.class)
+                .verify();
     }
 
     @Test
     public void equalsContractForModels() {
+        EqualsVerifier.forClass(ModuleModel.class)
+                .verify();
+
         EqualsVerifier.forClass(AnswerModel.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .verify();

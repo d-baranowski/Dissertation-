@@ -1,7 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.service;
 
 import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
-import uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
 import uk.ac.ncl.daniel.baranowski.data.MarksRepo;
 import uk.ac.ncl.daniel.baranowski.data.UserRepo;
@@ -53,7 +53,7 @@ public class MarkingService {
 
     public void startMarkingAttempt(int attemptId,  HttpSession markerSession) {
         try {
-            attemptRepo.setAttemptStatus(AttemptStatus.MARKING_ONGOING, attemptId);
+            attemptRepo.setAttemptStatus(ExamStatus.MARKING_ONGOING, attemptId);
             attemptRepo.lockAttemptForMarking(attemptId, SessionUtility.getUserId(markerSession));
         } catch (AccessException e) {
             LOGGER.log(Level.SEVERE, "Could not start marking attempt with id: attemptId " + attemptId, e);
@@ -89,7 +89,7 @@ public class MarkingService {
 
     public void finishMarkingTestAttempt(int testAttemptId) {
         try {
-            attemptRepo.setAttemptStatus(AttemptStatus.MARKED, testAttemptId);
+            attemptRepo.setAttemptStatus(ExamStatus.MARKED, testAttemptId);
             final int sumOfMarks = marksRepo.getSumOfMarksForAttempt(testAttemptId);
             attemptRepo.setAttemptFinalMark(testAttemptId, sumOfMarks);
         } catch (AccessException e ) {
@@ -102,7 +102,7 @@ public class MarkingService {
     public void unlockMarking(int testAttemptId) {
         try {
             attemptRepo.unlockAttemptForMarking(testAttemptId);
-            attemptRepo.setAttemptStatus(AttemptStatus.FINISHED, testAttemptId);
+            attemptRepo.setAttemptStatus(ExamStatus.FINISHED, testAttemptId);
         } catch (AccessException e ) {
             final String errorMsg = String.format("Failed to unlock attempt with id %s from marking.", testAttemptId);
             LOGGER.log(Level.SEVERE, errorMsg, e);
@@ -137,7 +137,7 @@ public class MarkingService {
 
     public boolean isInMarking(int testAttemptId) throws Exception {
         try {
-            return attemptRepo.getAttemptStatus(testAttemptId).equals(AttemptStatus.MARKING_ONGOING.name());
+            return attemptRepo.getAttemptStatus(testAttemptId).equals(ExamStatus.MARKING_ONGOING.name());
         } catch (AccessException e) {
             final String errorMsg = String.format("Could't get status for attempt with id %s", testAttemptId);
             LOGGER.log(Level.SEVERE, errorMsg, e);

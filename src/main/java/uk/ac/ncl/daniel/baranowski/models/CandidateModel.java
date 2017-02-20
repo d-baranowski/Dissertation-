@@ -9,6 +9,7 @@ public class CandidateModel {
     private String firstName;
     @Size(min=2, max=50, message="Surname must be between 2 and 60 characters")
     private String surname;
+    private boolean hasExtraTime;
 
     public int getId() {
         return id;
@@ -38,6 +39,10 @@ public class CandidateModel {
         return this.getFirstName() + " " + this.getSurname();
     }
 
+    public void setHasExtraTime(boolean hasExtraTime) {
+        this.hasExtraTime = hasExtraTime;
+    }
+
     public boolean hasId() {
         return id != 0;
     }
@@ -49,16 +54,21 @@ public class CandidateModel {
         CandidateModel that = (CandidateModel) o;
         return getId() == that.getId() &&
                 Objects.equals(getFirstName(), that.getFirstName()) &&
-                Objects.equals(getSurname(), that.getSurname());
+                Objects.equals(getSurname(), that.getSurname()) &&
+                Objects.equals(getHasExtraTime(), that.getHasExtraTime());
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getSurname());
+        return Objects.hash(getId(), getFirstName(), getSurname(), getHasExtraTime());
     }
 
     @Override
     public String toString() {
-        return String.format("CandidateModel [id=%s, firstName=%s, surname=%s]", id, firstName, surname);
+        return String.format("CandidateModel [id=%s, firstName=%s, surname=%s, hasExtraTime=%s]", id, firstName, surname, hasExtraTime);
+    }
+
+    public boolean getHasExtraTime() {
+        return hasExtraTime;
     }
 }

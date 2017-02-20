@@ -1,9 +1,11 @@
 package uk.ac.ncl.daniel.baranowski.service;
 
-import uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
+import uk.ac.ncl.daniel.baranowski.data.ModuleRepo;
 import uk.ac.ncl.daniel.baranowski.data.PaperRepo;
 import uk.ac.ncl.daniel.baranowski.data.UserRepo;
+import uk.ac.ncl.daniel.baranowski.data.access.TermsAndConditionsDAO;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
 import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.SignedAttemptReferenceModel;
@@ -11,7 +13,7 @@ import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
 import uk.ac.ncl.daniel.baranowski.common.Constants;
 import uk.ac.ncl.daniel.baranowski.views.FinishedTestTableViewModel;
-import uk.ac.ncl.daniel.baranowski.views.GenerateTestViewModel;
+import uk.ac.ncl.daniel.baranowski.views.GenerateExamViewModel;
 import uk.ac.ncl.daniel.baranowski.views.MarkedTestTableViewModel;
 import uk.ac.ncl.daniel.baranowski.views.OngoingMarkingTableViewModel;
 import uk.ac.ncl.daniel.baranowski.views.OngoingTestTableViewModel;
@@ -27,25 +29,34 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
+import static uk.ac.ncl.daniel.baranowski.common.SessionUtility.getUserId;
+
 @Service
 public class DashboardService {
     private final PaperRepo paperRepo;
     private final AttemptRepo attemptRepo;
     private final UserRepo userRepo;
+    private final TermsAndConditionsDAO termsDao;
+    private final ModuleRepo moduleRepo;
     private static final Logger LOGGER = Logger.getLogger(DashboardService.class.getName());
 
     @Autowired
-    public DashboardService(PaperRepo paperRepo, AttemptRepo attemptRepo, UserRepo userRepo) {
+    public DashboardService(PaperRepo paperRepo, AttemptRepo attemptRepo, UserRepo userRepo, TermsAndConditionsDAO termsDao, ModuleRepo moduleRepo) {
         this.paperRepo = paperRepo;
         this.attemptRepo = attemptRepo;
         this.userRepo = userRepo;
+        this.termsDao = termsDao;
+        this.moduleRepo = moduleRepo;
     }
 
-    public ModelAndView getGenerateTestViewModel(List<FieldError> errors, SetupExamFormModel target) {
+    public ModelAndView getGenerateTestViewModel(List<FieldError> errors, SetupExamFormModel target, HttpSession loggedInUser) {
         try {
-            return new GenerateTestViewModel(
+            return new GenerateExamViewModel(
                     paperRepo.getPaperReferencesToLatestVersions(),
-                    attemptRepo.getAllCandidates())
+                    attemptRepo.getAllCandidates(),
+                    moduleRepo.getAllReferencesForLeader(getUserId(loggedInUser)))
                     .appendErrors(errors, target)
                     .getModelAndView();
         } catch (AccessException e) {
@@ -62,7 +73,7 @@ public class DashboardService {
 
     public ModelAndView getSettingsFragment(){
         ModelAndView mav = new ModelAndView(Constants.TEMPLATE_DASHBOARD);
-        int currentTermsId = attemptRepo.getTermsAndConditionsId();
+        int currentTermsId = termsDao.getLatestId();
         mav.addObject("currentTerms", attemptRepo.getTermsById(currentTermsId));
         mav.addObject("dashboardContent", "settings");
         return mav;
@@ -70,7 +81,7 @@ public class DashboardService {
 
     public ModelAndView getCurrentTestsFragment() {
         try {
-            List<AttemptReferenceModel> referencesByStatus = attemptRepo.getAttemptReferencesByStatus(AttemptStatus.STARTED);
+            List<AttemptReferenceModel> referencesByStatus = attemptRepo.getAttemptReferencesByStatus(ExamStatus.STARTED);
             return new OngoingTestTableViewModel(referencesByStatus).getMav();
         } catch (AccessException e) {
             String errorMsg = "Failed to get attempt references by status ";
@@ -81,7 +92,7 @@ public class DashboardService {
 
     public ModelAndView getMarkedTestsFragment() {
         try {
-            List<SignedAttemptReferenceModel> referencesByStatus = getSignedAttemptReferenceModels(attemptRepo.getAttemptReferencesByStatus(AttemptStatus.MARKED));
+            List<SignedAttemptReferenceModel> referencesByStatus = getSignedAttemptReferenceModels(attemptRepo.getAttemptReferencesByStatus(ExamStatus.MARKED));
             return new MarkedTestTableViewModel(referencesByStatus).getMav();
         } catch (AccessException e) {
             String errorMsg = "Failed to get attempt references by status ";
@@ -92,7 +103,7 @@ public class DashboardService {
 
     public ModelAndView getUnmarkedTestsFragment() {
         try {
-            List<AttemptReferenceModel> referencesByStatus = attemptRepo.getAttemptReferencesByStatus(AttemptStatus.FINISHED);
+            List<AttemptReferenceModel> referencesByStatus = attemptRepo.getAttemptReferencesByStatus(ExamStatus.FINISHED);
             return new FinishedTestTableViewModel(referencesByStatus).getMav();
         } catch (AccessException e) {
             String errorMsg = "Failed to get attempt references by status ";
@@ -103,7 +114,7 @@ public class DashboardService {
 
     public ModelAndView getOngoingMarkingFragment() {
         try {
-            List<SignedAttemptReferenceModel> referencesByStatus = getSignedAttemptReferenceModels(attemptRepo.getAttemptReferencesByStatus(AttemptStatus.MARKING_ONGOING));
+            List<SignedAttemptReferenceModel> referencesByStatus = getSignedAttemptReferenceModels(attemptRepo.getAttemptReferencesByStatus(ExamStatus.MARKING_ONGOING));
             return new OngoingMarkingTableViewModel(referencesByStatus).getMav();
         } catch (AccessException e) {
             String errorMsg = "Failed to get attempt references by status ";

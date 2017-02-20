@@ -1,7 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
 import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
-import uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.exceptions.SessionAttributeMissingException;
 import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
 import uk.ac.ncl.daniel.baranowski.service.AdminService;
@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_BEGUN_TEST_ATTEMPT;
 import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_TIME_ALLOWED;
 
 /**
@@ -67,7 +66,7 @@ public class AttemptController {
     }
 
     /**
-     * When Candidate he she doesn't have the Role assigned to them so this endpoint only checks if the user is
+     * Since candidate doesn't have any roles assigned to them so this endpoint only checks if the user is
      * authenticated.
      * If they have begun the test attempt they will be redirected to the actual test page.
      * Otherwise they will be presented a start page will Terms and Conditions to accept and a start button.
@@ -80,14 +79,15 @@ public class AttemptController {
     public ModelAndView showStartPage(HttpSession candidateSession, @PathVariable int testAttemptId) {
         ModelAndView result;
         if (!SessionUtility.hasBegunTestAttempt(candidateSession)) {
-            attemptService.validateStatus(testAttemptId, AttemptStatus.CREATED);
+            attemptService.validateStatus(testAttemptId, ExamStatus.CREATED);
             AttemptReferenceModel model = attemptService.getAttemptReferenceModel(testAttemptId);
             final String instructionsText = paperService.getInstructionsText(model.getPaperRef().getId(), model.getPaperRef().getVersionNo());
-            result = new ModelAndView("testAttempt/start").addObject("model", model)
+            result = new ModelAndView("testAttempt/start")
+                    .addObject("model", model)
                     .addObject("timeAllowed",attemptService.getTimeAllowed(model.getId()))
                     .addObject("noNavigation", true)
-                    .addObject("termsAndConditions", attemptService.getTerms())
-                    .addObject("paperInstructions", instructionsText);;
+                    .addObject("termsAndConditions", attemptService.getLatestTermsAndConditions())
+                    .addObject("paperInstructions", instructionsText);
         } else {
             result = new ModelAndView(ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_ONGOING);
         }
@@ -110,9 +110,9 @@ public class AttemptController {
     public ModelAndView ongoingAttempt(HttpSession candidateSession) {
         final int attemptId = (int) candidateSession.getAttribute("attempt");
         try {
-            attemptService.validateStatus(attemptId, AttemptStatus.STARTED);
+            attemptService.validateStatus(attemptId, ExamStatus.STARTED);
         } catch (InvalidAttemptStatusException e) {
-            if (e.getActual().equals(AttemptStatus.FINISHED)) {
+            if (e.getActual().equals(ExamStatus.FINISHED)) {
                 final String errorMsg = String.format(
                         "Candidate %s tried to go back to ongoing attempt page after finishing the attempt. Redirected him back to finish page",
                         SessionUtility.getUserDisplayName(candidateSession));
@@ -143,12 +143,12 @@ public class AttemptController {
     @PreAuthorize("hasAnyAuthority('Marker')")
     public ModelAndView mark(@PathVariable int testAttemptId, HttpSession markerSession) {
         if (markingService.userIsMarking(testAttemptId, SessionUtility.getUserId(markerSession))) {
-            attemptService.validateStatus(testAttemptId, AttemptStatus.MARKING_ONGOING);
+            attemptService.validateStatus(testAttemptId, ExamStatus.MARKING_ONGOING);
         } else try {
             if(markingService.isInMarking(testAttemptId)) {
                 throw new NotLockedForMarkingException("This attempt is currently being marked by a different user.", testAttemptId, null);
             } else {
-                attemptService.validateStatus(testAttemptId, AttemptStatus.FINISHED);
+                attemptService.validateStatus(testAttemptId, ExamStatus.FINISHED);
                 markingService.startMarkingAttempt(testAttemptId,markerSession);
             }
         } catch (Exception e) {
@@ -171,7 +171,7 @@ public class AttemptController {
     @RequestMapping(value = ControllerEndpoints.ATTEMPT_COMPLETE, method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('Candidate')")
     public String testCompleted(HttpSession session) {
-        attemptService.validateStatus(SessionUtility.getCandidatesTestAttemptId(session), AttemptStatus.STARTED);
+        attemptService.validateStatus(SessionUtility.getCandidatesTestAttemptId(session), ExamStatus.STARTED);
         attemptService.finishAttempt(session);
         return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_FINISH_PAGE;
     }
@@ -183,7 +183,7 @@ public class AttemptController {
     @PreAuthorize("isAuthenticated()")
     public String beginAttempt(AttemptReferenceModel model, HttpSession candidateSession) {
         candidateSession.setAttribute(Constants.SESSION_BEGUN_TEST_ATTEMPT, true);
-        attemptService.validateStatus(model.getId(), AttemptStatus.CREATED);
+        attemptService.validateStatus(model.getId(), ExamStatus.CREATED);
         attemptService.beginAttempt(candidateSession, model.getId());
         return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_ONGOING;
     }
@@ -212,7 +212,7 @@ public class AttemptController {
             return bindingResult.getFieldErrors();
         }
 
-        attemptService.validateStatus(formBody.getAttemptId(), AttemptStatus.STARTED);
+        attemptService.validateStatus(formBody.getAttemptId(), ExamStatus.STARTED);
         attemptService.submitAnswer(formBody, SessionUtility.getUserDisplayName(candidateSession));
 
         LOGGER.log(Level.FINE, String.format("Candidate %s just submitted question with id %s and version %s. The answer provided was %s.",
@@ -237,7 +237,7 @@ public class AttemptController {
     public @ResponseBody Object submitMark(@Valid SubmitMarkFormModel formBody,BindingResult bindingResult, HttpSession markerSession) {
         if (!bindingResult.hasErrors()) {
             if (markingService.userIsMarking(formBody.getTestAttemptId(), SessionUtility.getUserId(markerSession))) {
-                attemptService.validateStatus(formBody.getTestAttemptId(), AttemptStatus.MARKING_ONGOING);
+                attemptService.validateStatus(formBody.getTestAttemptId(), ExamStatus.MARKING_ONGOING);
                 markingService.submitMark(formBody, markerSession);
                 return "ok";
             } else {
@@ -258,7 +258,7 @@ public class AttemptController {
     @PreAuthorize("hasAnyAuthority('Marker')")
     @ResponseBody
     public void finishMarking(@PathVariable int testAttemptId, HttpSession markerSession) {
-        attemptService.validateStatus(testAttemptId, AttemptStatus.MARKING_ONGOING);
+        attemptService.validateStatus(testAttemptId, ExamStatus.MARKING_ONGOING);
         markingService.validateUserIsMarking(testAttemptId, SessionUtility.getUserId(markerSession));
         markingService.finishMarkingTestAttempt(testAttemptId);
     }
@@ -273,7 +273,7 @@ public class AttemptController {
     @PreAuthorize("hasAnyAuthority('Marker')")
     @ResponseBody
     public void unlockMarking(@PathVariable int testAttemptId,HttpSession markerSession) {
-        attemptService.validateStatus(testAttemptId, AttemptStatus.MARKING_ONGOING);
+        attemptService.validateStatus(testAttemptId, ExamStatus.MARKING_ONGOING);
         markingService.validateUserIsMarking(testAttemptId, SessionUtility.getUserId(markerSession));
         markingService.unlockMarking(testAttemptId);
     }
@@ -289,7 +289,7 @@ public class AttemptController {
     @PreAuthorize("hasAnyAuthority('Admin')")
     @ResponseBody
     public void forceUnlock(@PathVariable int testAttemptId) {
-        attemptService.validateStatus(testAttemptId, AttemptStatus.MARKING_ONGOING);
+        attemptService.validateStatus(testAttemptId, ExamStatus.MARKING_ONGOING);
         markingService.unlockMarking(testAttemptId);
     }
 
@@ -315,32 +315,5 @@ public class AttemptController {
             LOGGER.log(Level.SEVERE,errorMessage,e);
             throw new InvalidUserStateException("This user cannot get time remaining");
         }
-    }
-
-    /**
-     * IMPORTANT FormBody parameter the PaperReferenceModel will always hold just the id.
-     * It always references the latest version. This means you can't submit a test attempt referencing
-     * an old version of a test paper.
-     *
-     * This method is called when Admin presses Generate Test. If all fields pass validation,
-     * strip roles from the session and redirect the user to the test attempt start page,
-     * otherwise return to Dashboard generate test and display form validation.
-     *
-     * @param formBody
-     * @return
-     */
-    @RequestMapping(value = ControllerEndpoints.ATTEMPT_SETUP_COMPLETE, method = RequestMethod.POST)
-    @PreAuthorize("hasAnyAuthority('Admin')")
-    public String confirmSetup(@Valid SetupExamFormModel formBody, BindingResult bindingResult, HttpSession adminSession, RedirectAttributes redir) {
-        if (bindingResult.hasErrors()) {
-            redir.addFlashAttribute("errors", bindingResult.getFieldErrors());
-            redir.addFlashAttribute("target", bindingResult.getTarget());
-            return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.DASHBOARD_PREFIX + ControllerEndpoints.DASHBOARD_GENERATE_TESTS;
-        }
-
-        AttemptReferenceModel model = adminService.createTestAttemptModelFromSetupInformation(formBody, attemptService.getTerms());
-        adminSession.setAttribute(SESSION_BEGUN_TEST_ATTEMPT, false);
-        adminService.logOutAdmin(adminSession, formBody.getCandidate());
-        return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_START.replace("{testAttemptId}", Integer.toString(model.getId()));
     }
 }

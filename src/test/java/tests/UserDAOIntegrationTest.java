@@ -16,13 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static tests.TestResources.ROLE_ADMIN;
-import static tests.TestResources.ROLE_AUTHOR;
-import static tests.TestResources.ROLE_MARKER;
-import static tests.TestResources.USER_ADMIN;
-import static tests.TestResources.USER_ALL;
-import static tests.TestResources.USER_AUTHOR;
-import static tests.TestResources.USER_MARKER;
+import static tests.TestResources.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DissertationApplication.class)
@@ -39,13 +33,12 @@ public class UserDAOIntegrationTest {
 
     @Test
     public void canGetUserCount() {
-        assertEquals(10, userDao.getCount());
+        assertEquals(8, userDao.getCount());
     }
 
     @Test
     public void canGetAllUsers() {
         List<User> actual = userDao.getAllUsers();
-
         assertTrue(actual.containsAll(Arrays.asList(USER_AUTHOR, USER_ADMIN, USER_MARKER, USER_ALL)));
     }
 
@@ -58,11 +51,11 @@ public class UserDAOIntegrationTest {
 
     @Test
     public void canGetRolesCount() {
-        assertEquals(3, userDao.getRolesCount());
+        assertEquals(4, userDao.getRolesCount());
     }
 
     @Test
     public void canGetAllRoles() {
-        assertTrue(userDao.getAllRoles().containsAll(Arrays.asList(ROLE_ADMIN, ROLE_MARKER, ROLE_AUTHOR)));
+        assertTrue(userDao.getAllRoles().containsAll(Arrays.asList(ROLE_ADMIN, ROLE_MARKER, ROLE_AUTHOR, ROLE_MODULE_LEADER)));
     }
 }

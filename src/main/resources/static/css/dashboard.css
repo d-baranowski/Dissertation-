@@ -9,7 +9,7 @@
 
 .dashboardWindow {
     position: relative;
-	height: auto%;
+	height: auto;
 	min-height: 80%;
 	width: 100%;
 	margin-top: 20px;
@@ -19,6 +19,7 @@
 	background-color: #ffffff;
     border-top: 5px solid #1F84B8;
     border-bottom: 5px solid #1F84B8;
+    padding: 20px;
 }
 
 .minimum-height {

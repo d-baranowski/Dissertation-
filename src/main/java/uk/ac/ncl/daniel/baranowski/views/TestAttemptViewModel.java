@@ -4,7 +4,7 @@ import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
 import org.springframework.web.servlet.ModelAndView;
-import uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 
 public class TestAttemptViewModel {
 	private final AttemptModel testAttemptModel;
@@ -37,10 +37,10 @@ public class TestAttemptViewModel {
 	}
 
 	private boolean isAnswerable() {
-		return testAttemptModel.getStatus().equals(AttemptStatus.STARTED.name());
+		return testAttemptModel.getStatus().equals(ExamStatus.STARTED.name());
 	}
 
 	private boolean isInMarking() {
-		return testAttemptModel.getStatus().equals(AttemptStatus.MARKING_ONGOING.name());
+		return testAttemptModel.getStatus().equals(ExamStatus.MARKING_ONGOING.name());
 	}
 }
