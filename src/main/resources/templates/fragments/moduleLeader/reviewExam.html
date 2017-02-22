@@ -1,0 +1,28 @@
+<div xmlns:th="http://www.w3.org/1999/xhtml">
+    <h1>Review Exam</h1>
+    <b><div th:text="${exam.module.getModuleCode()}"></div></b>
+    <div th:text="${'Exam Date: ' + exam.getTestDayModel().getDate()}"></div>
+    <div th:text="${'Status: ' + exam.getStatus()}"></div>
+    <div th:text="${'Start Time: ' + exam.getTestDayModel().getStartTime()}"></div>
+    <div th:text="${'End Time: ' + exam.getTestDayModel().getEndTime()}"></div>
+    <div>Paper: <a th:href="${paperLink}" th:text="${exam.getPaperRef().getReferenceName()}"></a></div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Exam Login</th>
+                <th>Exam Password</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reference : ${exam.getAttempts()}">
+                <td th:text="${reference.getCandidateName() + ' ' +  reference.getCandidateSurname()}"></td>
+                <td th:text="${reference.getStatus()}"></td>
+                <td th:text="${reference.getLogin()}"></td>
+                <td th:text="${reference.getPassword()}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

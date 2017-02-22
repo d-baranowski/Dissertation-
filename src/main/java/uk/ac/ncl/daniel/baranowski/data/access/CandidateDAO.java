@@ -1,17 +1,16 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Candidate;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 @DataAccessObject
 public class CandidateDAO {
@@ -73,6 +72,7 @@ public class CandidateDAO {
 
 
     private enum ColumnNames {
+        ID("_id"),
         NAME("name"),
         SURNAME("surname"),
         HAS_EXTRA_TIME("hasExtraTime");

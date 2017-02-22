@@ -78,14 +78,14 @@ public class TestAttemptServiceUnit {
         when(mockResult.getTimeAllowed()).thenReturn(60);
 
         doReturn(mockResult).when(attemptRepo).getAttemptReferenceModel(eq(1));
-        assertEquals(60, service.getTimeAllowed(1));
+        assertEquals(60, service.getTimeRemaining(1));
     }
 
     @Test
     public void canGetTimeExpectedWithError() throws AccessException {
         expectedEx.expect(HttpServerErrorException.class);
         doThrow(new AccessException("")).when(attemptRepo).getAttemptReferenceModel(eq(1));
-        service.getTimeAllowed(1);
+        service.getTimeRemaining(1);
     }
 
     @Test

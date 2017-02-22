@@ -16,6 +16,8 @@ public class ControllerEndpoints {
 
     public static final String ATTEMPT_PREFIX = "/test-attempt";
     public static final String EXAM_SETUP_COMPLETE = "/setup/confirm";
+    public static final String ATTEMPT_LOGIN = "{examId}/login";
+    public static final String ATTEMPT_CREATE_SESSION = "/{examId}/create-session";
     public static final String ATTEMPT_START = "/{testAttemptId}/start";
     public static final String ATTEMPT_ONGOING = "/ongoing";
     public static final String ATTEMPT_MARK = "/{testAttemptId}/mark";
@@ -49,6 +51,7 @@ public class ControllerEndpoints {
     public static final String PAPER_TEST_LIBRARY = "/test-library";
 
     private static final Logger LOGGER = Logger.getLogger(ControllerEndpoints.class.getName());
+    public static final String EXAM_REVIEW = "/review-exam/{examId}";
 
     /**
      * Hides implicit public constructor.

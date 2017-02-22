@@ -15,7 +15,7 @@
                 <br/>
                 <p class="infoTexts" th:text="|Name: ${model.candidateName} ${model.candidateSurname} |"></p>
                 <p class="infoTexts" th:text="|Test: ${model.paperRef.referenceName} |"></p>
-                <p class="infoTexts" th:text="|Time: ${timeAllowed} minutes |"></p>
+                <p class="infoTexts" th:text="|Time: ${minutesRemaining} minutes |"></p>
                 <br/>
                 <p class="infoTexts">Terms and Conditions</p>
                 <p th:text="${termsAndConditions}"></p>

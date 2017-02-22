@@ -32,6 +32,7 @@ public class ExamRepo
     private final ModuleRepo moduleRepo;
     private final AttemptRepo attemptRepo;
     private final TermsAndConditionsDAO termsDao;
+    private final PaperRepo paperRepo;
 
     private static final Logger LOGGER = Logger.getLogger(ExamRepo.class.getName());
 
@@ -45,7 +46,8 @@ public class ExamRepo
                     TestDayDAO dayDAO,
                     ModuleRepo moduleRepo,
                     AttemptRepo attemptRepo,
-                    TermsAndConditionsDAO termsDao) {
+                    TermsAndConditionsDAO termsDao,
+                    PaperRepo paperRepo) {
         this.termsDao = termsDao;
         this.attemptRepo = attemptRepo;
         this.examDAO = dao;
@@ -54,10 +56,11 @@ public class ExamRepo
         this.userDao = userDao;
         this.dayDAO = dayDAO;
         this.moduleRepo = moduleRepo;
+        this.paperRepo = paperRepo;
     }
 
 
-    public ExamModel createAndGetExam(int moduleId, PaperReferenceModel paper, int termsAndConditionsId, TestDayModel day) throws AccessException {
+    public int createExam(int moduleId, PaperReferenceModel paper, int termsAndConditionsId, TestDayModel day) throws AccessException {
         TestDayModel dayModel = mapTestDayModelFrom(dayDAO.getOrCreate(day));
         Exam crated = new Exam.Builder()
                 .setModuleId(moduleId)
@@ -69,38 +72,16 @@ public class ExamRepo
                 .build();
 
         int examId = examDAO.create(crated);
-
-        try {
-            String terms = termsDao.getTermsById(termsAndConditionsId);
-            ModuleModel moduleModel = moduleRepo.get(moduleId);
-            return new ExamModel.Builder()
-                    .setTermsAndConditions(terms)
-                    .setId(examId)
-                    .setModule(moduleModel)
-                    .setPaperRef(paper)
-                    .setStatus(ExamStatus.CREATED)
-                    .setTestDayModel(dayModel)
-                    .setAttempts(createAttempForEachCandidate(paper,moduleModel,dayModel,termsAndConditionsId))
-                    .build();
-        } catch (AccessException e) {
-            final String errorMsg = "Failed create exam";
-            LOGGER.log(Level.WARNING, errorMsg, e);
-            throw new AccessException(errorMsg, e);
-        }
+        ModuleModel moduleModel = moduleRepo.get(moduleId);
+        createAttemptForEachCandidate(paper,moduleModel,dayModel, examId);
+        return examId;
     }
 
-    private List<AttemptReferenceModel> createAttempForEachCandidate(PaperReferenceModel paper, ModuleModel moduleModel, TestDayModel dayModel, int terms) throws AccessException {
+    private List<AttemptReferenceModel> createAttemptForEachCandidate(PaperReferenceModel paper, ModuleModel moduleModel, TestDayModel dayModel, int examId) throws AccessException {
         List<AttemptReferenceModel> result = new ArrayList<>();
 
         for (CandidateModel candidateModel:  moduleModel.getStudents()) {
-            int timeAllowed = candidateModel.getHasExtraTime() ? paper.getTimeAllowed() + (int)(paper.getTimeAllowed() * 0.5) : paper.getTimeAllowed();
-            try {
-                result.add(attemptRepo.createAndGet(candidateModel, dayModel, paper, ExamStatus.CREATED.name(), terms, timeAllowed));
-            } catch (AccessException e) {
-                final String errorMsg = "Failed create attempt for candidate: " + candidateModel;
-                LOGGER.log(Level.WARNING, errorMsg, e);
-                throw new AccessException(errorMsg, e);
-            }
+            result.add(attemptRepo.createAndGet(candidateModel, dayModel, paper, ExamStatus.CREATED.name(), examId));
         }
 
         return result;
@@ -145,4 +126,23 @@ public class ExamRepo
         }
     }
 
+    public ExamModel getExam(int examId) throws AccessException  {
+        try {
+            Exam exam = examDAO.read(examId);
+
+            return new ExamModel.Builder()
+                    .setAttempts(attemptRepo.getAllAttemptReferencesForExam(examId))
+                    .setTermsAndConditions(termsDao.getTermsById(exam.getTermsAndConditionsId()))
+                    .setModule(moduleRepo.get(exam.getModuleId()))
+                    .setStatus(exam.getStatus())
+                    .setPaperRef(paperRepo.getPaperReference(exam.getPaperId(), exam.getPaperVersionNo()))
+                    .setId(examId)
+                    .setTestDayModel(mapTestDayModelFrom(dayDAO.read(exam.getTestDayId())))
+                    .build();
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to get exam with id: " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg, e);
+        }
+    }
 }

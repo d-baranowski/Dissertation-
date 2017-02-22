@@ -1,26 +1,11 @@
 package tests;
 
 
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
-import uk.ac.ncl.daniel.baranowski.models.AnswerModel;
-import uk.ac.ncl.daniel.baranowski.models.AnswersMapModel;
-import uk.ac.ncl.daniel.baranowski.models.AssetModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
-import uk.ac.ncl.daniel.baranowski.models.MarkModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.TestDayModel;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import uk.ac.ncl.daniel.baranowski.models.*;
+
+import java.util.*;
 
 class TestResources {
     /**
@@ -935,8 +920,10 @@ class TestResources {
                 .setPaperId(1)
                 .setPaperVersionNo(1)
                 .setTermsAndConditionsId(1)
-                .setStatus("Finished")
+                .setStatus(ExamStatus.FINISHED)
                 .build();
+
+
 
     }
 

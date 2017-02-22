@@ -69,6 +69,7 @@ public class ModuleDAO {
     }
 
     public enum ColumnNames {
+        ID("_id"),
         REFERENCE_NAME("referenceName"),
         MODULE_CODE("moduleCode");
 

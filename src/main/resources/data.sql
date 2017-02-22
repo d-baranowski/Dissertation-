@@ -41,12 +41,7 @@ INSERT INTO Question(language, referenceName, questionTypeId, difficulty) VALUES
 INSERT INTO Question(language, referenceName, questionTypeId, difficulty) VALUES ('Java', 'Explain appearance of a frame', 'Essay',5 );
 INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale) VALUES (1, 1,'You have been asked to develop a function called IsEven that return true if a given integer parameter is even, or false if odd. Write this function below.', 5);
 INSERT INTO QuestionVersionEntry VALUES (1,1,1,1,1);
-INSERT INTO Candidate(name,surname, hasExtraTime) VALUES ('Agent', 'Smith', FALSE );
-INSERT INTO Candidate(name,surname, hasExtraTime) VALUES ('John', 'Brown', FALSE );
-INSERT INTO TestDay(date,location,startTime,endTime) VALUES ('2014/01/02', 'Leeds Office',1485000000,1485000900);
-INSERT INTO TestDayEntry(testDayId, testPaperVersionNo, testPaperId, candidateId, termsAndConditionsId, timeAllowed) VALUES (1,1,1,1,0,60);
 
-INSERT INTO Answer(questionVersionNumber,questionId, testDayEntryId, text) VALUES (1,1,1,'Lorem ipsium dolor ...');
 INSERT INTO TestPaperSectionVersionEntry VALUES (1,1,1,1,1);
 
 INSERT INTO TestPaper(referenceName, timeAllowed) VALUES ('Interview Test-Graduate (C#)', 60);
@@ -140,8 +135,6 @@ INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Test st
 INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (31, 1,'What tests can be executed against a web site that has static pages?  For example, spell checking text or verifying image downloads.', 5, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque nulla est, mattis vel felis et, malesuada feugiat est. Mauris malesuada ex erat, ut consectetur felis iaculis interdum. Vivamus tempor semper turpis at maximus. Phasellus eu egestas enim, non ornare eros. Vivamus auctor rhoncus eros vel sollicitudin. Fusce vel magna id lectus tristique euismod. Curabitur facilisis cursus posuere. Aenean congue ligula est, vitae pellentesque massa rutrum ut. Donec nec facilisis magna, in viverra eros. Praesent enim sapien, consectetur congue risus in, condimentum elementum erat. Nam et ullamcorper ante. Duis lobortis volutpat scelerisque.');
 INSERT INTO QuestionVersionEntry VALUES (1,6,1,31,2);
 
-INSERT INTO TestDayEntry(testDayId, testPaperVersionNo, testPaperId, candidateId, termsAndConditionsId, timeAllowed) VALUES (1,1,2,1,0,60);
-
 INSERT INTO TermsAndConditions(termsAndConditions) VALUES ('Terms sample');
 
 INSERT INTO TestPaper(referenceName, timeAllowed) VALUES ('Sample Multiple Choice Auto-Marking Test', 20);
@@ -228,6 +221,7 @@ INSERT INTO UserRole VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','Author');
 INSERT INTO UserRole VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','ModuleLeader');
 INSERT INTO ModuleLeader(userId, moduleId) VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a', 5);
 
+INSERT INTO TestDay(date,location,startTime,endTime) VALUES ('2014/01/02', 'Leeds Office','12:00','14:30');
 INSERT INTO Exam(`testPaperVersionNo`,
                  `testPaperId`,
                  `status`,

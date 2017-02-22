@@ -46,7 +46,7 @@ public class TestDayEntryDAOIntegrationTest {
                 .setPaperVersionNo(1)
                 .setPaperId(1)
                 .setCandidateId(2)
-                .setTimeAllowed(60)
+                .setMinutesRemaining(60)
                 .setTermsAndConditions(0)
                 .build();
 
@@ -69,7 +69,7 @@ public class TestDayEntryDAOIntegrationTest {
                 .setPaperId(1)
                 .setTestDayId(1)
                 .setTermsAndConditions(0)
-                .setTimeAllowed(60)
+                .setMinutesRemaining(60)
                 .build();
 
         assertEquals(expected, dao.read(1));

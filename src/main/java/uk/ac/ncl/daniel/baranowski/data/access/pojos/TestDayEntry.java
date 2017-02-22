@@ -7,45 +7,39 @@ import java.util.Objects;
  */
 public final class TestDayEntry {
     private final int id;
-    private final int testDayId;
-    private final int paperVersionNo;
-    private final int paperId;
     private final int candidateId;
     private final String status;
     private final Integer finalMark;
-    private final int termsAndConditionsId;
-    private final Integer timeAllowed;
+    private final Integer examId;
+    private final String password;
+    private final String login;
+    private final String markingLock;
 
     private TestDayEntry(Builder builder) {
         id = builder.id;
-        testDayId = builder.testDayId;
-        paperVersionNo = builder.paperVersionNo;
         candidateId = builder.candidateId;
-        paperId = builder.paperId;
         status = builder.status;
         finalMark = builder.finalMark;
-        termsAndConditionsId = builder.termsAndConditionsId;
-        timeAllowed = builder.timeAllowed;
+        examId = builder.examId;
+        markingLock = builder.markingLock;
+        password = builder.password;
+        login = builder.login;
+    }
+
+    public String getMarkingLock() {
+        return markingLock;
+    }
+
+    public int getExamId() {
+        return examId;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getTestDayId() {
-        return testDayId;
-    }
-
-    public int getPaperVersionNo() {
-        return paperVersionNo;
-    }
-
     public int getCandidateId() {
         return candidateId;
-    }
-
-    public int getPaperId() {
-        return paperId;
     }
 
     public String getStatus() {
@@ -56,11 +50,8 @@ public final class TestDayEntry {
         return finalMark;
     }
 
-    public int getTermsAndConditionsId(){
-        return termsAndConditionsId;
-    }
-        public Integer getTimeAllowed() {
-        return timeAllowed;
+    public String getLogin() {
+        return login;
     }
 
     @Override
@@ -69,34 +60,54 @@ public final class TestDayEntry {
         if (o == null || getClass() != o.getClass()) return false; //NOSONAR
         TestDayEntry that = (TestDayEntry) o;
         return getId() == that.getId() && //NOSONAR
-                getTestDayId() == that.getTestDayId() &&
-                getPaperVersionNo() == that.getPaperVersionNo() &&
-                getPaperId() == that.getPaperId() &&
                 getCandidateId() == that.getCandidateId() &&
-                getTermsAndConditionsId() == that.getTermsAndConditionsId() &&
-                Objects.equals(getTimeAllowed(), that.getTimeAllowed()) &&
                 Objects.equals(status, that.status) &&
-                Objects.equals(finalMark, that.getFinalMark());
+                Objects.equals(finalMark, that.getFinalMark()) &&
+                Objects.equals(password, that.getPassword()) &&
+                Objects.equals(login, that.getLogin()) &&
+        Objects.equals(examId, that.getExamId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTestDayId(), getPaperVersionNo(), getPaperId(), getCandidateId(), getStatus(), getFinalMark(), getTermsAndConditionsId(), getTimeAllowed());
+        return Objects.hash(getId(), getCandidateId(), getStatus(), getFinalMark(), getExamId(), getLogin(), getPassword());
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TestDayEntry{");
+        sb.append("id=").append(id);
+        sb.append(", candidateId=").append(candidateId);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", finalMark=").append(finalMark);
+        sb.append(", examId=").append(examId);
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", login='").append(login).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public static class Builder {
-        private int paperId;
         private int id;
-        private int testDayId;
-        private int paperVersionNo;
         private int candidateId;
         private String status;
         private Integer finalMark;
-        private int termsAndConditionsId;
-        private Integer timeAllowed;
+        private int examId;
+        private String password;
+        private String login;
+        private String markingLock;
 
-        public Builder setTimeAllowed(Integer timeAllowed) {
-            this.timeAllowed = timeAllowed;
+        public Builder setMarkingLock(String markingLock) {
+            this.markingLock = markingLock;
+            return this;
+        }
+
+        public Builder setLogin(String login) {
+            this.login = login;
             return this;
         }
 
@@ -105,28 +116,8 @@ public final class TestDayEntry {
             return this;
         }
 
-        public Builder setTestDayId(int testDayId) {
-            this.testDayId = testDayId;
-            return this;
-        }
-
-        public Builder setPaperVersionNo(int paperVersionNo) {
-            this.paperVersionNo = paperVersionNo;
-            return this;
-        }
-
         public Builder setCandidateId(int candidateId) {
             this.candidateId = candidateId;
-            return this;
-        }
-
-        public Builder setId(int id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder setPaperId(int paperId) {
-            this.paperId = paperId;
             return this;
         }
 
@@ -135,13 +126,23 @@ public final class TestDayEntry {
             return this;
         }
 
-        public Builder setTermsAndConditions(int termsAndConditionsId){
-            this.termsAndConditionsId = termsAndConditionsId;
+        public Builder setId(int id) {
+            this.id = id;
             return this;
         }
 
         public TestDayEntry build() {
             return new TestDayEntry(this);
+        }
+
+        public Builder setExamId(int examId) {
+            this.examId = examId;
+            return this;
+        }
+
+        public Builder setPassword(String password) {
+            this.password = password;
+            return this;
         }
     }
 }

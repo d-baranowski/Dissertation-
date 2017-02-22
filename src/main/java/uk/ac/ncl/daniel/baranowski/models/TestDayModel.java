@@ -17,6 +17,7 @@ public class TestDayModel {
     private LocalTime startTime;
 
     private LocalTime endTime;
+    private LocalTime endTimeWithExtraTime;
 
     public int getId() {
         return id;
@@ -28,6 +29,9 @@ public class TestDayModel {
 
     public LocalTime getEndTime() {
         return endTime;
+    }
+    public LocalTime getEndTimeWithExtraTime() {
+        return endTimeWithExtraTime;
     }
 
     public String getDate() {
@@ -53,6 +57,11 @@ public class TestDayModel {
 
     public TestDayModel setEndTime(LocalTime endTime) {
         this.endTime = endTime;
+        return this;
+    }
+
+    public TestDayModel setEndTimeWithExtraTime(LocalTime endTimeWithExtraTime) {
+        this.endTimeWithExtraTime = endTimeWithExtraTime;
         return this;
     }
 

@@ -161,6 +161,10 @@ public class PaperRepo {
         }
     }
 
+    public PaperReferenceModel getLatestPaperReference(int paperId) throws AccessException {
+        return getPaperReference(paperId,getLatestVersionNo(paperId));
+    }
+
     public List<PaperReferenceModel> getAllPaperReferences() throws AccessException {
         try {
             List<PaperReferenceModel> result = new ArrayList<>();

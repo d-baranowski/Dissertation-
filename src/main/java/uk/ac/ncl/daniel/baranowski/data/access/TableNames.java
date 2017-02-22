@@ -24,7 +24,8 @@ enum TableNames {
     MODULE("Module"),
     MODULE_LEADER("ModuleLeader"),
     EXAM("Exam"),
-    CANDIDATE_MODULE("CandidateModule");
+    CANDIDATE_MODULE("CandidateModule"),
+    CANDIDATE_CREDENTIALS("ExamCandidateCredentials");
 
 
     private final String tableName;

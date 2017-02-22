@@ -10,7 +10,7 @@ public class ExamModel {
     private final List<AttemptReferenceModel> attempts;
     private final PaperReferenceModel paperRef;
     private final ExamStatus status;
-    private final TestDayModel testDayModel;
+    private final TestDayModel day;
     private final ModuleModel module;
     private final String termsAndConditions;
 
@@ -20,7 +20,7 @@ public class ExamModel {
         this.attempts = builder.attempts;
         this.paperRef = builder.paperRef;
         this.status = builder.status;
-        this.testDayModel = builder.testDayModel;
+        this.day = builder.testDayModel;
         this.termsAndConditions = builder.termsAndConditions;
     }
 
@@ -49,7 +49,7 @@ public class ExamModel {
     }
 
     public TestDayModel getTestDayModel() {
-        return testDayModel;
+        return day;
     }
 
     public static class Builder {
@@ -86,7 +86,7 @@ public class ExamModel {
             return this;
         }
 
-        public Builder addAttemp(AttemptReferenceModel attempt) {
+        public Builder addAttempt(AttemptReferenceModel attempt) {
             if (this.attempts != null) {
                 this.attempts.add(attempt);
             } else {

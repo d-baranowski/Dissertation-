@@ -1,51 +1,46 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
-import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
-import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
-import uk.ac.ncl.daniel.baranowski.exceptions.SessionAttributeMissingException;
-import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
-import uk.ac.ncl.daniel.baranowski.service.AdminService;
-import uk.ac.ncl.daniel.baranowski.common.Constants;
-import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
-import uk.ac.ncl.daniel.baranowski.exceptions.AttemptMissingException;
-import uk.ac.ncl.daniel.baranowski.exceptions.InvalidAttemptStatusException;
-import uk.ac.ncl.daniel.baranowski.exceptions.InvalidUserStateException;
-import uk.ac.ncl.daniel.baranowski.exceptions.NotLockedForMarkingException;
-import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
-import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
-import uk.ac.ncl.daniel.baranowski.service.AttemptService;
-import uk.ac.ncl.daniel.baranowski.service.MarkingService;
-import uk.ac.ncl.daniel.baranowski.service.PaperService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.InvalidIsolationLevelException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ncl.daniel.baranowski.common.Constants;
+import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
+import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
+import uk.ac.ncl.daniel.baranowski.exceptions.*;
+import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
+import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
+import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
+import uk.ac.ncl.daniel.baranowski.service.AttemptService;
+import uk.ac.ncl.daniel.baranowski.service.ExamService;
+import uk.ac.ncl.daniel.baranowski.service.MarkingService;
+import uk.ac.ncl.daniel.baranowski.service.PaperService;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_TIME_ALLOWED;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.*;
+import static uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus.STARTED;
 
 /**
  * This controller provides endpoints linked to the Test Attempt and actions that user can perform on it,
  * Like Taking the Test, and Marking the test.
  */
 @Controller
-@RequestMapping(ControllerEndpoints.ATTEMPT_PREFIX)
+@RequestMapping(ATTEMPT_PREFIX)
 public class AttemptController {
     private final AttemptService attemptService;
     private final MarkingService markingService;
-    private final AdminService adminService;
     private final PaperService paperService;
+    private final ExamService examService;
     private static final Logger LOGGER = Logger.getLogger(AttemptController.class.getName());
     private static final double GRACE_PERIOD = -0.3;
 
@@ -54,15 +49,14 @@ public class AttemptController {
      * Controller constructor has to be public.
      * Parameters will be automatically injected due to use of @Autowired.
      * @param attemptService NOSONAR
-     * @param adminService NOSONAR
      * @param markingService NOSONAR
      */
     @Autowired
-    public AttemptController(AttemptService attemptService, AdminService adminService, MarkingService markingService, PaperService paperService) {
+    public AttemptController(AttemptService attemptService, MarkingService markingService, PaperService paperService, ExamService examService) {
         this.attemptService = attemptService;
         this.markingService = markingService;
-        this.adminService = adminService;
         this.paperService = paperService;
+        this.examService = examService;
     }
 
     /**
@@ -84,12 +78,12 @@ public class AttemptController {
             final String instructionsText = paperService.getInstructionsText(model.getPaperRef().getId(), model.getPaperRef().getVersionNo());
             result = new ModelAndView("testAttempt/start")
                     .addObject("model", model)
-                    .addObject("timeAllowed",attemptService.getTimeAllowed(model.getId()))
+                    .addObject("timeAllowed",attemptService.getTimeRemaining(model.getId()))
                     .addObject("noNavigation", true)
                     .addObject("termsAndConditions", attemptService.getLatestTermsAndConditions())
                     .addObject("paperInstructions", instructionsText);
         } else {
-            result = new ModelAndView(ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_ONGOING);
+            result = new ModelAndView(REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_ONGOING);
         }
 
         return result;
@@ -105,19 +99,19 @@ public class AttemptController {
      * @param candidateSession
      * @return
      */
-    @RequestMapping(ControllerEndpoints.ATTEMPT_ONGOING)
+    @RequestMapping(ATTEMPT_ONGOING)
     @PreAuthorize("hasAnyAuthority('Candidate')")
     public ModelAndView ongoingAttempt(HttpSession candidateSession) {
         final int attemptId = (int) candidateSession.getAttribute("attempt");
         try {
-            attemptService.validateStatus(attemptId, ExamStatus.STARTED);
+            attemptService.validateStatus(attemptId, STARTED);
         } catch (InvalidAttemptStatusException e) {
             if (e.getActual().equals(ExamStatus.FINISHED)) {
                 final String errorMsg = String.format(
                         "Candidate %s tried to go back to ongoing attempt page after finishing the attempt. Redirected him back to finish page",
                         SessionUtility.getUserDisplayName(candidateSession));
                 LOGGER.log(Level.INFO,errorMsg, e);
-                return new ModelAndView(ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_FINISH_PAGE);
+                return new ModelAndView(REDIRECT_PREFIX + ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_FINISH_PAGE);
             }
 
             throw e;
@@ -168,24 +162,51 @@ public class AttemptController {
      * @param session
      * @return
      */
-    @RequestMapping(value = ControllerEndpoints.ATTEMPT_COMPLETE, method = RequestMethod.POST)
+    @RequestMapping(value = ATTEMPT_COMPLETE, method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('Candidate')")
     public String testCompleted(HttpSession session) {
-        attemptService.validateStatus(SessionUtility.getCandidatesTestAttemptId(session), ExamStatus.STARTED);
+        attemptService.validateStatus(SessionUtility.getCandidatesTestAttemptId(session), STARTED);
         attemptService.finishAttempt(session);
-        return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_FINISH_PAGE;
+        return REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_FINISH_PAGE;
     }
+
+    @RequestMapping(ATTEMPT_LOGIN)
+    @PreAuthorize("isAnonymous()")
+    public ModelAndView loginToAttempt(@PathVariable int examId) {
+        ModelAndView mav = new ModelAndView(Constants.TEMPLATE_LOGIN);
+        mav.addObject("ENDPOINT", ATTEMPT_PREFIX + ATTEMPT_CREATE_SESSION.replaceFirst("\\{examId}", examId + ""));
+        return mav;
+    }
+
+    @RequestMapping(value = ControllerEndpoints.ATTEMPT_CREATE_SESSION, method = RequestMethod.POST)
+    @PreAuthorize("isAnonymous()")
+    public String createSession(@RequestParam(value = "usernameField", required = true, defaultValue = "") String username,
+                                @RequestParam(value = "passwordField", required = true, defaultValue = "") String password,
+                                @PathVariable int examId,
+                                HttpSession session, RedirectAttributes redirectAttributes) {
+
+        int attemptId = attemptService.canLoginToAttempt(examId,username,password);
+
+        if (attemptId == 0) {
+            session.invalidate();
+            redirectAttributes.addFlashAttribute(Constants.FLASH_ERROR, "Wrong Credentials, Try Again");
+            return REDIRECT_PREFIX + ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_LOGIN.replaceFirst("\\{examId}", examId + "");
+        } else {
+            examService.validateStatus(attemptService.getExamId(attemptId), STARTED);
+            attemptService.setupSessionToBeginAttempt(session,attemptId);
+            return REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_BEGIN;
+        }
+    }
+
 
     /**
      * IMPORTANT Model parameter will only hold id.
      */
-    @RequestMapping(value = ControllerEndpoints.ATTEMPT_BEGIN, method = RequestMethod.POST)
+    @RequestMapping(value = ATTEMPT_BEGIN, method = RequestMethod.POST)
     @PreAuthorize("isAuthenticated()")
     public String beginAttempt(AttemptReferenceModel model, HttpSession candidateSession) {
-        candidateSession.setAttribute(Constants.SESSION_BEGUN_TEST_ATTEMPT, true);
-        attemptService.validateStatus(model.getId(), ExamStatus.CREATED);
-        attemptService.beginAttempt(candidateSession, model.getId());
-        return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_ONGOING;
+        attemptService.setupSessionToBeginAttempt(candidateSession,model.getId());
+        return REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_ONGOING;
     }
 
     /**
@@ -199,7 +220,7 @@ public class AttemptController {
      * @param candidateSession
      * @return
      */
-    @RequestMapping(value = ControllerEndpoints.ATTEMPT_QUESTION_SUBMIT, method = RequestMethod.POST)
+    @RequestMapping(value = ATTEMPT_QUESTION_SUBMIT, method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('Candidate')")
     public @ResponseBody Object submitQuestion(@Valid SubmitAnswerFormModel formBody, BindingResult bindingResult, HttpSession candidateSession) {
         double timeRemaining = Double.parseDouble(getTimeRemaining(candidateSession));
@@ -212,7 +233,7 @@ public class AttemptController {
             return bindingResult.getFieldErrors();
         }
 
-        attemptService.validateStatus(formBody.getAttemptId(), ExamStatus.STARTED);
+        attemptService.validateStatus(formBody.getAttemptId(), STARTED);
         attemptService.submitAnswer(formBody, SessionUtility.getUserDisplayName(candidateSession));
 
         LOGGER.log(Level.FINE, String.format("Candidate %s just submitted question with id %s and version %s. The answer provided was %s.",
@@ -232,7 +253,7 @@ public class AttemptController {
      * @param markerSession
      * @return
      */
-    @RequestMapping(value= ControllerEndpoints.ATTEMPT_MARK_SUBMIT, method = RequestMethod.POST)
+    @RequestMapping(value= ATTEMPT_MARK_SUBMIT, method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('Marker')")
     public @ResponseBody Object submitMark(@Valid SubmitMarkFormModel formBody,BindingResult bindingResult, HttpSession markerSession) {
         if (!bindingResult.hasErrors()) {
@@ -254,7 +275,7 @@ public class AttemptController {
      * @param markerSession
      * @return
      */
-    @RequestMapping(value= ControllerEndpoints.ATTEMPT_FINISH_MARKING, method = RequestMethod.POST)
+    @RequestMapping(value= ATTEMPT_FINISH_MARKING, method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('Marker')")
     @ResponseBody
     public void finishMarking(@PathVariable int testAttemptId, HttpSession markerSession) {
@@ -269,7 +290,7 @@ public class AttemptController {
      * @param testAttemptId
      * @param markerSession
      */
-    @RequestMapping(value = ControllerEndpoints.ATTEMPT_UNLOCK_MARKING, method = RequestMethod.POST)
+    @RequestMapping(value = ATTEMPT_UNLOCK_MARKING, method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('Marker')")
     @ResponseBody
     public void unlockMarking(@PathVariable int testAttemptId,HttpSession markerSession) {
@@ -285,7 +306,7 @@ public class AttemptController {
      * @param testAttemptId
      *
      */
-    @RequestMapping(value = ControllerEndpoints.ATTEMPT_FORCE_UNLOCK_MARKING, method = RequestMethod.POST)
+    @RequestMapping(value = ATTEMPT_FORCE_UNLOCK_MARKING, method = RequestMethod.POST)
     @PreAuthorize("hasAnyAuthority('Admin')")
     @ResponseBody
     public void forceUnlock(@PathVariable int testAttemptId) {
@@ -299,7 +320,7 @@ public class AttemptController {
      * @param candidateSession
      * @return
      */
-    @RequestMapping(value = ControllerEndpoints.ATTEMPT_TIME_REMAINING, method = RequestMethod.GET)
+    @RequestMapping(value = ATTEMPT_TIME_REMAINING, method = RequestMethod.GET)
     @PreAuthorize("hasAnyAuthority('Candidate')")
     @ResponseBody
     private String getTimeRemaining(HttpSession candidateSession) {

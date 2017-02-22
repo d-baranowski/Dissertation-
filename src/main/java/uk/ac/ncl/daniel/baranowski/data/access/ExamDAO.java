@@ -64,6 +64,7 @@ public class ExamDAO {
     }
 
     public enum ColumnNames {
+        ID("_id"),
         TEST_PAPER_VERSION_NO("testPaperVersionNo"),
         TEST_PAPER_ID("testPaperId"),
         TEST_DAY_ID("testDayId"),
