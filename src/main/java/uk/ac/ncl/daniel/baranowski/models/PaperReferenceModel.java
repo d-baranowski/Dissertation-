@@ -1,12 +1,27 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class PaperReferenceModel {
     private int id;
     private int versionNo;
+    @NotNull(message = "Please specify the reference name for this paper.")
+    @Size(min = 5, max = 100, message = "Reference name needs to be between 5 and 100 characters long. ")
     private String referenceName;
+    @Min(value = 1, message = "Minimum time scale is 1")
+    @Max(value = 100, message = "Maximum time scale is 99")
     private Integer timeAllowed;
+
+    public PaperReferenceModel() {
+        id = 0;
+        versionNo = 0;
+        referenceName = "";
+        timeAllowed = 5;
+    }
 
     public int getId() {
         return id;

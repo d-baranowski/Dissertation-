@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
 import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddQuestionToSectionException;
+import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddSectionToPaperException;
 import uk.ac.ncl.daniel.baranowski.exceptions.FailedToMoveQuestionWithinSectionException;
 import uk.ac.ncl.daniel.baranowski.exceptions.FailedToRemoveQuestionFromSectionException;
 import uk.ac.ncl.daniel.baranowski.models.api.AddQuestionToSection;
+import uk.ac.ncl.daniel.baranowski.models.api.AddSectionToPaper;
 import uk.ac.ncl.daniel.baranowski.models.api.MoveQuestionInSection;
 import uk.ac.ncl.daniel.baranowski.models.api.RemoveQuestionFromSection;
 import uk.ac.ncl.daniel.baranowski.service.PaperService;
@@ -48,6 +50,24 @@ public class PaperAPIController {
 
             return ResponseEntity.ok(questionNumber);
         } catch (FailedToAddQuestionToSectionException e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @RequestMapping(value = PAPER_ADD_SECTION_TO_PAPER, method = RequestMethod.POST)
+    public ResponseEntity addSectionToPaper(@Valid @RequestBody AddSectionToPaper q, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        try {
+            int questionNumber = service.addSectionToPaper(q);
+
+            if (questionNumber == -1) {
+                return ResponseEntity.badRequest().body(new FailedToAddSectionToPaperException("Section already added"));
+            }
+
+            return ResponseEntity.ok(questionNumber);
+        } catch (FailedToAddSectionToPaperException e) {
             return ResponseEntity.badRequest().body(e);
         }
     }

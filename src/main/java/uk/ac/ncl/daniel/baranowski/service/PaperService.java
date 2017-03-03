@@ -15,6 +15,7 @@ import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
 import uk.ac.ncl.daniel.baranowski.models.SectionModel;
 import uk.ac.ncl.daniel.baranowski.models.api.AddQuestionToSection;
+import uk.ac.ncl.daniel.baranowski.models.api.AddSectionToPaper;
 import uk.ac.ncl.daniel.baranowski.models.api.MoveQuestionInSection;
 import uk.ac.ncl.daniel.baranowski.models.api.RemoveQuestionFromSection;
 import uk.ac.ncl.daniel.baranowski.views.TestLibraryViewModel;
@@ -112,6 +113,33 @@ public class PaperService {
         return mav;
     }
 
+    public ModelAndView getPaperEditor(int paperId, int paperVersion) {
+        ModelAndView mav = new ModelAndView("paperEditor");
+        try {
+            mav.addObject("sections",repo.getSectionReferencesToLatestVersions());
+        } catch (AccessException e) {
+            final String errorMsg = "Failed to section references.";
+            LOGGER.log(SEVERE, errorMsg, e);
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        mav.addObject("ENDPOINT", PAPER_PREFIX + PAPER_CREATE_PAPER);
+        mav.addObject("UPDATE_ENDPOINT", PAPER_PREFIX + PAPER_UPDATE_PAPER);
+        mav.addObject("ADD_SECTION_ENDPOINT", PAPER_PREFIX + PAPER_ADD_SECTION_TO_PAPER);
+        if (paperId != 0 && paperVersion != 0) {
+            try {
+                mav.addObject("formObject", repo.getPaper(paperId, paperVersion));
+            } catch (AccessException e) {
+                final String errorMsg = "Failed getting specified paper. Adding an empty paper instead.";
+                LOGGER.log(SEVERE, errorMsg, e);
+                mav.addObject("formObject", new PaperModel());
+            }
+        } else {
+            mav.addObject("formObject", new PaperModel());
+        }
+
+        return mav;
+    }
+
     public ModelAndView getSectionQuestionsTableBody(int sectionId, int sectionVersion) {
         ModelAndView mav = new ModelAndView("fragments/author/sectionEditor/sectionQuestionsTableBody");
         mav.addObject("sectionQuestionsTableList", repo.getSectionQuestions(sectionId,sectionVersion));
@@ -174,6 +202,18 @@ public class PaperService {
         }
     }
 
+    public int updatePaper(PaperModel model) {
+        try {
+            String authorId = repo.getAuthorId(model.getId(), model.getVersionNo());
+            model.setInstructionsText(sanitizeHTML(model.getInstructionsText()));
+            return repo.updatePaper(model, authorId);
+        } catch (AccessException e) {
+            final String errorMsg = "Failed to update section" + model;
+            LOGGER.log(SEVERE, errorMsg, e);
+            return -1;
+        }
+    }
+
     public int addQuestionToSection(AddQuestionToSection q) throws FailedToAddQuestionToSectionException {
         try {
             return repo.addQuestionToSection(q.getQuestionId(), q.getQuestionVersion(), q.getSectionId(), q.getSectionVersion());
@@ -181,6 +221,16 @@ public class PaperService {
             final String errorMsg = "Add question to section";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToAddQuestionToSectionException(errorMsg);
+        }
+    }
+
+    public int addSectionToPaper(AddSectionToPaper q) throws FailedToAddSectionToPaperException {
+        try {
+            return repo.addSectionToSection(q.getPaperId(), q.getPaperVersion(), q.getSectionId(), q.getSectionVersion());
+        }  catch (AccessException e) {
+            final String errorMsg = "Failed to add Section to Paper " ;
+            LOGGER.log(SEVERE, errorMsg + q, e);
+            throw new FailedToAddSectionToPaperException(errorMsg);
         }
     }
 
@@ -225,6 +275,17 @@ public class PaperService {
             final String errorMsg = "Failed to move question within section ";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToMoveQuestionWithinSectionException(errorMsg);
+        }
+    }
+
+    public int createPaper(PaperModel model, String authorId) {
+        try {
+            model.setInstructionsText(sanitizeHTML(model.getInstructionsText()));
+            return repo.createPaper(model, authorId);
+        } catch (AccessException e) {
+            final String errorMsg = "Failed to create paper. " + model;
+            LOGGER.log(SEVERE, errorMsg, e);
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, errorMsg);
         }
     }
 

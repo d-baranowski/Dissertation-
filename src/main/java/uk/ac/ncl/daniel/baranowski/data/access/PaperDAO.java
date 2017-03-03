@@ -1,14 +1,18 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Paper;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import static uk.ac.ncl.daniel.baranowski.data.access.PaperDAO.ColumnNames.*;
 
 @DataAccessObject
 public class PaperDAO {
@@ -19,8 +23,22 @@ public class PaperDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void create(Paper paper) {
-        //NOSONAR TODO BEYOND MVP
+    public int create(Paper paper) {
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("referenceName", paper.getName());
+        args.put("timeAllowed", paper.getTimeAllowed());
+
+
+        Number key = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(TableNames.TEST_PAPER.toString())
+                .usingColumns(
+                        REFERENCE_NAME.toString(),
+                        TIME_ALLOWED.toString()
+                )
+                .usingGeneratedKeyColumns(ID.toString())
+                .executeAndReturnKey(args);
+        return key.intValue();
     }
 
     public Paper read(int objId) {
@@ -52,5 +70,34 @@ public class PaperDAO {
                 .setName((String) row.get("referenceName"))
                 .setTimeAllowed((Integer) row.get("timeAllowed"))
                 .build();
+    }
+
+    public enum ColumnNames {
+        ID("_id"),
+        REFERENCE_NAME("referenceName"),
+        TIME_ALLOWED("timeAllowed");
+
+        private final String columnName;
+
+        ColumnNames(String tableName) {
+            this.columnName = tableName;
+        }
+
+        @Override
+        public String toString() {
+            return columnName;
+        }
+    }
+
+    private String getFieldNames(String prepend) {
+        StringBuilder builder = new StringBuilder();
+        for (ColumnNames column : ColumnNames.values()) {
+            builder.append(prepend);
+            builder.append(column.columnName);
+            if (!column.equals(ColumnNames.values()[ColumnNames.values().length - 1])) {
+                builder.append(",");
+            }
+        }
+        return builder.toString();
     }
 }

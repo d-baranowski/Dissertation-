@@ -78,7 +78,6 @@ function getSectionQuestionFromRow(row, questionNumber) {
         "<td>" + result[8] + "</td>" +
         "<td><a class='js-remove-question-handle' href='test'>Remove</a></td>" +
         "</tr>";
-
 }
 
 function getUpdatedQuestionsTable(sectionId, sectionVersion) {
@@ -146,9 +145,9 @@ function handleAddingQuestions(table) {
     table.rows().every(function () {
         $('.js-add-question-handle', this.node()).each(function () {
             current = $(this);
-            var questionId = current.data('questionId');
-            var questionVersion = current.data('questionVer');
             var sectionId = current.data('sectionId');
+            var sectionVersion = current.data('sectionVer');
+            var paperId = current.data('paperId');
             var url = current.attr('href');
             var parent = table.row("#" + current.data('parentId'));
 
@@ -156,10 +155,10 @@ function handleAddingQuestions(table) {
                 e.preventDefault();
 
                 var jsonData = JSON.stringify({
-                    "questionId": questionId,
-                    "questionVersion": questionVersion,
-                    "sectionId": sectionId,
-                    "sectionVersion": $('#versionNumber').val()
+                    "questionId": sectionId,
+                    "questionVersion": sectionVersion,
+                    "paperId": sectionId,
+                    "paperVersion": $('#versionNo').val()
                 });
 
                 $.ajax({
@@ -244,11 +243,12 @@ function bindCreationForm() {
     var url = form.action;
 
     $(form).submit(function (event) {
+        var formData = $(form).serialize();
         event.preventDefault();
         $.ajax({
             type: "POST",
             url: url,
-            data: $(form).serialize(), // serializes the form's elements.
+            data: formData, // serializes the form's elements.
             success: function (data) {
                 hideErrorMessages();
                 beginUpdating(data, 1); // show response from the php script.
@@ -287,11 +287,6 @@ function enableFroalaEditor() {
         var html = editor.html.get();
         $('.' + $(this).data('paste-to')).val(html);
     });
-}
-
-function hideErrorMessages() {
-    $('.js-hook-error-msg').text('');
-    $(' .js-hook-form-status').removeClass('has-danger');
 }
 
 function displayErrorMessages(errors) {

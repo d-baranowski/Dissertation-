@@ -42,4 +42,13 @@ public class PaperModelMapper {
                 .setTimeAllowed(paperReferenceModel.getTimeAllowed())
                 .build();
     }
+
+    public static PaperVersion mapPaperVersionFrom(PaperModel p, String authodId) {
+        return new PaperVersion.Builder()
+                .setAuthorId(authodId)
+                .setInstructionsText(p.getInstructionsText())
+                .setPaperId(p.getId())
+                .setVersionNo(p.getVersionNo())
+                .build();
+    }
 }

@@ -1,18 +1,19 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersion;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersionEntry;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static uk.ac.ncl.daniel.baranowski.data.access.SectionVersionDAO.ColumnNames.*;
+import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.TEST_PAPER_SECTION_VERSION;
+import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.TEST_PAPER_SECTION_VERSION_ENTRY;
 
 
 @DataAccessObject
@@ -33,7 +34,7 @@ public class SectionVersionDAO {
         args.put(TIME_ALLOWED.toString(),  obj.getTimeScale());
 
         new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName(TableNames.TEST_PAPER_SECTION_VERSION.toString())
+                .withTableName(TEST_PAPER_SECTION_VERSION.toString())
                 .usingColumns(
                         ID.toString()
                         , VERSION_NO.toString()
@@ -44,7 +45,7 @@ public class SectionVersionDAO {
     }
 
     public SectionVersion read(int sectionId, int versionNo) {
-        final String sql = String.format("SELECT * FROM %s t WHERE t.testPaperSectionId = ? AND t.versionNumber = ?", TableNames.TEST_PAPER_SECTION_VERSION);
+        final String sql = String.format("SELECT * FROM %s t WHERE t.testPaperSectionId = ? AND t.versionNumber = ?", TEST_PAPER_SECTION_VERSION);
         return mapSectionVersion(jdbcTemplate.queryForMap(sql, sectionId, versionNo));
     }
 
@@ -60,7 +61,7 @@ public class SectionVersionDAO {
     }
 
     public List<SectionVersion> readAll() {
-        final String sql = String.format("SELECT * FROM %s", TableNames.TEST_PAPER_SECTION_VERSION);
+        final String sql = String.format("SELECT * FROM %s", TEST_PAPER_SECTION_VERSION);
 
         List<SectionVersion> result = new ArrayList<>();
         for (Map<String, Object> row : jdbcTemplate.queryForList(sql)) {
@@ -71,7 +72,7 @@ public class SectionVersionDAO {
     }
 
     public int getCount() {
-        final String sql = String.format("select count(*) from %s", TableNames.TEST_PAPER_SECTION_VERSION);
+        final String sql = String.format("select count(*) from %s", TEST_PAPER_SECTION_VERSION);
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
@@ -83,7 +84,7 @@ public class SectionVersionDAO {
                         "AND e.testPaperSectionVersionNo = sv.versionNumber " +
                         "AND e.testPaperSectionId = sv.testPaperSectionId ",
                 TableNames.TEST_PAPER_SECTION_VERSION_ENTRY,
-                TableNames.TEST_PAPER_SECTION_VERSION);
+                TEST_PAPER_SECTION_VERSION);
         List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, paperId, versionNo);
         List<SectionVersion> result = new ArrayList<>();
 
@@ -108,7 +109,7 @@ public class SectionVersionDAO {
     }
 
     public List<Integer> getVersionNumbersById(int sectionId) {
-        final String sql = String.format("SELECT t.versionNumber FROM %s t WHERE t.testPaperSectionId = ?", TableNames.TEST_PAPER_SECTION_VERSION);
+        final String sql = String.format("SELECT t.versionNumber FROM %s t WHERE t.testPaperSectionId = ?", TEST_PAPER_SECTION_VERSION);
         List<Integer> result = new ArrayList<>();
 
         for (Map<String, Object> row : jdbcTemplate.queryForList(sql, sectionId)) {
@@ -120,9 +121,14 @@ public class SectionVersionDAO {
 
     public Integer getLatestVersionNo(int objId) {
         final String sql = String.format("SELECT MAX(t.versionNumber) AS latest"
-                + " FROM %s t WHERE t.testPaperSectionId = ?", TableNames.TEST_PAPER_SECTION_VERSION);
+                + " FROM %s t WHERE t.testPaperSectionId = ?", TEST_PAPER_SECTION_VERSION);
 
         return (int) jdbcTemplate.queryForMap(sql, objId).get("latest");
+    }
+
+    public int getNumberOfQuestionsToAnswer(int id, Integer versionNo) {
+        final String sql = "SELECT " + NO_OF_QUESTIONS + " FROM "+ TEST_PAPER_SECTION_VERSION +" WHERE " + ID + " = ? AND " + VERSION_NO + " = ?";
+        return jdbcTemplate.queryForObject(sql,Integer.class, id, versionNo);
     }
 
     public boolean checkIfVersionIsUsed(int id, int versionNumber) {
@@ -140,11 +146,71 @@ public class SectionVersionDAO {
                 .build();
     }
 
+    private SectionVersionEntry mapEntry(Map<String, Object> row) {
+        return new SectionVersionEntry()
+                .setSectionId((int) row.get("testPaperSectionId"))
+                .setSectionVersionNo((int) row.get("testPaperSectionVersionNo"))
+                .setPaperId((int) row.get("testPaperId"))
+                .setPaperVersionNumber((int) row.get("testPaperVersionNo"));
+    }
+
+    public void copyEntries(int id, int oldVersionNo, int newVersionNo) {
+        final String sql =
+                "INSERT INTO TestPaperSectionVersionEntry (testPaperSectionVersionNo, testPaperSectionId, testPaperId, testPaperVersionNumber, referenceNumber)\n" +
+                        "    SELECT  testPaperSectionVersionNo,testPaperSectionId, testPaperId,"+newVersionNo+", referenceNumber\n" +
+                        "    FROM TestPaperSectionVersionEntry WHERE testPaperId = ? AND testPaperVersionNo = ? ";
+
+        jdbcTemplate.update(sql, id, oldVersionNo);
+    }
+
+    public SectionVersionEntry getEntry(int paperId, int paperVersion, int sectionId, int sectionVersion) {
+        final String sql =
+                "SELECT * FROM TestPaperSectionVersionEntry " +
+                        "WHERE testPaperSectionId = ? AND testPaperSectionVersionNo = ?" +
+                        " AND testPaperId = ? AND testPaperVersionNo = ?";
+
+        try {
+            return mapEntry(jdbcTemplate.queryForMap(sql, sectionId, sectionVersion, paperId, paperVersion));
+        } catch (EmptyResultDataAccessException e) {
+            return new SectionVersionEntry();
+        }
+    }
+
+    public int getLastSectionNumber(int paperId, int paperVersion) {
+        final String sql = String.format(
+                "SELECT MAX(t.%s) FROM %s t WHERE t.%s = ? AND t.%s = ?",
+                EntryColumnNames.SECTION_NO,
+                TEST_PAPER_SECTION_VERSION_ENTRY,
+                EntryColumnNames.PAPER_ID,
+                EntryColumnNames.PAPER_VERSION);
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, paperId, paperVersion);
+    }
+
+    public void addSectionToPaper(SectionVersionEntry e) {
+        Map<String, Object> args = new HashMap<>();
+        args.put(EntryColumnNames.SECTION_NO.toString(), e.getReferenceNumber());
+        args.put(EntryColumnNames.SECTION_ID.toString(), e.getSectionId());
+        args.put(EntryColumnNames.SECTION_VERSION.toString(),  e.getSectionVersionNo());
+        args.put(EntryColumnNames.PAPER_ID.toString(), e.getPaperId());
+        args.put(EntryColumnNames.PAPER_VERSION.toString(), e.getPaperVersionNumber());
+
+        new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(TEST_PAPER_SECTION_VERSION_ENTRY.toString())
+                .usingColumns(
+                        EntryColumnNames.SECTION_NO.toString(),
+                        EntryColumnNames.SECTION_ID.toString(),
+                        EntryColumnNames.SECTION_VERSION.toString(),
+                        EntryColumnNames.PAPER_ID.toString(),
+                        EntryColumnNames.PAPER_VERSION.toString())
+                .execute(args);
+    }
+
 
     public enum EntryColumnNames {
         SECTION_ID("testPaperSectionId"),
         SECTION_VERSION("testPaperSectionVersionNo"),
-        PAPER_VERISON("testPaperVersionNo"),
+        PAPER_VERSION("testPaperVersionNo"),
         PAPER_ID("testPaperId"),
         SECTION_NO("referenceNumber");
 

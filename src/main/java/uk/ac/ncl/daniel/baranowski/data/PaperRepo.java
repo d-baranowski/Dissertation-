@@ -1,5 +1,6 @@
 package uk.ac.ncl.daniel.baranowski.data;
 
+import org.springframework.security.access.method.P;
 import uk.ac.ncl.daniel.baranowski.data.access.PaperDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.PaperVersionDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.QuestionDAO;
@@ -33,8 +34,7 @@ import javax.xml.crypto.Data;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapQuestionVersionAssetFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.PaperModelMapper.mapPaperModelFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.PaperModelMapper.mapPaperReferenceModelFrom;
+import static uk.ac.ncl.daniel.baranowski.data.mappers.PaperModelMapper.*;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionAssetsFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionVersionFrom;
@@ -132,7 +132,8 @@ public class PaperRepo {
 
             for (Section s : sectionDao.readAll()) {
                 for (Integer versionNo : sectionVersionDao.getVersionNumbersById(s.getId())) {
-                    result.add(mapSectionReferenceModelFrom(s, versionNo));
+                    SectionVersion ver = sectionVersionDao.read(s.getId(), versionNo);
+                    result.add(mapSectionReferenceModelFrom(ver, s.getReferenceName()));
                 }
             }
 
@@ -148,7 +149,9 @@ public class PaperRepo {
             List<SectionReferenceModel> result = new ArrayList<>();
 
             for (Section s : sectionDao.readAll()) {
-                result.add(mapSectionReferenceModelFrom(s, sectionVersionDao.getLatestVersionNo(s.getId())));
+                int versionNo = sectionVersionDao.getLatestVersionNo(s.getId());
+                SectionVersion ver = sectionVersionDao.read(s.getId(), versionNo);
+                result.add(mapSectionReferenceModelFrom(ver , s.getReferenceName()));
             }
 
             return result;
@@ -319,6 +322,28 @@ public class PaperRepo {
         }
     }
 
+    public int updatePaper(PaperModel model, String authorId) throws AccessException {
+        try {
+            boolean isUsed = paperVersionDao.checkIfVersionIsUsed(model.getId(),model.getVersionNo());
+            if (isUsed) {
+                int oldVersionNo = model.getVersionNo();
+                int newVersionNo = paperVersionDao.getLatestVersionNo(model.getId()) + 1;
+                model.setVersionNo(newVersionNo);
+                paperVersionDao.create(mapPaperVersionFrom(model,authorId));
+
+                sectionVersionDao.copyEntries(model.getId(), oldVersionNo, newVersionNo);
+
+                return newVersionNo;
+            } else {
+                paperVersionDao.update(mapPaperVersionFrom(model,authorId));
+                return model.getVersionNo();
+            }
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to update paper " + model, e);
+            throw new AccessException("Failed to update paper ", e);
+        }
+    }
+
     public SectionModel getSectionModel(int sectionId, int sectionVersionNo) throws AccessException {
         try {
             SectionVersion sectionVersion = sectionVersionDao.read(sectionId,sectionVersionNo);
@@ -367,6 +392,32 @@ public class PaperRepo {
         }
     }
 
+    public int addSectionToSection(int paperId, int paperVersion, int sectionId, int sectionVersion) throws AccessException {
+        try {
+            SectionVersionEntry entry =  sectionVersionDao.getEntry(paperId, paperVersion, sectionId, sectionVersion);
+
+            //If entry already exists in the paper
+            if (!entry.equals(new SectionVersionEntry())) {
+                return -1;
+            } else {
+                int sectionNumber = getLastSectionNumber(paperId, paperVersion);
+                sectionVersionDao.addSectionToPaper(
+                        new SectionVersionEntry()
+                                .setPaperId(paperId)
+                                .setPaperVersionNumber(paperVersion)
+                                .setReferenceNumber(sectionNumber + 1)
+                                .setSectionId(sectionId)
+                                .setSectionVersionNo(sectionVersion)
+                );
+                return sectionNumber + 1;
+            }
+        } catch (DataAccessException e) {
+            final String msg = "Failed to add section to paper";
+            LOGGER.log(Level.WARNING, msg, e);
+            throw new AccessException(msg, e);
+        }
+    }
+
     public int getLastQuestionNumber(int sectionId, int sectionVersion) throws AccessException {
         try {
             return questionVersionDao.getLastQuestionNumber(sectionId, sectionVersion);
@@ -376,6 +427,20 @@ public class PaperRepo {
             throw new AccessException(msg, e);
         } catch (NullPointerException e) {
             final String msg = "There are no questions in section";
+            LOGGER.log(Level.INFO, msg);
+            return 0;
+        }
+    }
+
+    public int getLastSectionNumber(int paperId, int paperVersion) throws AccessException {
+        try {
+            return sectionVersionDao.getLastSectionNumber(paperId, paperVersion);
+        } catch(DataAccessException e) {
+            final String msg = "Failed to get latest section number";
+            LOGGER.log(Level.WARNING, msg, e);
+            throw new AccessException(msg, e);
+        } catch (NullPointerException e) {
+            final String msg = "There are no sections in paper";
             LOGGER.log(Level.INFO, msg);
             return 0;
         }
@@ -429,6 +494,30 @@ public class PaperRepo {
             questionVersionDao.moveQuestionByPosition(from, to, sectionId, sectionVersionNo);
         } catch (DataAccessException e) {
             final String errorMsg = "Failed to move question from " + from + " to " + to + " in section " + sectionId + ":" + sectionVersionNo;
+            LOGGER.log(Level.WARNING, errorMsg,e);
+            throw new AccessException(errorMsg);
+        }
+    }
+
+    public int createPaper(PaperModel model, String authorId) throws AccessException {
+        try {
+            int id = paperDao.create(mapPaperFrom(model));
+            model.setId(id);
+            model.setVersionNo(1);
+            paperVersionDao.create(mapPaperVersionFrom(model,authorId));
+            return id;
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to create paper " + model;
+            LOGGER.log(Level.WARNING, errorMsg,e);
+            throw new AccessException(errorMsg);
+        }
+    }
+
+    public String getAuthorId(int id, int versionNo) throws AccessException {
+        try {
+            return paperVersionDao.getAuthorId(id, versionNo);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to get author id for paper " + id + " " + versionNo;
             LOGGER.log(Level.WARNING, errorMsg,e);
             throw new AccessException(errorMsg);
         }

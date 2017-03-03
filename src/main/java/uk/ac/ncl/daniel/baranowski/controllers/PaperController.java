@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.*;
+import static uk.ac.ncl.daniel.baranowski.common.SessionUtility.getUserId;
 
 /**
  * This controller is responsible for the View Paper functionality of our application.
@@ -82,6 +84,14 @@ public class PaperController {
             @RequestParam(required = false, defaultValue = "0") int sectionId,
             @RequestParam(required = false, defaultValue = "0") int sectionVersion) {
         return service.getSectionEditor(sectionId, sectionVersion);
+    }
+
+    @RequestMapping("paper-editor")
+    @PreAuthorize("hasAnyAuthority('Author')")
+    public ModelAndView paperEditor(
+            @RequestParam(required = false, defaultValue = "0") int paperId,
+            @RequestParam(required = false, defaultValue = "0") int paperVersion) {
+        return service.getPaperEditor(paperId, paperVersion);
     }
 
     @RequestMapping("/view-question/{questionId}/{questionVersion}")
@@ -151,4 +161,36 @@ public class PaperController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @RequestMapping(value = PAPER_CREATE_PAPER, method = RequestMethod.POST)
+    @PreAuthorize("hasAnyAuthority('Author')")
+    public ResponseEntity createPaper(@Valid PaperModel model, BindingResult bindingResult, HttpSession authorSession) {
+        if (bindingResult.hasErrors()) {
+            return  ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        int id = service.createPaper(model, getUserId(authorSession));
+        if (id != -1) {
+            return ResponseEntity.ok(id);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @RequestMapping(value=PAPER_UPDATE_PAPER, method = RequestMethod.POST)
+    @PreAuthorize("hasAnyAuthority('Author')")
+    public ResponseEntity updatePaper(@Valid PaperModel model, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return  ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        int versionNo = service.updatePaper(model);
+        if (versionNo != -1) {
+            return ResponseEntity.ok(versionNo);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    
 }

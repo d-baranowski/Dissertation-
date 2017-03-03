@@ -59,6 +59,13 @@ public class ControllerEndpoints {
     public static final String PAPER_MOVE_QUESTION_IN_SECTION = "/move-question-in-section";
     public static final String PAPER_GET_UPDATED_SECTION_QUESTIONS = "/get-questions-table/{sectionId}/{sectionVersion}";
 
+    public static final String PAPER_CREATE_PAPER = "/create-paper";
+    public static final String PAPER_UPDATE_PAPER = "/update-paper";
+    public static final String PAPER_ADD_SECTION_TO_PAPER = "/add-section-to-paper";
+    public static final String PAPER_REMOVE_SECTION_FROM_PAPER = "/remove-section-from-paper";
+    public static final String PAPER_MOVE_SECTION_IN_PAPER = "/move-section-in-paper";
+    public static final String PAPER_GET_UPDATED_PAPER_SECTION = "/get-sections-table/{paperId}/{paperVersion}";
+
     public static final String EXAM_REVIEW = "/review-exam/{examId}";
     public static final String EXAM_BEGIN = "/start/{examId}";
     public static final String EXAM_FINNISH = "/finnish/{examId}";

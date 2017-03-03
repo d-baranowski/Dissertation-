@@ -125,39 +125,39 @@ CREATE TABLE Question(
 
 CREATE TABLE QuestionVersion(
 	`versionNumber` INT NOT NULL,
-	`questionId` INT NOT NULL,
+	`paperId` INT NOT NULL,
 	`text` VARCHAR(2048),
     `correctAnswer` VARCHAR(2048),
     `markingGuide` VARCHAR(2048),
     `timeScale` INT,
-	FOREIGN KEY (questionId) 
+	FOREIGN KEY (paperId)
         REFERENCES Question(_id),
-	PRIMARY KEY (versionNumber,questionId)
+	PRIMARY KEY (versionNumber,paperId)
 );
 
 CREATE TABLE QuestionVersionAsset(
 	`_id` INT NOT NULL AUTO_INCREMENT,
-    `questionVersionNumber` INT NOT NULL,
-	`questionId` INT NOT NULL,
+    `paperVersionNumber` INT NOT NULL,
+	`paperId` INT NOT NULL,
 	`referenceName` VARCHAR(104),
 	`blobType` VARCHAR(104),
 	`_blob` LONGBLOB,
-    FOREIGN KEY (questionVersionNumber,questionId) 
-        REFERENCES QuestionVersion(versionNumber,questionId),
+    FOREIGN KEY (paperVersionNumber,paperId)
+        REFERENCES QuestionVersion(versionNumber,paperId),
     PRIMARY KEY (_id)
 );
 
 CREATE TABLE QuestionVersionEntry(
     `testPaperSectionVersionNo` INT,
     `testPaperSectionId` INT,
-    `questionVersionNumber` INT,
-	  `questionId` INT,
+    `paperVersionNumber` INT,
+	  `paperId` INT,
     `referenceNumber` INT,
     FOREIGN KEY (testPaperSectionId,testPaperSectionVersionNo) 
         REFERENCES TestPaperSectionVersion(testPaperSectionId,versionNumber),
-    FOREIGN KEY (questionId,questionVersionNumber) 
-        REFERENCES QuestionVersion(questionId,versionNumber),        
-    PRIMARY KEY (questionVersionNumber, questionId,testPaperSectionVersionNo,testPaperSectionId)
+    FOREIGN KEY (paperId,paperVersionNumber)
+        REFERENCES QuestionVersion(paperId,versionNumber),
+    PRIMARY KEY (paperVersionNumber, paperId,testPaperSectionVersionNo,testPaperSectionId)
 );
 
 CREATE TABLE TermsAndConditions(
@@ -221,29 +221,29 @@ CREATE TABLE Mark(
 );
 
 CREATE TABLE Answer(
-  `questionId`  INT NOT NULL,
-  `questionVersionNumber` INT NOT NULL,
+  `paperId`  INT NOT NULL,
+  `paperVersionNumber` INT NOT NULL,
   `testDayEntryId` INT NOT NULL,
   `text` VARCHAR(50000),
   `markId` INT,
   FOREIGN KEY (markId)
   REFERENCES Mark(_id),
-  FOREIGN KEY (questionVersionNumber,questionId)
-  REFERENCES QuestionVersion(versionNumber,questionId),
+  FOREIGN KEY (paperVersionNumber,paperId)
+  REFERENCES QuestionVersion(versionNumber,paperId),
   FOREIGN KEY (testDayEntryId)
   REFERENCES TestDayEntry(_id),
-  PRIMARY KEY (questionId,questionVersionNumber,testDayEntryId)
+  PRIMARY KEY (paperId,paperVersionNumber,testDayEntryId)
 );
 
 CREATE TABLE AnswerAsset(
   `_id` INT NOT NULL AUTO_INCREMENT,
-  `questionId`  INT NOT NULL,
-  `questionVersionNumber` INT NOT NULL,
+  `paperId`  INT NOT NULL,
+  `paperVersionNumber` INT NOT NULL,
   `testDayEntryId` INT NOT NULL,
   `referenceName` VARCHAR(150),
   `_blob` MEDIUMBLOB,
-  FOREIGN KEY (questionId,questionVersionNumber,testDayEntryId)
-  REFERENCES Answer(questionId,questionVersionNumber,testDayEntryId)
+  FOREIGN KEY (paperId,paperVersionNumber,testDayEntryId)
+  REFERENCES Answer(paperId,paperVersionNumber,testDayEntryId)
     ON DELETE CASCADE,
   PRIMARY KEY (_id)
 );

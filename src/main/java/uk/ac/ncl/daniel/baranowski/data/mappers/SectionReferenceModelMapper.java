@@ -13,11 +13,13 @@ public class SectionReferenceModelMapper {
         //Hiding implicit public constructor
     }
 
-    public static SectionReferenceModel mapSectionReferenceModelFrom(Section s, int versionNo) {
+    public static SectionReferenceModel mapSectionReferenceModelFrom(SectionVersion s, String referenceName) {
         final SectionReferenceModel ref = new SectionReferenceModel();
-        ref.setId(s.getId());
-        ref.setVersionNumber(versionNo);
-        ref.setReferenceName(s.getReferenceName());
+        ref.setId(s.getSectionId());
+        ref.setTimeScale(s.getTimeScale());
+        ref.setVersionNumber(s.getVersionNo());
+        ref.setReferenceName(referenceName);
+        ref.setNoOfQuestionsToAnswer(s.getNoOfQuestionsToAnswer());
         return ref;
     }
 
