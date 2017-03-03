@@ -7,7 +7,9 @@
         <div th:replace="/fragments/paper/section"></div>
         <th:block th:with="questions=${paper.sections.get(sectionKey).questions}"
                   th:each="questionKey : ${paper.sections.get(sectionKey).questions.keySet()}">
-            <div th:replace="/fragments/paper/question"></div>
+            <th:block th:with="currentQuestion =${questions.get(questionKey)}">
+                <div th:replace="/fragments/paper/question"></div>
+            </th:block>
         </th:block>
     </th:block>
 </div>

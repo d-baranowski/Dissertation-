@@ -3,7 +3,6 @@ $(document).ready(function(){
 });
 
 function startTimer() {
-
     $.ajax({
                 type: "GET",
                 url: ENDPOINTS.ATTEMPT_PREFIX + ENDPOINTS.ATTEMPT_TIME_REMAINING,

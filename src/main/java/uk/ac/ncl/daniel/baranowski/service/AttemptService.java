@@ -3,7 +3,6 @@ package uk.ac.ncl.daniel.baranowski.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,8 +27,6 @@ import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
 import uk.ac.ncl.daniel.baranowski.views.TestAttemptViewModel;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -122,11 +119,6 @@ public class AttemptService {
 
 
     public void beginAttempt(HttpSession candidateSession, int attemptId) {
-        List<SimpleGrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(Constants.ROLE_CANDIDATE));
-        SessionUtility.setCurrentUserRoles(candidateSession, roles);
-        SessionUtility.assignTestAttemptIdToCandidate(candidateSession, attemptId);
-
         long startTime = System.currentTimeMillis();
         candidateSession.setAttribute(Constants.SESSION_START_TIME, startTime);
         candidateSession.setAttribute(Constants.SESSION_ATTEMPT_ID, attemptId);

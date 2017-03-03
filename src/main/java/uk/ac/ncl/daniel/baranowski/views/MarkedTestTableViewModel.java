@@ -17,7 +17,6 @@ public class MarkedTestTableViewModel {
                         "Candidate Name",
                         "Paper",
                         "Date",
-                        "Location",
                         "Marked by",
                         "Final Mark"));
 

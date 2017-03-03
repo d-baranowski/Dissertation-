@@ -2,6 +2,7 @@ package uk.ac.ncl.daniel.baranowski.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.InvalidIsolationLevelException;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,8 @@ import uk.ac.ncl.daniel.baranowski.service.PaperService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -152,6 +155,14 @@ public class AttemptController {
         return markingService.getMarkableViewForTestAttempt(testAttemptId);
     }
 
+    @RequestMapping(ATTEMPT_LOGIN)
+    @PreAuthorize("isAnonymous()")
+    public ModelAndView loginToAttempt(@PathVariable int examId) {
+        ModelAndView mav = new ModelAndView(Constants.TEMPLATE_LOGIN);
+        mav.addObject("ENDPOINT", ATTEMPT_PREFIX + ATTEMPT_CREATE_SESSION.replaceFirst("\\{examId}", examId + ""));
+        return mav;
+    }
+
     /**
      * API Endpoints.
      */
@@ -170,14 +181,6 @@ public class AttemptController {
         return REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_FINISH_PAGE;
     }
 
-    @RequestMapping(ATTEMPT_LOGIN)
-    @PreAuthorize("isAnonymous()")
-    public ModelAndView loginToAttempt(@PathVariable int examId) {
-        ModelAndView mav = new ModelAndView(Constants.TEMPLATE_LOGIN);
-        mav.addObject("ENDPOINT", ATTEMPT_PREFIX + ATTEMPT_CREATE_SESSION.replaceFirst("\\{examId}", examId + ""));
-        return mav;
-    }
-
     @RequestMapping(value = ControllerEndpoints.ATTEMPT_CREATE_SESSION, method = RequestMethod.POST)
     @PreAuthorize("isAnonymous()")
     public String createSession(@RequestParam(value = "usernameField", required = true, defaultValue = "") String username,
@@ -193,8 +196,11 @@ public class AttemptController {
             return REDIRECT_PREFIX + ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_LOGIN.replaceFirst("\\{examId}", examId + "");
         } else {
             examService.validateStatus(attemptService.getExamId(attemptId), STARTED);
-            attemptService.setupSessionToBeginAttempt(session,attemptId);
-            return REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_BEGIN;
+            List<SimpleGrantedAuthority> roles = new ArrayList<>();
+            roles.add(new SimpleGrantedAuthority(Constants.ROLE_CANDIDATE));
+            SessionUtility.setCurrentUserRoles(session, roles);
+            SessionUtility.assignTestAttemptIdToCandidate(session, attemptId);
+            return REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_START.replaceFirst("\\{testAttemptId}",attemptId+"");
         }
     }
 
@@ -203,7 +209,7 @@ public class AttemptController {
      * IMPORTANT Model parameter will only hold id.
      */
     @RequestMapping(value = ATTEMPT_BEGIN, method = RequestMethod.POST)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyAuthority('Candidate')")
     public String beginAttempt(AttemptReferenceModel model, HttpSession candidateSession) {
         attemptService.setupSessionToBeginAttempt(candidateSession,model.getId());
         return REDIRECT_PREFIX + ATTEMPT_PREFIX + ATTEMPT_ONGOING;

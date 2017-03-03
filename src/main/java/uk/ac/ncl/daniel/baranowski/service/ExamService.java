@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static uk.ac.ncl.daniel.baranowski.common.SessionUtility.getUserId;
 
 @Service
@@ -101,6 +102,42 @@ public class ExamService {
             final String errorMsg = String.format("Failed to get paper reference from form: %s", info);
             LOGGER.log(Level.WARNING, errorMsg, e);
             throw new TestPaperDoesNotExistException(errorMsg);
+        }
+    }
+
+    public void validateUser(int examId, HttpSession moduleLeaderSession) {
+        String userId = getUserId(moduleLeaderSession);
+        try {
+            boolean isModuleLeader = examRepo.isModuleLeader(examId, userId);
+
+            if (!isModuleLeader) {
+                throw new InvalidUserStateException("Logged in user is not the module leader for chosen module");
+            }
+
+        } catch (AccessException e) {
+            final String errorMsg = String.format("Failed to determine if user %s is module leader for exam %s", userId, examId);
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new HttpServerErrorException(INTERNAL_SERVER_ERROR, errorMsg);
+        }
+    }
+
+    public void beginExam(int examId) {
+        try {
+            examRepo.beginExam(examId);
+        } catch (AccessException e) {
+            final String errorMsg = "Failed to start exam " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new HttpServerErrorException(INTERNAL_SERVER_ERROR, errorMsg);
+        }
+    }
+
+    public void finnishExam(int examId) {
+        try {
+            examRepo.endExam(examId);
+        } catch (AccessException e) {
+            final String errorMsg = "Failed to start exam " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new HttpServerErrorException(INTERNAL_SERVER_ERROR, errorMsg);
         }
     }
 

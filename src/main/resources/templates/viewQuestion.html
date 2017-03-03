@@ -1,0 +1,32 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+<head th:fragment="head">
+    <title>View Question</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="questionPageStyle.css"
+          th:href="@{~/css/candidate/questionPageStyle.css}"/>
+    <link th:href="@{/webjars/google-code-prettify/1.0.4/loader/src/prettify.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<th:block layout:fragment="headerText">
+
+</th:block>
+
+<th:block layout:fragment="upper-right-header-content">
+
+</th:block>
+
+<div layout:fragment="content" id="content" class="container-fluid">
+    <div class="col-md-10 col-md-offset-1 style-main-content">
+        <div th:replace="fragments/paper/question"></div>
+    </div>
+</div>
+
+<div layout:fragment="script">
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/prettify.js}"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/lang-sql.js}"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/run_prettify.js}"></script>
+</div>
+</body>
+</html>

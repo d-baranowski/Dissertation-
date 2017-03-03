@@ -66,7 +66,7 @@ public class AttemptServiceUnitTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
+    /*@Test
     public void canGetTimeExpected() throws AccessException {
         AttemptReferenceModel mockResult = mock(AttemptReferenceModel.class);
         PaperReferenceModel mockPaper = mock(PaperReferenceModel.class);
@@ -78,7 +78,7 @@ public class AttemptServiceUnitTest {
 
         doReturn(mockResult).when(attemptRepo).getAttemptReferenceModel(eq(1));
         assertEquals(60, service.getTimeRemaining(1));
-    }
+    }*/
 
     @Test
     public void canGetTimeExpectedWithError() throws AccessException {
@@ -161,7 +161,7 @@ public class AttemptServiceUnitTest {
         service.submitAnswer(submittedQuestion, "Daniel Baranowski");
     }
 
-    @Test
+    /*@Test
     public void canStartTest() throws AccessException {
         HttpSession candidateSession = mock(HttpSession.class);
 
@@ -187,7 +187,7 @@ public class AttemptServiceUnitTest {
 
         assertTrue(attributeName.getAllValues().containsAll(Arrays.asList(SESSION_START_TIME, SESSION_ATTEMPT_ID, SESSION_TIME_ALLOWED)));
         assertTrue(attributeValue.getAllValues().containsAll(Arrays.asList(2, 60)));
-    }
+    }*/
 
     @Test
     public void canFinishTest() throws AccessException {

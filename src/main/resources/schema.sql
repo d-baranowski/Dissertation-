@@ -87,7 +87,7 @@ CREATE TABLE TestPaperSectionVersion(
 	`testPaperSectionId` INT NOT NULL,
 	`versionNumber` INT NOT NULL,
 	`noOfQuestionsToAnswer` INT,
-    `sectionDescription` VARCHAR(1024),
+    `sectionDescription` TEXT(65536),
     `timeScale` INT,
 	FOREIGN KEY (testPaperSectionId) 
         REFERENCES TestPaperSection(_id), 

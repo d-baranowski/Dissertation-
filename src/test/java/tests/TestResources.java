@@ -865,39 +865,39 @@ class TestResources {
         /** AttemptModel resources **/
         TEST_ATTEMPT_MODEL_ID_1 = new AttemptModel();
         TEST_ATTEMPT_MODEL_ID_1.setId(1);
-        TEST_ATTEMPT_MODEL_ID_1.setTestDayModel(SAMPLE_DAY);
+        //TEST_ATTEMPT_MODEL_ID_1.setTestDayModel(SAMPLE_DAY);
         TEST_ATTEMPT_MODEL_ID_1.setCandidate(CANDIDATE_MODEL_ID_1);
         TEST_ATTEMPT_MODEL_ID_1.setPaper(PAPER_MODEL_ID_1_VER_1);
         TEST_ATTEMPT_MODEL_ID_1.setAnswerMap(ANSWERS_FOR_ATTEMPT_MODEL_ID_1);
         TEST_ATTEMPT_MODEL_ID_1.setStatus(null);
-        TEST_ATTEMPT_MODEL_ID_1.setTimeAllowed(60);
-        TEST_ATTEMPT_MODEL_ID_1.setTermsAndConditionsId(0);
+        //TEST_ATTEMPT_MODEL_ID_1.setTimeAllowed(60);
+        //TEST_ATTEMPT_MODEL_ID_1.setTermsAndConditionsId(0);
 
         TEST_ATTEMPT_MODEL_ID_2 = new AttemptModel();
         TEST_ATTEMPT_MODEL_ID_2.setId(2);
-        TEST_ATTEMPT_MODEL_ID_2.setTestDayModel(SAMPLE_DAY);
+        //TEST_ATTEMPT_MODEL_ID_2.setTestDayModel(SAMPLE_DAY);
         TEST_ATTEMPT_MODEL_ID_2.setCandidate(CANDIDATE_MODEL_ID_1);
         TEST_ATTEMPT_MODEL_ID_2.setPaper(PAPER_MODEL_ID_2_VER_1);
         TEST_ATTEMPT_MODEL_ID_2.setAnswerMap(ANSWERS_FOR_ATTEMPT_MODEL_ID_2);
-        TEST_ATTEMPT_MODEL_ID_2.setTimeAllowed(60);
-        TEST_ATTEMPT_MODEL_ID_2.setTermsAndConditionsId(0);
+        //TEST_ATTEMPT_MODEL_ID_2.setTimeAllowed(60);
+        //TEST_ATTEMPT_MODEL_ID_2.setTermsAndConditionsId(0);
 
         /** AttemptReferenceModel resources **/
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1 = new AttemptReferenceModel();
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setId(1);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setCandidate(CANDIDATE_MODEL_ID_1);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTestDayModel(SAMPLE_DAY);
+        //TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTestDayModel(SAMPLE_DAY);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setPaperRef(PAPER_REFERENCE_MODEL_ID_1);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTimeAllowed(60);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTermsAndConditionsId(0);
+        //TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTimeAllowed(60);
+        //TEST_ATTEMPT_REFERENCE_MODEL_ID_1.setTermsAndConditionsId(0);
 
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2 = new AttemptReferenceModel();
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setId(2);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setCandidate(CANDIDATE_MODEL_ID_1);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTestDayModel(SAMPLE_DAY);
+        //TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTestDayModel(SAMPLE_DAY);
         TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setPaperRef(PAPER_REFERENCE_MODEL_ID_2);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTimeAllowed(60);
-        TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTermsAndConditionsId(0);
+       // TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTimeAllowed(60);
+        //TEST_ATTEMPT_REFERENCE_MODEL_ID_2.setTermsAndConditionsId(0);
 
         /** Mark resources **/
         SAMPLE_MARK = new Mark.Builder()

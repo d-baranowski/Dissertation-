@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDay;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
+import uk.ac.ncl.daniel.baranowski.data.exceptions.DateFormatException;
 import uk.ac.ncl.daniel.baranowski.models.TestDayModel;
 
 import javax.sql.DataSource;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static uk.ac.ncl.daniel.baranowski.common.Constants.TIME_PATTERN;
+import static uk.ac.ncl.daniel.baranowski.common.DateUtils.DATE_TIME_FORMATTER;
+import static uk.ac.ncl.daniel.baranowski.common.DateUtils.validDateFormat;
 import static uk.ac.ncl.daniel.baranowski.data.access.TestDayDAO.ColumnNames.*;
 
 @DataAccessObject
@@ -24,7 +27,9 @@ public class TestDayDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void create(TestDay obj) {
+    public void create(TestDay obj) throws DateFormatException {
+        validDateFormat(obj.getDate());
+
         jdbcTemplate.update(String.format("INSERT INTO %s ("+getFieldNames("")+") VALUES (?,?,?,?,?)",
                 TableNames.TEST_DAY),
                 obj.getDate(),
@@ -44,7 +49,7 @@ public class TestDayDAO {
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
-    public TestDay getOrCreate(TestDayModel model) {
+    public TestDay getOrCreate(TestDayModel model) throws DateFormatException {
         final String sqlCheck = String.format(
                 "select count(*) from %s t WHERE t.date = ? AND t.startTime = ? AND t.endTime = ? AND t.endTimeWithExtraTime = ? AND t.location = ?",
                 TableNames.TEST_DAY);
@@ -56,6 +61,7 @@ public class TestDayDAO {
         String startTime = model.getStartTime().toString(TIME_PATTERN);
         String endTime = model.getEndTime().toString(TIME_PATTERN);
         String endTimeWithExtra = model.getEndTimeWithExtraTime().toString(TIME_PATTERN);
+        validDateFormat(model.getDate());
 
         final boolean exists = jdbcTemplate.queryForObject(sqlCheck, Integer.class, model.getDate() ,startTime,endTime,endTimeWithExtra,model.getLocation()) > 0;
 
@@ -66,7 +72,7 @@ public class TestDayDAO {
         }
     }
 
-    public TestDay insertAndGet(String date, String startTime, String endTime, String endTimeWithExtra, String location) {
+    public TestDay insertAndGet(String date, String startTime, String endTime, String endTimeWithExtra, String location) throws DateFormatException {
         Map<String, String> args = new HashMap<>();
         args.put(DATE.toString(), date);
         args.put(LOCATION.toString(), location);
@@ -74,6 +80,7 @@ public class TestDayDAO {
         args.put(END_TIME.toString(), endTime);
         args.put(END_TIME_WITH_EXTRA.toString(),endTimeWithExtra);
 
+        validDateFormat(date);
         Number key = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TableNames.TEST_DAY.toString())
                 .usingColumns("date","startTime", "endTime" ,"location", END_TIME_WITH_EXTRA.toString()).usingGeneratedKeyColumns("_id")

@@ -88,6 +88,11 @@ public class GlobalControllerConfiguration {
         return new GenericErrorPageViewModel(e.getMessage(), "Unable To Create Exam", "errorPuzzle.png").getModelAndView();
     }
 
+    @ExceptionHandler(value = FailedToCreateQuestionException.class)
+    public ModelAndView handleExamMissing(FailedToCreateQuestionException e) { //NOSONAR as above
+        return new GenericErrorPageViewModel(e.getMessage(), "Unable To Create Question", "errorPuzzle.png").getModelAndView();
+    }
+
     /**
      * Converts SimpleGrantedAuthority to plain String.
      * @param session A list of SimpleGrantedAuthority will be retrieved from this session.

@@ -17,7 +17,6 @@
                     th:attr="title=${'Paper Id: ' + reference.getReferenceModel().getPaperRef().getId() + ' Version Number: ' + reference.getReferenceModel().getPaperRef().getVersionNo()}"
             ></a></td>
             <td th:text="${reference.getReferenceModel().getDate()}"></td>
-            <td th:text="${reference.getReferenceModel().getLocation()}"></td>
             <td th:text="${reference.getMarkerFullName()}"></td>
             <td th:text="${reference.getReferenceModel().getFinalMark()}"></td>
         </tr>

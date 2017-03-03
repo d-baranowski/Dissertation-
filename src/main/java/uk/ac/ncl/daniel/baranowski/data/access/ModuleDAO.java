@@ -24,7 +24,7 @@ public class ModuleDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public Module read(int objId) throws AccessException {
+    public Module read(int objId) {
         final String sql = String.format("SELECT * FROM %s t WHERE t._id = ?", TableNames.MODULE);
         return mapModule(jdbcTemplate.queryForMap(sql, objId));
     }

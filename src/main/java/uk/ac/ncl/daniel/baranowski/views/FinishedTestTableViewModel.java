@@ -16,7 +16,6 @@ public class FinishedTestTableViewModel {
                 "Candidate Name",
                 "Paper",
                 "Date",
-                "Location",
                 "Link to Mark"));
         mav.addObject("viewPaperPrefix", ControllerEndpoints.PAPER_PREFIX);
         mav.addObject("viewPaperView", ControllerEndpoints.PAPER_VIEW.replace("/{paperId}", "").replace("/{paperVersionNo}", ""));

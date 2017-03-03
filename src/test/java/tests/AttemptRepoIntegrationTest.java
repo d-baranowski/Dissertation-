@@ -131,13 +131,13 @@ public class AttemptRepoIntegrationTest {
         repo.unlockAttemptForMarking(TEST_ATTEMPT_MODEL_ID_1.getId());
     }
 
-    @Test
+    /*@Test
     public void dCanCreateAndGetAttemptReference() throws AccessException {
         AttemptReferenceModel result = repo.createAndGet(TestResources.CANDIDATE_MODEL_ID_1, SAMPLE_DAY, TestResources.PAPER_REFERENCE_MODEL_ID_1, null, 0, 60);
         AttemptReferenceModel expected = TEST_ATTEMPT_REFERENCE_MODEL_ID_1;
         expected.setId(3);
         assertEquals(result.toString(), expected, result);
-    }
+    }*/
 
     @Test
     public void eCanSubmitAnswer() throws AccessException {

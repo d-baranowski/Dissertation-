@@ -1,19 +1,25 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
 import nl.jqno.equalsverifier.internal.lib.bytebuddy.utility.RandomString;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDayEntry;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import static uk.ac.ncl.daniel.baranowski.common.DateUtils.DATE_TIME_FORMATTER;
 import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.TEST_DAY_ENTRY;
 import static uk.ac.ncl.daniel.baranowski.data.access.TestDayEntryDAO.ColumnNames.*;
 
@@ -31,7 +37,7 @@ public class TestDayEntryDAO {
         String password = RandomString.make(5);
         jdbcTemplate.update(
                 String.format(
-                        "INSERT INTO %s (" + getFieldNames("")  +
+                        "INSERT INTO %s (" + getFieldNames("") +
                                 ") VALUES (?,?,?,?)", TEST_DAY_ENTRY),
                 obj.getCandidateId(),
                 obj.getExamId(),
@@ -45,8 +51,8 @@ public class TestDayEntryDAO {
         args.put(CANDIDATE_ID.toString(), obj.getCandidateId());
         args.put(STATUS.toString(), obj.getStatus());
         args.put(EXAM_ID.toString(), obj.getExamId());
-        args.put(LOGIN.toString(),  RandomString.make(5));
-        args.put(PASSWORD.toString(),  RandomString.make(5));
+        args.put(LOGIN.toString(), RandomString.make(5));
+        args.put(PASSWORD.toString(), RandomString.make(5));
 
         Number key = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TEST_DAY_ENTRY.toString())
@@ -62,7 +68,7 @@ public class TestDayEntryDAO {
     }
 
     public TestDayEntry read(int objId) {
-        final String sql = String.format("SELECT "+ getFieldNames("t.")  +" FROM %s t WHERE t._id = ?", TEST_DAY_ENTRY);
+        final String sql = String.format("SELECT " + getFieldNames("t.") + " FROM %s t WHERE t._id = ?", TEST_DAY_ENTRY);
         return mapTestDayEntry(jdbcTemplate.queryForMap(sql, objId));
     }
 
@@ -72,7 +78,7 @@ public class TestDayEntryDAO {
     }
 
     public List<TestDayEntry> readAll() {
-        final String sql = String.format("SELECT " + getFieldNames("t.")  + " FROM %s t", TEST_DAY_ENTRY);
+        final String sql = String.format("SELECT " + getFieldNames("t.") + " FROM %s t", TEST_DAY_ENTRY);
         List<TestDayEntry> result = new ArrayList<>();
 
         jdbcTemplate.queryForList(sql).forEach(row -> result.add(mapTestDayEntry(row)));
@@ -86,7 +92,7 @@ public class TestDayEntryDAO {
     }
 
     public List<TestDayEntry> getByCandidateId(int candidateId) {
-        final String sql = String.format("SELECT " + getFieldNames("t.")  +" FROM %s t WHERE t.candidateId = ?", TEST_DAY_ENTRY);
+        final String sql = String.format("SELECT " + getFieldNames("t.") + " FROM %s t WHERE t.candidateId = ?", TEST_DAY_ENTRY);
         List<TestDayEntry> result = new ArrayList<>();
 
         jdbcTemplate.queryForList(sql, candidateId).forEach(row -> result.add(mapTestDayEntry(row)));
@@ -96,7 +102,7 @@ public class TestDayEntryDAO {
 
     public List<TestDayEntry> getByDateLocation(String date, String location) {
         final String sql = String.format(
-                "SELECT " + getFieldNames("t.")  +
+                "SELECT " + getFieldNames("t.") +
                         "FROM %s t, %s td " +
                         "WHERE td.date = ? AND td.location = ? AND td._id = t.testDayId",
                 TEST_DAY_ENTRY, TableNames.TEST_DAY);
@@ -131,7 +137,7 @@ public class TestDayEntryDAO {
     }
 
     public void updateFinalMark(int id, int mark) {
-        final String sql = String.format("UPDATE %s t SET t.%s=? WHERE t._id=?", TEST_DAY_ENTRY,FINAL_MARK);
+        final String sql = String.format("UPDATE %s t SET t.%s=? WHERE t._id=?", TEST_DAY_ENTRY, FINAL_MARK);
         jdbcTemplate.update(sql, mark, id);
     }
 
@@ -146,7 +152,7 @@ public class TestDayEntryDAO {
 
     public int findAttemptIdByCredentials(int examId, String login, String password) {
         final String sql = "SELECT a._id FROM TestDayEntry a INNER JOIN Exam e ON e.`_id` = a.examId WHERE e.`_id` = ? AND a.login = ? AND a.password = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, examId, login,password);
+        return jdbcTemplate.queryForObject(sql, Integer.class, examId, login, password);
     }
 
     public int getExamId(int attemptId) {
@@ -154,21 +160,32 @@ public class TestDayEntryDAO {
         return jdbcTemplate.queryForObject(sql, Integer.class, attemptId);
     }
 
-    public int getTimeRemaining(int testAttemptId) {
+    public int getTimeRemaining(int testAttemptId) throws IllegalArgumentException {
         final String sql =
-                "SELECT CASE c.hasExtraTime\n" +
-                "  WHEN TRUE THEN d.endTime\n" +
-                "  WHEN FALSE THEN d.endTimeWithExtraTime\n" +
-                "  END AS endTime\n" +
-                "FROM TestDayEntry a\n" +
-                "  INNER JOIN Candidate c ON a.candidateId = c.`_id`\n" +
+                "SELECT\n" +
+                "  d.date,\n" +
+                "  CASE c.hasExtraTime\n" +
+                "  WHEN TRUE\n" +
+                "    THEN d.endTime\n" +
+                "  WHEN FALSE\n" +
+                "    THEN d.endTimeWithExtraTime END AS endTime\n" +
+                "FROM TestDayEntry a INNER JOIN Candidate c ON a.candidateId = c.`_id`\n" +
                 "  INNER JOIN Exam e ON e.`_id` = a.examId\n" +
-                "  INNER JOIN TestDay d ON e.testDayId = t.`_id`\n" +
-                "WHERE a.`_id` = ?";
-        LocalTime endTime = LocalTime.parse(jdbcTemplate.queryForObject(sql, String.class, testAttemptId));
-        LocalTime currentTime = new LocalTime(System.currentTimeMillis());
+                "  INNER JOIN TestDay d ON e.testDayId = d.`_id`\n" +
+                "WHERE a.`_id` = ?;";
 
-        return Minutes.minutesBetween(currentTime, endTime).getMinutes();
+        Map<String, Object> result = jdbcTemplate.queryForMap(sql, testAttemptId);
+
+        LocalDate examDate = LocalDate.parse((String)result.get("date"), DATE_TIME_FORMATTER);
+        LocalTime endTime = LocalTime.parse((String) result.get("endTime"));
+        LocalTime currentTime = new LocalTime(System.currentTimeMillis());
+        LocalDate currentDate = new LocalDate(System.currentTimeMillis());
+
+        if (currentTime.isAfter(endTime) || currentDate.isAfter(examDate)) {
+            return 0;
+        }
+        int minutes  = Minutes.minutesBetween(currentTime, endTime).getMinutes();
+        return minutes;
     }
 
     public enum ColumnNames {

@@ -1,13 +1,17 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Section;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import static uk.ac.ncl.daniel.baranowski.data.access.SectionDAO.ColumnNames.*;
 
 @DataAccessObject
 public class SectionDAO {
@@ -18,8 +22,19 @@ public class SectionDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void create(Section section) {
-        //TODO BEYOND MVP NOSONAR
+    public int create(Section obj) {
+        Map<String, Object> args = new HashMap<>();
+
+        args.put(REFERENCE_NAME.toString(), obj.getReferenceName());
+
+        Number key = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(TableNames.TEST_PAPER_SECTION.toString())
+                .usingColumns(
+                        REFERENCE_NAME.toString()
+                )
+                .usingGeneratedKeyColumns(ID.toString())
+                .executeAndReturnKey(args);
+        return key.intValue();
     }
 
     public Section read(int objId) {
@@ -52,5 +67,33 @@ public class SectionDAO {
                 .setId((int) row.get("_id"))
                 .setReferenceName((String) row.get("referenceName"))
                 .build();
+    }
+
+    public enum ColumnNames {
+        ID("_id"),
+        REFERENCE_NAME("referenceName");
+
+        private final String columnName;
+
+        ColumnNames(String tableName) {
+            this.columnName = tableName;
+        }
+
+        @Override
+        public String toString() {
+            return columnName;
+        }
+    }
+
+    private String getFieldNames(String prepend) {
+        StringBuilder builder = new StringBuilder();
+        for (ColumnNames column : ColumnNames.values()) {
+            builder.append(prepend);
+            builder.append(column.columnName);
+            if (!column.equals(ColumnNames.values()[ColumnNames.values().length - 1])) {
+                builder.append(",");
+            }
+        }
+        return builder.toString();
     }
 }

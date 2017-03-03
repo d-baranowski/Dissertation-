@@ -43,15 +43,6 @@
     </th:block>
 </th:block>
 
-<th:block layout:fragment="rightText">
-    <th:block th:if="${answerable}">
-        <div class="injectInHeader" id="timer">
-            <h4>Time Remaining</h4>
-            <h1 id="clockText">00:00</h1>
-        </div>
-    </th:block>
-</th:block>
-
 <div layout:fragment="content" id="content" class="contentWrapper container-fluid">
     <div th:replace="/fragments/paper/sectionNavigation"/>
     <div id="workspace" class="col-md-9">
@@ -65,9 +56,6 @@
 
 <div layout:fragment="modals">
     <div th:replace="/fragments/paper/areyousuremodal"></div>
-    <div id="loading">
-        <img id="loading-image" src="../images/ajax-loader.gif" alt="Loading..." />
-    </div>
 </div>
 
 <th:block layout:fragment="script">

@@ -29,7 +29,7 @@ public class ExamDAOTest {
         Assert.assertEquals(TestResources.SAMPLE_EXAM, dao.read(1));
     }
 
-    @Test
+    /*@Test
     public void canCreate() {
         Exam exam = new Exam.Builder()
                 .setId(2)
@@ -43,5 +43,5 @@ public class ExamDAOTest {
         int createdId = dao.create(exam);
 
         Assert.assertEquals(exam, dao.read(createdId));
-    }
+    }*/
 }

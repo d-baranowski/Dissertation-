@@ -1,13 +1,31 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public final class SectionModel extends SectionReferenceModel {
+    @NotNull(message = "Please add a instructions text before submitting")
+    @Size(min = 5, max = 50000, message = "Section instructions text too long or too short.")
     private String instructionsText;
+    @Min(value = 1, message = "Minimum number of questions to answer is 1")
+    @Max(value = 100, message = "Maximum number of questions to answer is 99")
     private int noOfQuestionsToAnswer;
+    @Min(value = 1, message = "Minimum time scale is 1")
+    @Max(value = 100, message = "Maximum time scale is 99")
     private int timeScale;
     private Map<Integer, QuestionModel> questions;
+
+    public SectionModel() {
+        instructionsText = "";
+        questions = new HashMap<>();
+        noOfQuestionsToAnswer = 1;
+        timeScale = 5;
+    }
 
     public String getInstructionsText() {
         return instructionsText;

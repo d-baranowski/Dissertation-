@@ -25,4 +25,12 @@
             </tr>
         </tbody>
     </table>
+
+    <form role="form" method="post" th:action="${BEGIN_ENDPOINT}" th:if="${EXAM_STATUS.equals(CREATED) == true}">
+        <input class="button btn-primary" value="Begin Exam" type="submit"/>
+    </form>
+
+    <form role="form" method="post" th:action="${END_ENDPOINT}" th:if="${EXAM_STATUS.equals(STARTED) == true}">
+        <input class="button btn-primary" value="End Exam" type="submit"/>
+    </form>
 </div>

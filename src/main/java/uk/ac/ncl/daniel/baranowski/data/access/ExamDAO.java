@@ -1,7 +1,10 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import javafx.scene.control.Tab;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Exam;
@@ -61,6 +64,41 @@ public class ExamDAO {
                 .setStatus(ExamStatus.getByName((String) row.get("status")))
                 .setTermsAndConditionsId((int) row.get("termsAndConditionsId"))
                 .build();
+    }
+
+    public boolean isModuleLeader(int examId, String userId) {
+        String sql = "SELECT count(*) = 1 FROM Exam e INNER JOIN Module m ON m.`_id` = e.moduleId INNER JOIN ModuleLeader ml ON ml.moduleId = m.`_id` WHERE e.`_id` = ? AND ml.userId = ?";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, examId, userId);
+    }
+
+    public void setExamStatus(int examId, ExamStatus status) {
+        String sql =
+                "UPDATE " + TableNames.EXAM + " e " +
+                "SET " + STATUS + "= ? " +
+                "WHERE e." + ID + " = ?";
+
+        jdbcTemplate.update(sql, status.toString(), examId);
+    }
+
+    public void setStartTime(int examId, String s) {
+        String sql =
+                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.startTime = ? WHERE e.`_id` = ?";
+
+        jdbcTemplate.update(sql, s, examId);
+    }
+
+    public void setEndTimeExtra(int examId, String s) {
+        String sql =
+                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.endTimeWithExtraTime = ? WHERE e.`_id` = ?";
+
+        jdbcTemplate.update(sql, s, examId);
+    }
+
+    public void setEndTime(int examId, String endTime) {
+        String sql =
+                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.endTime = ? WHERE e.`_id` = ?";
+
+        jdbcTemplate.update(sql, endTime, examId);
     }
 
     public enum ColumnNames {

@@ -4,6 +4,6 @@
     </div>
 
     <div class="panel-answer-section collapsible collapse" th:id="${#ids.seq('panel-answer-section')}">
-        <textarea readonly="true" th:text="${currentQuestion.getCorrectAnswer()}" type="text" style="resize: none;"></textarea>
+        <div th:utext="${currentQuestion.getMarkingGuide()}" style="resize: none;"></div>
     </div>
 </div>

@@ -33,4 +33,21 @@ public class SectionReferenceModelMapper {
 
         return section;
     }
+
+    public static Section mapSectionFrom(SectionReferenceModel model) {
+        return new Section.Builder()
+                .setId(model.getId())
+                .setReferenceName(model.getReferenceName())
+                .build();
+    }
+
+    public static SectionVersion mapSectionVersionFrom(SectionModel model) {
+        return new SectionVersion.Builder()
+                .setVersionNo(model.getVersionNumber())
+                .setDescription(model.getInstructionsText())
+                .setSectionId(model.getId())
+                .setNoOfQuestionsToAnswer(model.getNoOfQuestionsToAnswer())
+                .setTimeScale(model.getTimeScale())
+                .build();
+    }
 }

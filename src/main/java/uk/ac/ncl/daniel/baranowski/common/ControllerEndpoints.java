@@ -16,14 +16,14 @@ public class ControllerEndpoints {
 
     public static final String ATTEMPT_PREFIX = "/test-attempt";
     public static final String EXAM_SETUP_COMPLETE = "/setup/confirm";
-    public static final String ATTEMPT_LOGIN = "{examId}/login";
+    public static final String ATTEMPT_LOGIN = "/{examId}/login";
     public static final String ATTEMPT_CREATE_SESSION = "/{examId}/create-session";
     public static final String ATTEMPT_START = "/{testAttemptId}/start";
     public static final String ATTEMPT_ONGOING = "/ongoing";
     public static final String ATTEMPT_MARK = "/{testAttemptId}/mark";
     public static final String ATTEMPT_COMPLETE = "/completed";
     public static final String ATTEMPT_FINISH_PAGE = "/finish-page";
-    public static final String ATTEMPT_BEGIN = "begin";
+    public static final String ATTEMPT_BEGIN = "/begin";
     public static final String ATTEMPT_QUESTION_SUBMIT = "/submit-question";
     public static final String ATTEMPT_MARK_SUBMIT = "/submit-mark";
     public static final String ATTEMPT_TIME_REMAINING = "/get-time-remaining";
@@ -49,9 +49,21 @@ public class ControllerEndpoints {
     public static final String PAPER_PREFIX = "/test-paper";
     public static final String PAPER_VIEW = "/{paperId}/{paperVersionNo}/view";
     public static final String PAPER_TEST_LIBRARY = "/test-library";
+    public static final String PAPER_CREATE_QUESTION = "/create-question";
+    public static final String PAPER_UPDATE_QUESTION = "/update-question";
+
+    public static final String PAPER_CREATE_SECTION = "/create-section";
+    public static final String PAPER_UPDATE_SECTION = "/update-section";
+    public static final String PAPER_ADD_QUESTION_TO_SECTION = "/add-question-to-section";
+    public static final String PAPER_REMOVE_QUESTION_FROM_SECTION = "/remove-question-from-section";
+    public static final String PAPER_MOVE_QUESTION_IN_SECTION = "/move-question-in-section";
+    public static final String PAPER_GET_UPDATED_SECTION_QUESTIONS = "/get-questions-table/{sectionId}/{sectionVersion}";
+
+    public static final String EXAM_REVIEW = "/review-exam/{examId}";
+    public static final String EXAM_BEGIN = "/start/{examId}";
+    public static final String EXAM_FINNISH = "/finnish/{examId}";
 
     private static final Logger LOGGER = Logger.getLogger(ControllerEndpoints.class.getName());
-    public static final String EXAM_REVIEW = "/review-exam/{examId}";
 
     /**
      * Hides implicit public constructor.

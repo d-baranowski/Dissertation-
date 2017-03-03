@@ -1,10 +1,14 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class SectionReferenceModel {
     private int id;
     private int versionNumber;
+    @NotNull(message = "Please specify the reference name for this section.")
+    @Size(min = 5, max = 100, message = "Reference name needs to be between 5 and 100 characters long. ")
     private String referenceName;
 
     public int getId() {

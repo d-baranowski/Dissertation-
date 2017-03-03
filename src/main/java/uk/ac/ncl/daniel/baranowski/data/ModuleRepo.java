@@ -62,7 +62,7 @@ public class ModuleRepo {
                     getModuleLeaders(id),
                     getAllCandidatesEnrolledToModule(id)
             );
-        } catch (AccessException | DataAccessException e) {
+        } catch (DataAccessException e) {
             final String errorMsg = "Failed to get module with id " + id;
             LOGGER.log(Level.WARNING, errorMsg, e);
             throw new AccessException(errorMsg, e);

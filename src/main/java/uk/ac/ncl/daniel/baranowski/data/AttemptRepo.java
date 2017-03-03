@@ -476,11 +476,16 @@ public class AttemptRepo {
         }
     }
 
+
     public int getTimeRemaining(int testAttemptId) throws AccessException {
         try {
             return attemptDao.getTimeRemaining(testAttemptId);
         } catch (DataAccessException e) {
             final String errorMsg = "Failed to get gime remaining to test attempt with id " + testAttemptId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg);
+        } catch (IllegalArgumentException e) {
+            final String errorMsg = "Exam date is in wrong format";
             LOGGER.log(Level.WARNING, errorMsg, e);
             throw new AccessException(errorMsg);
         }

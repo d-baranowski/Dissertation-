@@ -221,7 +221,7 @@ INSERT INTO UserRole VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','Author');
 INSERT INTO UserRole VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a','ModuleLeader');
 INSERT INTO ModuleLeader(userId, moduleId) VALUES ('045d785e-cc44-4e7e-89b8-2df505c0b72a', 5);
 
-INSERT INTO TestDay(date,location,startTime,endTime) VALUES ('2014/01/02', 'Leeds Office','12:00','14:30');
+INSERT INTO TestDay(date,location,startTime,endTime) VALUES ('22/02/2017', 'Leeds Office','12:00','14:30');
 INSERT INTO Exam(`testPaperVersionNo`,
                  `testPaperId`,
                  `status`,

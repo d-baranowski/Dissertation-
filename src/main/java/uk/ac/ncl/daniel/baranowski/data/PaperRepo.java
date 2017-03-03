@@ -8,13 +8,7 @@ import uk.ac.ncl.daniel.baranowski.data.access.QuestionVersionDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.SectionDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.SectionVersionDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.TermsAndConditionsDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Paper;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.PaperVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Question;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersion;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersionAsset;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Section;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersion;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
 import uk.ac.ncl.daniel.baranowski.models.AssetModel;
 import uk.ac.ncl.daniel.baranowski.models.PaperModel;
@@ -35,11 +29,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper;
 
+import javax.xml.crypto.Data;
+
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
+import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapQuestionVersionAssetFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.PaperModelMapper.mapPaperModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.PaperModelMapper.mapPaperReferenceModelFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.SectionReferenceModelMapper.mapSectionModelFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.SectionReferenceModelMapper.mapSectionReferenceModelFrom;
+import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionAssetsFrom;
+import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionFrom;
+import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionVersionFrom;
+import static uk.ac.ncl.daniel.baranowski.data.mappers.SectionReferenceModelMapper.*;
 
 @Repository
 public class PaperRepo {
@@ -89,10 +88,12 @@ public class PaperRepo {
         try {
             for (Question q : questionDao.readAll()) {
                 final int latestVersionNo = questionVersionDao.getLatestVersionNo(q.getId());
-                result.add(QuestionModelMapper.mapQuestionReferenceModelFrom(
-                        q,
-                        latestVersionNo,
-                        questionVersionDao.getTimeScale(latestVersionNo, q.getId())));
+                if (latestVersionNo != 0) {
+                    result.add(QuestionModelMapper.mapQuestionReferenceModelFrom(
+                            q,
+                            latestVersionNo,
+                            questionVersionDao.getTimeScale(q.getId(), latestVersionNo)));
+                }
             }
         } catch (DataAccessException e) {
             LOGGER.log(Level.WARNING, "Failed to get all question references", e);
@@ -100,6 +101,15 @@ public class PaperRepo {
         }
 
         return result;
+    }
+
+    public void removeQuestionFromSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException {
+        try {
+            questionVersionDao.deleteEntry(questionId, questionVersion, sectionId, sectionVersion);
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to delete question version entry", e);
+            throw new AccessException(e.getMessage());
+        }
     }
 
     public QuestionModel getQuestionById(int questionId, int versionNo) throws AccessException {
@@ -240,6 +250,137 @@ public class PaperRepo {
         }
     }
 
+    public int createQuestion(QuestionModel model) throws AccessException {
+        try {
+            model.setVersionNo(1);
+            int id = questionDao.create(mapQuestionFrom(model));
+            model.setId(id);
+            questionVersionDao.create(mapQuestionVersionFrom(model));
+            mapQuestionAssetsFrom(model).forEach(assetModel -> {
+                questionAssetDao.create(mapQuestionVersionAssetFrom(assetModel,id, 1));
+            });
+            return id;
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to create question " + model, e);
+            throw new AccessException("Failed to create question", e);
+        }
+    }
+
+    public int updateQuestion(QuestionModel model) throws AccessException {
+        try {
+            boolean isUsed = questionVersionDao.checkIfVersionIsUsed(model.getId(),model.getVersionNo());
+            if (isUsed) {
+                int newVersionNo = model.getVersionNo() + 1;
+                model.setVersionNo(newVersionNo);
+                questionVersionDao.create(mapQuestionVersionFrom(model));
+                return newVersionNo;
+            } else {
+                questionVersionDao.update(mapQuestionVersionFrom(model));
+                return model.getVersionNo();
+            }
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to update question " + model, e);
+            throw new AccessException("Failed to update question", e);
+        }
+    }
+
+    public int createSection(SectionModel model) throws AccessException {
+        try {
+            model.setVersionNumber(1);
+            int id = sectionDao.create(mapSectionFrom(model));
+            model.setId(id);
+            sectionVersionDao.create(mapSectionVersionFrom(model));
+            return id;
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to create section " + model, e);
+            throw new AccessException("Failed to create section", e);
+        }
+    }
+
+    public int updateSection(SectionModel model) throws AccessException {
+        try {
+            boolean isUsed = sectionVersionDao.checkIfVersionIsUsed(model.getId(),model.getVersionNumber());
+            if (isUsed) {
+                int oldVersionNo = model.getVersionNumber();
+                int newVersionNo = sectionVersionDao.getLatestVersionNo(model.getId()) + 1;
+                model.setVersionNumber(newVersionNo);
+                sectionVersionDao.create(mapSectionVersionFrom(model));
+
+                questionVersionDao.copyEntries(model.getId(), oldVersionNo, newVersionNo);
+
+                return newVersionNo;
+            } else {
+                sectionVersionDao.update(mapSectionVersionFrom(model));
+                return model.getVersionNumber();
+            }
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to update section " + model, e);
+            throw new AccessException("Failed to update section ", e);
+        }
+    }
+
+    public SectionModel getSectionModel(int sectionId, int sectionVersionNo) throws AccessException {
+        try {
+            SectionVersion sectionVersion = sectionVersionDao.read(sectionId,sectionVersionNo);
+            Section sectionParent = sectionDao.read(sectionId);
+            return  mapSectionModelFrom(sectionParent, sectionVersion,
+                    getSectionQuestions(sectionId, sectionVersionNo));
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, String.format("Failed to get section with id %s and versionNo %s",
+                    sectionId, sectionVersionNo), e);
+            throw new AccessException(e.getMessage());
+        }
+    }
+
+    public void moveQuestion(int questionId, int questionVerNo, int sectionId, int sectionVersion, int newRef) throws AccessException {
+        try {
+            questionVersionDao.moveQuestion(questionId, questionVerNo, sectionId, sectionVersion, newRef);
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to move question within section.");
+            throw new AccessException(e.getMessage());
+        }
+    }
+
+    public int addQuestionToSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException {
+        try {
+            QuestionVersionEntry entry = questionVersionDao.getEntry(questionId, questionVersion, sectionId, sectionVersion);
+
+            //If entry already exists in the section
+            if (!entry.equals(new QuestionVersionEntry())) {
+                return -1;
+            } else {
+                int questionNumber = getLastQuestionNumber(sectionId, sectionVersion);
+                questionVersionDao.addQuestionToSection(
+                        new QuestionVersionEntry()
+                                .setSectionVersionNo(sectionVersion)
+                                .setSectionId(sectionId)
+                                .setReferenceNumber(questionNumber + 1)
+                                .setQuestionId(questionId)
+                                .setQuestionVersionNumber(questionVersion)
+                );
+                return questionNumber + 1;
+            }
+        } catch (DataAccessException e) {
+            final String msg = "Failed to add question to section";
+            LOGGER.log(Level.WARNING, msg, e);
+            throw new AccessException(msg, e);
+        }
+    }
+
+    public int getLastQuestionNumber(int sectionId, int sectionVersion) throws AccessException {
+        try {
+            return questionVersionDao.getLastQuestionNumber(sectionId, sectionVersion);
+        } catch(DataAccessException e) {
+            final String msg = "Failed to get latest question number";
+            LOGGER.log(Level.WARNING, msg, e);
+            throw new AccessException(msg, e);
+        } catch (NullPointerException e) {
+            final String msg = "There are no questions in section";
+            LOGGER.log(Level.INFO, msg);
+            return 0;
+        }
+    }
+
     private Map<Integer, SectionModel> getPaperSections(int paperId, int versionNo) throws AccessException {
         try {
             Map<Integer, SectionModel> result = new HashMap<>();
@@ -261,7 +402,7 @@ public class PaperRepo {
         }
     }
 
-    private Map<Integer, QuestionModel> getSectionQuestions(int sectionId, int sectionVersionNo) {
+    public Map<Integer, QuestionModel> getSectionQuestions(int sectionId, int sectionVersionNo) {
         Map<Integer, QuestionModel> result = new HashMap<>();
         List<QuestionVersion> questionVersions = questionVersionDao.getBySection(sectionId, sectionVersionNo);
 
@@ -281,5 +422,15 @@ public class PaperRepo {
         final List<AssetModel> result = new ArrayList<>();
         qa.forEach(a -> result.add(mapAssetModelFrom(a)));
         return result;
+    }
+
+    public void moveQuestionByIndex(int from, int to, int sectionId, int sectionVersionNo) throws AccessException {
+        try {
+            questionVersionDao.moveQuestionByPosition(from, to, sectionId, sectionVersionNo);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to move question from " + from + " to " + to + " in section " + sectionId + ":" + sectionVersionNo;
+            LOGGER.log(Level.WARNING, errorMsg,e);
+            throw new AccessException(errorMsg);
+        }
     }
 }

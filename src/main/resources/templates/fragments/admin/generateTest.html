@@ -28,7 +28,7 @@
 
         <div>
             <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Date: </label><br/>
-            <input type="text" id="datepicker" class="form-control formItem" th:field="${formBody.day.date}"/>
+            <input type="text" id="datepicker" format="dd/mm/yyyy" class="form-control formItem" th:field="${formBody.day.date}"/>
             <p th:if="${daydateError != null}" th:class="text-error" th:text="${daydateError}"></p>
         </div>
 

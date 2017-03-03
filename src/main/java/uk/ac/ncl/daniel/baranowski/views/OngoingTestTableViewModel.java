@@ -15,8 +15,7 @@ public class OngoingTestTableViewModel {
                         "Attempt Id",
                         "Candidate Name",
                         "Paper",
-                        "Date",
-                        "Location"));
+                        "Date"));
 
         mav.addObject("viewPaperPrefix", ControllerEndpoints.PAPER_PREFIX);
         mav.addObject("viewPaperView", ControllerEndpoints.PAPER_VIEW.replace("/{paperId}", "").replace("/{paperVersionNo}", ""));

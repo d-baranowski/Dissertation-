@@ -17,7 +17,6 @@
 
                 ></a></td>
             <td th:text="${reference.getDate()}"></td>
-            <td th:text="${reference.getLocation()}"></td>
             <th:block th:unless="${disableNotMarker}">
                 <td><a th:attr="href=${'/test-attempt/' + reference.getId() + '/mark'}">Mark</a></td>
             </th:block>
