@@ -17,6 +17,37 @@ $(document).ready(function () {
             }
         );
 
+        paperSectionsDataTable.on('row-reorder',function(e, diff, edit) {
+            var paperId = $('#id').val();
+            var paperVersion = $('#versionNo').val();
+            var updates = [];
+
+            for ( var i=0, ien=diff.length ; i<ien ; i++ ) {
+                var rowData = paperSectionsDataTable.row( diff[i].node ).data();
+                updates.push({
+                    "paperId": paperId,
+                    "paperVer": paperVersion,
+                    "sectionId": rowData[1],
+                    "sectionVer": rowData[2],
+                    "newRef": diff[i].newData
+                })
+            }
+
+            var url = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_MOVE_SECTION_IN_PAPER;
+
+            var jsonData = JSON.stringify(updates);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: 'application/json',
+                data: jsonData,
+                error: function (data) {
+                    buildWarningAlert('Failed to move question')
+                }
+            });
+        });
+
         handleDeletingSectionsFromPaper(paperSectionsDataTable);
 
         var versionNumber = $('#versionNo').val();
@@ -173,7 +204,7 @@ function getSectionFromRow(row, sectionNumber) {
         "<td>" + result[4] + "</td>" +
         "<td>" + result[5] + "</td>" +
         "<td>" + result[6] + "</td>" +
-        "<td><a class='js-remove-question-handle' href='test'>Remove</a></td>" +
+        "<td><a class='js-remove-section-handle' href='test'>Remove</a></td>" +
         "</tr>";
 }
 
@@ -216,7 +247,7 @@ function handleDeletingSectionsFromPaper(table) {
             "sectionId": row.data()[1],
             "sectionVersion": row.data()[2],
             "paperId": $('#id').val(),
-            "paperVersion": $('#versionNumber').val(),
+            "paperVersion": $('#versionNo').val(),
             "sectionNo": row.data()[0]
         });
 
@@ -236,6 +267,11 @@ function handleDeletingSectionsFromPaper(table) {
             },
             error: function (data) {
                 var msg = "Failed to remove section. " + (data.responseJSON.message ? data.responseJSON.message : "");
+                if (data.responseJSON.constructor === Array) {
+                    data.responseJSON.forEach(function (element) {
+                        msg += (element.defaultMessage ? element.defaultMessage + ", " : "")
+                    });
+                }
                 buildWarningAlert(msg)
             }
         });

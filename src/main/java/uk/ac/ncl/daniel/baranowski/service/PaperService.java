@@ -14,12 +14,10 @@ import uk.ac.ncl.daniel.baranowski.models.PaperModel;
 import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
 import uk.ac.ncl.daniel.baranowski.models.SectionModel;
-import uk.ac.ncl.daniel.baranowski.models.api.AddQuestionToSection;
-import uk.ac.ncl.daniel.baranowski.models.api.AddSectionToPaper;
-import uk.ac.ncl.daniel.baranowski.models.api.MoveQuestionInSection;
-import uk.ac.ncl.daniel.baranowski.models.api.RemoveQuestionFromSection;
+import uk.ac.ncl.daniel.baranowski.models.api.*;
 import uk.ac.ncl.daniel.baranowski.views.TestLibraryViewModel;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -84,6 +82,36 @@ public class PaperService {
         }
 
         return mav;
+    }
+
+    public ModelAndView getViewSection(int sectionId, int sectionVersion) {
+        PaperModel paper = new PaperModel();
+        paper.setInstructionsText("");
+        paper.setVersionNo(0);
+        paper.setId(0);
+        paper.setReferenceName("View Section");
+        paper.setTimeAllowed(0);
+
+        try {
+            SectionModel section = repo.getSectionModel(sectionId, sectionVersion);
+            HashMap<Integer, SectionModel> sections = new HashMap<>();
+            sections.put(1, section);
+            paper.setSections(sections);
+
+            if (section != null) {
+                ModelAndView mav = new ModelAndView("paper");
+                mav.addObject("paper", paper);
+                mav.addObject("answerable", false);
+                mav.addObject("dashboardContent", "testLibrary");
+                mav.addObject("inMarking", false);
+                return mav;
+            } else {
+                throw new SectionDoesNotExistException(String.format("Section with id: %s and Version number: %s does not exist.", sectionId, sectionVersion));
+            }
+        } catch (AccessException e) {
+            LOGGER.log(WARNING, String.format("Failed to get section with id %s and version no %s", sectionId, sectionVersion), e);
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public ModelAndView getSectionEditor(int sectionId, int sectionVersion) {
@@ -248,6 +276,32 @@ public class PaperService {
         }
     }
 
+    public void removeSectionFromPaper(RemoveSectionFromPaper q) throws FailedToRemoveSectionFromPaperException, FailedToMoveSectionWithinPaperException {
+        try {
+            repo.removeSectionFromPaper(q.getSectionId(), q.getSectionVersion(), q.getPaperId(), q.getPaperVersion());
+            int lastIndex = repo.getLastSectionNumber(q.getPaperId(), q.getPaperVersion());
+            if (lastIndex != q.getSectionNo()) {
+                moveSectionsUpToDeleted(q.getSectionNo(), lastIndex, q.getPaperId(), q.getPaperVersion());
+            }
+        }  catch (AccessException e) {
+            final String errorMsg = "Failed to remove question from section";
+            LOGGER.log(SEVERE, errorMsg, e);
+            throw new FailedToRemoveSectionFromPaperException(errorMsg);
+        }
+    }
+
+    private void moveSectionsUpToDeleted(int deletedNo, int lastNo, int paperId, int paperVersion) throws FailedToMoveSectionWithinPaperException {
+        try {
+            for (int i = deletedNo; i <= lastNo; i++) {
+                repo.moveSectionByIndex(i + 1, i, paperId, paperVersion);
+            }
+        } catch (AccessException e){
+            final String errorMsg = "Failed to move questions deleting";
+            LOGGER.log(SEVERE, errorMsg, e);
+            throw new FailedToMoveSectionWithinPaperException(errorMsg);
+        }
+    }
+
     private void moveQuestionsUpToDeleted(int deletedNo, int lastNo, int sectionId, int sectionVersionNo) throws FailedToMoveQuestionWithinSectionException {
         try {
             for (int i = deletedNo; i <= lastNo; i++) {
@@ -258,7 +312,6 @@ public class PaperService {
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToMoveQuestionWithinSectionException(errorMsg);
         }
-
     }
 
     public void moveQuestionWithinSection(MoveQuestionInSection[] q) throws FailedToMoveQuestionWithinSectionException {
@@ -275,6 +328,23 @@ public class PaperService {
             final String errorMsg = "Failed to move question within section ";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToMoveQuestionWithinSectionException(errorMsg);
+        }
+    }
+
+    public void moveSectionWithinPaper(MoveSectionInPaper[] q) throws FailedToMoveSectionWithinPaperException {
+        try {
+            for (MoveSectionInPaper move : q) {
+                repo.moveSection(
+                        move.getSectionId(),
+                        move.getSectionVer(),
+                        move.getPaperId(),
+                        move.getPaperVer(),
+                        move.getNewRef());
+            }
+        } catch (AccessException e) {
+            final String errorMsg = "Failed to move section within paper ";
+            LOGGER.log(SEVERE, errorMsg, e);
+            throw new FailedToMoveSectionWithinPaperException(errorMsg);
         }
     }
 

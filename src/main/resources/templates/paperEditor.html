@@ -116,7 +116,7 @@
                 <td th:text="${section.getReferenceName()}"></td>
                 <td th:text="${section.getNoOfQuestionsToAnswer()}"></td>
                 <td th:text="${section.getTimeScale()}"></td>
-                <td><a th:href="${'/test-paper/view-question/' + section.getId() + '/' + section.getVersionNumber()}">View</a></td>
+                <td><a th:href="${'/test-paper/view-section/' + section.getId() + '/' + section.getVersionNumber()}">View</a></td>
                 <td><a class="js-add-section-handle"
                        th:attr="data-paper-id=${formObject.getId()},
                            data-section-id=${section.getId()},

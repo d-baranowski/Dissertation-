@@ -125,39 +125,39 @@ CREATE TABLE Question(
 
 CREATE TABLE QuestionVersion(
 	`versionNumber` INT NOT NULL,
-	`paperId` INT NOT NULL,
+	questionId INT NOT NULL,
 	`text` VARCHAR(2048),
     `correctAnswer` VARCHAR(2048),
     `markingGuide` VARCHAR(2048),
     `timeScale` INT,
-	FOREIGN KEY (paperId)
+	FOREIGN KEY (questionId)
         REFERENCES Question(_id),
-	PRIMARY KEY (versionNumber,paperId)
+	PRIMARY KEY (versionNumber, questionId)
 );
 
 CREATE TABLE QuestionVersionAsset(
 	`_id` INT NOT NULL AUTO_INCREMENT,
-    `paperVersionNumber` INT NOT NULL,
-	`paperId` INT NOT NULL,
+    questionVersionNumber INT NOT NULL,
+	questionId INT NOT NULL,
 	`referenceName` VARCHAR(104),
 	`blobType` VARCHAR(104),
 	`_blob` LONGBLOB,
-    FOREIGN KEY (paperVersionNumber,paperId)
-        REFERENCES QuestionVersion(versionNumber,paperId),
+    FOREIGN KEY (questionVersionNumber,questionId)
+        REFERENCES QuestionVersion(versionNumber, questionId),
     PRIMARY KEY (_id)
 );
 
 CREATE TABLE QuestionVersionEntry(
     `testPaperSectionVersionNo` INT,
     `testPaperSectionId` INT,
-    `paperVersionNumber` INT,
-	  `paperId` INT,
+    questionVersionNumber INT,
+	  questionId INT,
     `referenceNumber` INT,
     FOREIGN KEY (testPaperSectionId,testPaperSectionVersionNo) 
         REFERENCES TestPaperSectionVersion(testPaperSectionId,versionNumber),
-    FOREIGN KEY (paperId,paperVersionNumber)
-        REFERENCES QuestionVersion(paperId,versionNumber),
-    PRIMARY KEY (paperVersionNumber, paperId,testPaperSectionVersionNo,testPaperSectionId)
+    FOREIGN KEY (questionId, questionVersionNumber)
+        REFERENCES QuestionVersion(questionId,versionNumber),
+    PRIMARY KEY (questionVersionNumber, questionId, testPaperSectionVersionNo, testPaperSectionId)
 );
 
 CREATE TABLE TermsAndConditions(
@@ -229,7 +229,7 @@ CREATE TABLE Answer(
   FOREIGN KEY (markId)
   REFERENCES Mark(_id),
   FOREIGN KEY (paperVersionNumber,paperId)
-  REFERENCES QuestionVersion(versionNumber,paperId),
+  REFERENCES QuestionVersion(versionNumber, questionId),
   FOREIGN KEY (testDayEntryId)
   REFERENCES TestDayEntry(_id),
   PRIMARY KEY (paperId,paperVersionNumber,testDayEntryId)

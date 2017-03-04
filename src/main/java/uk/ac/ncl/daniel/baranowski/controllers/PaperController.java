@@ -100,6 +100,12 @@ public class PaperController {
         return service.getViewQuestion(questionId, questionVersion);
     }
 
+    @RequestMapping("/view-section/{sectionId}/{sectionVersion}")
+    @PreAuthorize("hasAnyAuthority('Marker', 'Admin', 'Author','ModuleLeader')")
+    public ModelAndView viewSection(@PathVariable int sectionId, @PathVariable int sectionVersion) {
+        return service.getViewSection(sectionId, sectionVersion);
+    }
+
 
     /* API ENDPOINTS */
     @RequestMapping(value = PAPER_CREATE_QUESTION, method = RequestMethod.POST)
@@ -191,6 +197,4 @@ public class PaperController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
-    
 }

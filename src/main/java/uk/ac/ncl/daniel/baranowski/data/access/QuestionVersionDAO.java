@@ -126,7 +126,7 @@ public class QuestionVersionDAO {
         }
     }
 
-    public List<QuestionVersion> getBySection(int sectionId, int sectonVersionNo) {
+    public List<QuestionVersion> getBySection(int sectionId, int sectionVersionNo) {
         final String sql = String.format(
                 "SELECT qv.questionId, qv.text, qv.correctAnswer, qv.markingGuide, qv.timeScale, qv.versionNumber " +
                         "FROM %s qv JOIN %s e " +
@@ -134,7 +134,7 @@ public class QuestionVersionDAO {
                         "AND e.questionId = qv.questionId AND e.questionVersionNumber = qv.versionNumber ",
                 QUESTION_VERSION, QUESTION_VERSION_ENTRY);
 
-        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, sectionId, sectonVersionNo);
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, sectionId, sectionVersionNo);
         List<QuestionVersion> result = new ArrayList<>();
 
         for (Map<String, Object> row : resultList) {

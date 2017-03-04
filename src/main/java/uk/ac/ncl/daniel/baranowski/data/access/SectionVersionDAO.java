@@ -178,7 +178,7 @@ public class SectionVersionDAO {
 
     public int getLastSectionNumber(int paperId, int paperVersion) {
         final String sql = String.format(
-                "SELECT MAX(t.%s) FROM %s t WHERE t.%s = ? AND t.%s = ?",
+                "SELECT MAX(%s) FROM %s WHERE %s = ? AND %s = ?",
                 EntryColumnNames.SECTION_NO,
                 TEST_PAPER_SECTION_VERSION_ENTRY,
                 EntryColumnNames.PAPER_ID,
@@ -204,6 +204,54 @@ public class SectionVersionDAO {
                         EntryColumnNames.PAPER_ID.toString(),
                         EntryColumnNames.PAPER_VERSION.toString())
                 .execute(args);
+    }
+
+    public void deleteEntry(int sectionId, int sectionVersion, int paperId, int paperVersion) {
+        final String sql = String.format(
+                "DELETE FROM %s WHERE %s = ? AND %s = ? AND %s = ? AND %s = ?",
+                TEST_PAPER_SECTION_VERSION_ENTRY,
+                EntryColumnNames.SECTION_ID,
+                EntryColumnNames.SECTION_VERSION,
+                EntryColumnNames.PAPER_ID,
+                EntryColumnNames.PAPER_VERSION);
+
+        jdbcTemplate.update(sql, sectionId, sectionVersion, paperId, paperVersion);
+    }
+
+    public void moveSectionByPosition(int from, int to, int paperId, int paperVersion) {
+        final String sql = String.format(
+                "UPDATE %s SET %s = ? WHERE %s = ? AND %s = ? AND %s = ?",
+                TEST_PAPER_SECTION_VERSION_ENTRY,
+                EntryColumnNames.SECTION_NO,
+                EntryColumnNames.PAPER_ID,
+                EntryColumnNames.PAPER_VERSION,
+                EntryColumnNames.SECTION_NO
+        );
+        jdbcTemplate.update(sql,
+                to,
+                paperId,
+                paperVersion,
+                from
+        );
+    }
+
+    public void moveSection(int sectionId, int sectionVer, int paperId, int paperVer, int newRef) {
+        final String sql = String.format(
+                "UPDATE %s SET %s = ? WHERE %s = ? AND %s = ? AND %s = ? AND %s = ?",
+                TEST_PAPER_SECTION_VERSION_ENTRY,
+                EntryColumnNames.SECTION_NO,
+                EntryColumnNames.SECTION_ID,
+                EntryColumnNames.SECTION_VERSION,
+                EntryColumnNames.PAPER_ID,
+                EntryColumnNames.PAPER_VERSION
+        );
+        jdbcTemplate.update(sql,
+                newRef,
+                sectionId,
+                sectionVer,
+                paperId,
+                paperVer
+        );
     }
 
 

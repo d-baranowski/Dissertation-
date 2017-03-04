@@ -6,14 +6,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
-import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddQuestionToSectionException;
-import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddSectionToPaperException;
-import uk.ac.ncl.daniel.baranowski.exceptions.FailedToMoveQuestionWithinSectionException;
-import uk.ac.ncl.daniel.baranowski.exceptions.FailedToRemoveQuestionFromSectionException;
-import uk.ac.ncl.daniel.baranowski.models.api.AddQuestionToSection;
-import uk.ac.ncl.daniel.baranowski.models.api.AddSectionToPaper;
-import uk.ac.ncl.daniel.baranowski.models.api.MoveQuestionInSection;
-import uk.ac.ncl.daniel.baranowski.models.api.RemoveQuestionFromSection;
+import uk.ac.ncl.daniel.baranowski.exceptions.*;
+import uk.ac.ncl.daniel.baranowski.models.api.*;
 import uk.ac.ncl.daniel.baranowski.service.PaperService;
 
 import javax.validation.Valid;
@@ -85,6 +79,19 @@ public class PaperAPIController {
         }
     }
 
+    @RequestMapping(value = PAPER_REMOVE_SECTION_FROM_PAPER, method = RequestMethod.POST)
+    public ResponseEntity removeSectionFromPaper(@Valid @RequestBody RemoveSectionFromPaper q, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        try {
+            service.removeSectionFromPaper(q);
+            return ResponseEntity.ok().build();
+        } catch (FailedToRemoveSectionFromPaperException | FailedToMoveSectionWithinPaperException e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
     @RequestMapping(value = PAPER_MOVE_QUESTION_IN_SECTION, method = RequestMethod.POST)
     public ResponseEntity moveQuestionInSection(@Valid @RequestBody MoveQuestionInSection[] q, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -94,6 +101,19 @@ public class PaperAPIController {
             service.moveQuestionWithinSection(q);
             return ResponseEntity.ok("Ok");
         } catch (FailedToMoveQuestionWithinSectionException e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @RequestMapping(value = PAPER_MOVE_SECTION_IN_PAPER, method = RequestMethod.POST)
+    public ResponseEntity moveSectionInPaper(@Valid @RequestBody MoveSectionInPaper[] q, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+        try {
+            service.moveSectionWithinPaper(q);
+            return ResponseEntity.ok("Ok");
+        } catch (FailedToMoveSectionWithinPaperException e) {
             return ResponseEntity.badRequest().body(e);
         }
     }

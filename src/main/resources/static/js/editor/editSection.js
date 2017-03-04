@@ -46,7 +46,6 @@ $(document).ready(function () {
                     buildWarningAlert('Failed to move question')
                 }
             });
-
         });
 
         handleDeletingQuestionsFromSection(sectionQuestionDataTable);

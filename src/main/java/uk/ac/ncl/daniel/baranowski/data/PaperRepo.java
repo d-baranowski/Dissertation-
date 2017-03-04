@@ -1,6 +1,5 @@
 package uk.ac.ncl.daniel.baranowski.data;
 
-import org.springframework.security.access.method.P;
 import uk.ac.ncl.daniel.baranowski.data.access.PaperDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.PaperVersionDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.QuestionDAO;
@@ -29,8 +28,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper;
-
-import javax.xml.crypto.Data;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapQuestionVersionAssetFrom;
@@ -106,6 +103,15 @@ public class PaperRepo {
     public void removeQuestionFromSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException {
         try {
             questionVersionDao.deleteEntry(questionId, questionVersion, sectionId, sectionVersion);
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to delete question version entry", e);
+            throw new AccessException(e.getMessage());
+        }
+    }
+
+    public void removeSectionFromPaper(int sectionId, int sectionVersion, int paperId, int paperVersion) throws AccessException {
+        try {
+            sectionVersionDao.deleteEntry(sectionId, sectionVersion, paperId, paperVersion);
         } catch (DataAccessException e) {
             LOGGER.log(Level.WARNING, "Failed to delete question version entry", e);
             throw new AccessException(e.getMessage());
@@ -366,6 +372,15 @@ public class PaperRepo {
         }
     }
 
+    public void moveSection(int sectionId, int sectionVer, int paperId, int paperVer, int newRef) throws AccessException {
+        try {
+            sectionVersionDao.moveSection(sectionId, sectionVer, paperId, paperVer, newRef);
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, "Failed to move question within section.");
+            throw new AccessException(e.getMessage());
+        }
+    }
+
     public int addQuestionToSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException {
         try {
             QuestionVersionEntry entry = questionVersionDao.getEntry(questionId, questionVersion, sectionId, sectionVersion);
@@ -494,6 +509,16 @@ public class PaperRepo {
             questionVersionDao.moveQuestionByPosition(from, to, sectionId, sectionVersionNo);
         } catch (DataAccessException e) {
             final String errorMsg = "Failed to move question from " + from + " to " + to + " in section " + sectionId + ":" + sectionVersionNo;
+            LOGGER.log(Level.WARNING, errorMsg,e);
+            throw new AccessException(errorMsg);
+        }
+    }
+
+    public void moveSectionByIndex(int from, int to, int paperId, int paperVersion) throws AccessException {
+        try {
+            sectionVersionDao.moveSectionByPosition(from, to, paperId, paperVersion);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to move section from " + from + " to " + to + " in section " + paperId + ":" + paperVersion;
             LOGGER.log(Level.WARNING, errorMsg,e);
             throw new AccessException(errorMsg);
         }
