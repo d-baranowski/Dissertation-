@@ -1,33 +1,16 @@
 package uk.ac.ncl.daniel.baranowski.data;
 
-import uk.ac.ncl.daniel.baranowski.common.enums.AttemptStatus;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Candidate;
-import uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper;
-import uk.ac.ncl.daniel.baranowski.models.AssetModel;
-import uk.ac.ncl.daniel.baranowski.models.MarkModel;
-import uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.AnswerDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.CandidateDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.MarkDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.PaperDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.TermsAndConditionsDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.TestDayDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.TestDayEntryDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Answer;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.AnswerAsset;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDay;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDayEntry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
+import uk.ac.ncl.daniel.baranowski.data.access.*;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
-import uk.ac.ncl.daniel.baranowski.models.AnswerModel;
-import uk.ac.ncl.daniel.baranowski.models.AnswersMapModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionModel;
-import uk.ac.ncl.daniel.baranowski.models.TestDayModel;
+import uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper;
+import uk.ac.ncl.daniel.baranowski.models.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +18,9 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AnswerModelMapper.mapAnswerFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AnswerModelMapper.mapAnswerModelFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AttemptModelMapper.mapAttempt;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AttemptModelMapper.mapAttemptReferenceModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.CandidateModelMapper.mapCandidateFrom;
@@ -62,13 +40,14 @@ public class AttemptRepo {
     private final TestDayDAO dayDao;
     private final CandidateDAO candidateDao;
     private final TermsAndConditionsDAO termsAndConditionsDAO;
+    private final ExamDAO examDAO;
     private static final Logger LOGGER = Logger.getLogger(AttemptRepo.class.getName());
 
     //This should always be created using dependency injection
     @Autowired
     public AttemptRepo(PaperRepo paperRepo, MarkDAO markDao, AnswerDAO answerDao, AnswerAssetDAO assetDao, //NOSONAR
                        TestDayEntryDAO attemptDao, TestDayDAO dayDao, CandidateDAO candidateDao, PaperDAO paperDao,
-                       TermsAndConditionsDAO termsAndConditionsDAO) {
+                       TermsAndConditionsDAO termsAndConditionsDAO, ExamDAO examDAO) {
         this.paperRepo = paperRepo;
         this.markDao = markDao;
         this.answerDao = answerDao;
@@ -77,27 +56,20 @@ public class AttemptRepo {
         this.dayDao = dayDao;
         this.candidateDao = candidateDao;
         this.paperDao = paperDao;
+        this.examDAO = examDAO;
         this.termsAndConditionsDAO = termsAndConditionsDAO;
-    }
-
-    public int getTermsAndConditionsId(){
-        String id = termsAndConditionsDAO.getLatestId();
-        try{
-            return Integer.parseInt(id);
-        }catch(NumberFormatException nfe){
-            LOGGER.log(Level.WARNING,"Could not parse id " +  nfe);
-        }
-        return 0;
     }
 
     public AttemptReferenceModel getAttemptReferenceModel(int id) throws AccessException {
         try {
             final TestDayEntry attempt = attemptDao.read(id);
+            final Exam exam = examDAO.read(attempt.getExamId());
             return mapAttemptReferenceModelFrom(
                     attempt,
-                    dayDao.read(attempt.getTestDayId()),
+                    dayDao.read(exam.getTestDayId()),
                     candidateDao.read(attempt.getCandidateId()),
-                    paperDao.read(attempt.getPaperId()));
+                    paperDao.read(exam.getPaperId()),
+                    exam.getPaperVersionNo());
         } catch (EmptyResultDataAccessException e) {
             final String errorMsg = String.format("Failed to get test attempt reference with id %s ", id);
             LOGGER.log(Level.WARNING, errorMsg, e);
@@ -109,11 +81,13 @@ public class AttemptRepo {
         final List<AttemptReferenceModel> result = new ArrayList<>();
         try {
             for (TestDayEntry attempt : attemptDao.readAll()) {
+                final Exam exam = examDAO.read(attempt.getExamId());
                 result.add(mapAttemptReferenceModelFrom(
                         attempt,
-                        dayDao.read(attempt.getTestDayId()),
+                        dayDao.read(exam.getTestDayId()),
                         candidateDao.read(attempt.getCandidateId()),
-                        paperDao.read(attempt.getPaperId())));
+                        paperDao.read(exam.getPaperId()),
+                        exam.getPaperVersionNo()));
             }
 
             return result;
@@ -131,12 +105,14 @@ public class AttemptRepo {
             final List<TestDayEntry> attempts = attemptDao.getByCandidateId(candidateId);
 
             for (TestDayEntry attempt : attempts) {
+                final Exam exam = examDAO.read(attempt.getExamId());
                 result.add(
                         mapAttemptReferenceModelFrom(
                                 attempt,
-                                dayDao.read(attempt.getTestDayId()),
+                                dayDao.read(exam.getTestDayId()),
                                 candidateDao.read(attempt.getCandidateId()),
-                                paperDao.read(attempt.getPaperId())
+                                paperDao.read(exam.getPaperId()),
+                                exam.getPaperVersionNo()
                         )
                 );
             }
@@ -156,12 +132,14 @@ public class AttemptRepo {
             final List<TestDayEntry> attempts = attemptDao.getByDateLocation(date, location);
 
             for (TestDayEntry attempt : attempts) {
+                final Exam exam = examDAO.read(attempt.getExamId());
                 result.add(
                         mapAttemptReferenceModelFrom(
                                 attempt,
-                                dayDao.read(attempt.getTestDayId()),
+                                dayDao.read(exam.getTestDayId()),
                                 candidateDao.read(attempt.getCandidateId()),
-                                paperDao.read(attempt.getPaperId())
+                                paperDao.read(exam.getPaperId()),
+                                        exam.getPaperVersionNo()
                         )
                 );
             }
@@ -175,19 +153,21 @@ public class AttemptRepo {
         return result;
     }
 
-    public List<AttemptReferenceModel> getAttemptReferencesByStatus(AttemptStatus status) throws AccessException{
+    public List<AttemptReferenceModel> getAttemptReferencesByStatus(ExamStatus status) throws AccessException{
         final List<AttemptReferenceModel> result = new ArrayList<>();
 
         try {
             final List<TestDayEntry> attempts = attemptDao.getByEntryStatus(status.name());
 
             for (TestDayEntry attempt : attempts) {
+                final Exam exam = examDAO.read(attempt.getExamId());
                 result.add(
                         mapAttemptReferenceModelFrom(
                                 attempt,
-                                dayDao.read(attempt.getTestDayId()),
+                                dayDao.read(exam.getTestDayId()),
                                 candidateDao.read(attempt.getCandidateId()),
-                                paperDao.read(attempt.getPaperId())
+                                paperDao.read(exam.getPaperId()),
+                                exam.getPaperVersionNo()
                         )
                 );
             }
@@ -207,9 +187,10 @@ public class AttemptRepo {
     public AttemptModel getAttemptModel(int id) throws AccessException {
         try {
             final TestDayEntry attempt = attemptDao.read(id);
-            final TestDay day = dayDao.read(attempt.getTestDayId());
+            final Exam exam = examDAO.read(attempt.getExamId());
+            final TestDay day = dayDao.read(exam.getTestDayId());
             final Candidate candidate = candidateDao.read(attempt.getCandidateId());
-            final PaperModel paper = paperRepo.getPaper(attempt.getPaperId(), attempt.getPaperVersionNo());
+            final PaperModel paper = paperRepo.getPaper(exam.getPaperId(), exam.getPaperVersionNo());
             final AnswersMapModel answerMap = getAnswersForAttempt(id, paper);
 
             return mapAttempt(attempt, day, candidate, paper, answerMap);
@@ -327,24 +308,31 @@ public class AttemptRepo {
         }
     }
 
-    public AttemptReferenceModel createAndGet(CandidateModel candidate, TestDayModel day, PaperReferenceModel paper, String status, int terms, Integer timeAllowed) throws AccessException {
+    public int findAttemtIdByCredentials(int examId, String login, String password) throws AccessException {
+        try {
+            return attemptDao.findAttemptIdByCredentials(examId, login, password);
+        } catch (DataAccessException e) {
+            final String errorMsg = String.format("Failed to get attempt id by user credentials");
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg, e);
+        }
+    }
+
+    public AttemptReferenceModel createAndGet(CandidateModel candidate, TestDayModel day, PaperReferenceModel paper, String status, int examId) throws AccessException {
         try {
             TestDayEntry attempt = attemptDao.createAndGet(
                     new TestDayEntry.Builder()
-                            .setTestDayId(dayDao.getOrCreate(day.getDate(), day.getLocation()).getId())
-                            .setPaperId(paper.getId())
-                            .setPaperVersionNo(paper.getVersionNo())
                             .setCandidateId(candidate.getId())
                             .setStatus(status)
-                            .setTermsAndConditions(terms)
-                            .setTimeAllowed(timeAllowed)
+                            .setExamId(examId)
                             .build());
-
+            final Exam exam = examDAO.read(attempt.getExamId());
             return mapAttemptReferenceModelFrom(
                     attempt,
-                    mapTestDayModel(day, attempt.getTestDayId()),
+                    mapTestDayModel(day, exam.getTestDayId()),
                     mapCandidateFrom(candidate),
-                    mapPaperFrom(paper));
+                    mapPaperFrom(paper),
+                    exam.getPaperVersionNo());
         } catch (DataAccessException e) {
             final String errorMsg = String.format(
                     "Could not submit test attempt reference for candidate: %s \n" +
@@ -355,7 +343,7 @@ public class AttemptRepo {
         }
     }
 
-    public void setAttemptStatus(AttemptStatus status, int id) throws AccessException {
+    public void setAttemptStatus(ExamStatus status, int id) throws AccessException {
         try {
             attemptDao.updateStatus(status.name(), id);
         } catch (DataAccessException e) {
@@ -449,5 +437,57 @@ public class AttemptRepo {
             return AssetModelMapper.mapAssetModelFrom(assetDao.getByAnswer(questionId, questionVersionNumber, testDayEntryId));
         }
         return null;
+    }
+
+    public List<AttemptReferenceModel> getAllAttemptReferencesForExam(int examId) throws AccessException {
+        final List<AttemptReferenceModel> result = new ArrayList<>();
+
+        try {
+            final List<TestDayEntry> attempts = attemptDao.getByExamId(examId);
+
+            for (TestDayEntry attempt : attempts) {
+                final Exam exam = examDAO.read(attempt.getExamId());
+                result.add(
+                        mapAttemptReferenceModelFrom(
+                                attempt,
+                                dayDao.read(exam.getTestDayId()),
+                                candidateDao.read(attempt.getCandidateId()),
+                                paperDao.read(exam.getPaperId()),
+                                exam.getPaperVersionNo()
+                        )
+                );
+            }
+
+            return result;
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to get all attempt references by exam id " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg);
+        }
+    }
+
+    public int getExamId(int attemptId) throws AccessException {
+        try {
+            return attemptDao.getExamId(attemptId);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to get all exam id for attempt with id " + attemptId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg);
+        }
+    }
+
+
+    public int getTimeRemaining(int testAttemptId) throws AccessException {
+        try {
+            return attemptDao.getTimeRemaining(testAttemptId);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Failed to get gime remaining to test attempt with id " + testAttemptId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg);
+        } catch (IllegalArgumentException e) {
+            final String errorMsg = "Exam date is in wrong format";
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg);
+        }
     }
 }

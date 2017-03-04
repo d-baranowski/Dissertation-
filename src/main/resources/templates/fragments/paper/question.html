@@ -1,4 +1,4 @@
-<div th:with="currentQuestion =${questions.get(questionKey)}" class="question" xmlns:th="http://www.w3.org/1999/xhtml">
+<div  class="question" xmlns:th="http://www.thymeleaf.org">
     <th:block th:if="${inMarking}">
         <div class="info-banner">
             <p th:text="${'Test: ' + paper.referenceName}"></p>
@@ -29,7 +29,7 @@
                 <th:block th:if="${inMarking}">
                     <div th:replace="/fragments/paper/inMarking/candidate-answer"/>
                 </th:block>
-                <div th:replace="/fragments/paper/correct-answer"/>
+                <div th:replace="/fragments/paper/marking-guide"/>
                 <th:block th:if="${inMarking}">
                     <div th:replace="/fragments/paper/inMarking/markSubmissionForm"/>
                 </th:block>

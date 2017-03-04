@@ -14,16 +14,17 @@ public class AttemptModelMapper {
         //Hiding implicit public constructor
     }
 
-    public static AttemptReferenceModel mapAttemptReferenceModelFrom(TestDayEntry attempt, TestDay day, Candidate candidate, Paper p) {
+    public static AttemptReferenceModel mapAttemptReferenceModelFrom(TestDayEntry attempt, TestDay day, Candidate candidate, Paper p, int paperVersionNo) {
         final AttemptReferenceModel result = new AttemptReferenceModel();
         result.setId(attempt.getId());
         result.setCandidate(CandidateModelMapper.mapCandidateModelFrom(candidate));
-        result.setTestDayModel(TestDayModelMapper.mapTestDayModelFrom(day));
-        result.setPaperRef(PaperModelMapper.mapPaperReferenceModelFrom(p, attempt.getPaperVersionNo()));
+        result.setDate(day.getDate());
+        result.setPaperRef(PaperModelMapper.mapPaperReferenceModelFrom(p,paperVersionNo));
         result.setStatus(attempt.getStatus());
         result.setFinalMark(attempt.getFinalMark());
-        result.setTimeAllowed(attempt.getTimeAllowed());
-        result.setTermsandConditionsId(attempt.getTermsAndConditionsId());
+        result.setExamId(attempt.getExamId());
+        result.setPassword(attempt.getPassword());
+        result.setLogin(attempt.getLogin());
         return result;
     }
 
@@ -31,14 +32,15 @@ public class AttemptModelMapper {
                                           AnswersMapModel answerMap) {
         final AttemptModel result = new AttemptModel();
         result.setId(attempt.getId());
-        result.setTestDayModel(TestDayModelMapper.mapTestDayModelFrom(day));
+        result.setDate(day.getDate());
         result.setCandidate(CandidateModelMapper.mapCandidateModelFrom(candidate));
         result.setPaper(paper);
         result.setAnswerMap(answerMap);
         result.setStatus(attempt.getStatus());
         result.setFinalMark(attempt.getFinalMark());
-        result.setTimeAllowed(attempt.getTimeAllowed());
-        result.setTermsandConditionsId(attempt.getTermsAndConditionsId());
+        result.setExamId(attempt.getExamId());
+        result.setPassword(attempt.getPassword());
+        result.setLogin(attempt.getLogin());
         return result;
     }
 }

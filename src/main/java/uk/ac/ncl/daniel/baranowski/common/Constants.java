@@ -37,6 +37,8 @@ public class Constants {
     public static final String ROLE_AUTHOR = "Author";
     public static final String[] ROLES = { ROLE_ADMIN, ROLE_MARKER, ROLE_AUTHOR, ROLE_CANDIDATE };
 
+    public static final String TIME_PATTERN = "HH:mm";
+
     private Constants() {
         // Hides explicit public constructor.
     }

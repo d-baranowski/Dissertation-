@@ -1,11 +1,22 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public final class PaperModel extends PaperReferenceModel {
+    @NotNull(message = "Please add a instructions text before submitting")
+    @Size(min = 5, max = 50000, message = "Paper instructions text too long or too short.")
     private String instructionsText;
     private Map<Integer, SectionModel> sections;
+
+    public PaperModel() {
+        super();
+        this.sections = new HashMap<>();
+        this.instructionsText = "";
+    }
 
     public String getInstructionsText() {
         return instructionsText;

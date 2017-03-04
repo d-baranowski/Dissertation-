@@ -29,7 +29,7 @@ public class QuestionDAOIntegrationTest {
 
     @Test
     public void canGetCount() {
-        assertEquals(31, dao.getCount());
+        assertEquals(41, dao.getCount());
     }
 
     @Test

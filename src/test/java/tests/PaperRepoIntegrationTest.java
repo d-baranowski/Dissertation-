@@ -41,7 +41,7 @@ public class PaperRepoIntegrationTest {
 
         List<QuestionReferenceModel> actual = repo.getAllQuestionReferences();
 
-        assertTrue(actual.containsAll(Collections.singletonList(expected)) && actual.size() == 18);
+        assertTrue(actual.containsAll(Collections.singletonList(expected)) && actual.size() == 28);
     }
 
     @Test
@@ -59,7 +59,8 @@ public class PaperRepoIntegrationTest {
                 TestResources.SECTION_REFERENCE_MODEL_ID_3,
                 TestResources.SECTION_REFERENCE_MODEL_ID_4,
                 TestResources.SECTION_REFERENCE_MODEL_ID_5,
-                TestResources.SECTION_REFERENCE_MODEL_ID_6
+                TestResources.SECTION_REFERENCE_MODEL_ID_6,
+                TestResources.SECTION_REFERENCE_MODEL_ID_7
         );
 
         assertEquals(expected, repo.getAllSectionReferences());
@@ -69,7 +70,8 @@ public class PaperRepoIntegrationTest {
     public void canGetAllPaperReferences() throws AccessException {
         List<PaperReferenceModel> expected = Arrays.asList(
                 TestResources.PAPER_REFERENCE_MODEL_ID_1,
-                TestResources.PAPER_REFERENCE_MODEL_ID_2
+                TestResources.PAPER_REFERENCE_MODEL_ID_2,
+                TestResources.PAPER_REFERENCE_MODEL_ID_3
         );
 
         assertEquals(expected, repo.getAllPaperReferences());
@@ -87,7 +89,8 @@ public class PaperRepoIntegrationTest {
     public void canGetPaperReferencesToLatestVersions() throws AccessException {
         List<PaperReferenceModel> expected = Arrays.asList(
                 TestResources.PAPER_REFERENCE_MODEL_ID_1,
-                TestResources.PAPER_REFERENCE_MODEL_ID_2
+                TestResources.PAPER_REFERENCE_MODEL_ID_2,
+                TestResources.PAPER_REFERENCE_MODEL_ID_3
         );
 
         List<PaperReferenceModel> actual = repo.getPaperReferencesToLatestVersions();

@@ -5,6 +5,8 @@ import uk.ac.ncl.daniel.baranowski.models.AssetModel;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersion;
 import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
 import uk.ac.ncl.daniel.baranowski.models.QuestionReferenceModel;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionModelMapper {
@@ -40,6 +42,31 @@ public class QuestionModelMapper {
         result.setAssets(assets);
 
         return result;
+    }
+
+    public static Question mapQuestionFrom(QuestionModel q) {
+        return new Question.Builder()
+                .setId(q.getId())
+                .setDifficulty(q.getDifficulty())
+                .setLanguage(q.getLanguage())
+                .setReferenceName(q.getReferenceName())
+                .setType(q.getType())
+                .build();
+    }
+
+    public static QuestionVersion mapQuestionVersionFrom(QuestionModel q) {
+        return new QuestionVersion.Builder()
+                .setCorrectAnswer(q.getCorrectAnswer())
+                .setMarkingGuide(q.getMarkingGuide())
+                .setQuestionId(q.getId())
+                .setText(q.getText())
+                .setTimeScale(q.getTimeScale())
+                .setVersionNo(q.getVersionNo())
+                .build();
+    }
+
+    public static List<AssetModel> mapQuestionAssetsFrom(QuestionModel q) {
+        return q.getAssets() != null ? q.getAssets() : new ArrayList<AssetModel>(0);
     }
 
 }

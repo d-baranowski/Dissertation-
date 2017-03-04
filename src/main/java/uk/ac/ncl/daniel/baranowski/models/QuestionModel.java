@@ -1,5 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,8 +11,12 @@ import java.util.regex.Pattern;
 public final class QuestionModel extends QuestionReferenceModel {
     private static final String MULTIPLE_CHOICE_QUESTION = "Multiple Choice";
     private static final String CHOICE_PATTERN = "([A-Z])\\)";
+    @NotNull(message = "Please add a question text before submitting")
+    @Size(min = 5, max = 50000, message = "Question text too long or too short.")
     private String text;
     private String correctAnswer;
+    @NotNull(message = "Please create a marking scheme before submitting")
+    @Size(min = 5, max = 50000, message = "Marking guide is too long or too short.")
     private String markingGuide;
     private List<AssetModel> assets;
 

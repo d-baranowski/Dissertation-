@@ -41,4 +41,14 @@ public class AssetModelMapper {
         return result;
     }
 
+    public static QuestionVersionAsset mapQuestionVersionAssetFrom(AssetModel m, int questionId, int questionVersionNo) {
+        return new QuestionVersionAsset.Builder().setId(m.getId())
+                .setQuestionId(questionId)
+                .setQuestionVersionNo(questionVersionNo)
+                .setFile(m.getFile())
+                .setFileType(m.getFileType())
+                .setReferenceName(m.getReferenceName())
+                .build();
+    }
+
 }

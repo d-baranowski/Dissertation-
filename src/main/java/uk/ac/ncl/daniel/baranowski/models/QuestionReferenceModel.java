@@ -1,14 +1,26 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class QuestionReferenceModel {
     private int id;
     private int versionNo;
+    @Size(max = 100)
     private String language;
+    @NotNull(message = "Please specify the reference name for this question.")
+    @Size(min = 5, max = 100, message = "Reference name needs to be between 5 and 100 characters long. ")
     private String referenceName;
+    @Min(value = 1, message = "Minimum difficulty is 1")
+    @Max(value = 100, message = "Max difficulty is 100")
     private int difficulty;
+    @Min(value = 0, message = "Minimum time scale is 0")
     private int timeScale;
+
+    @Size(max = 20)
     private String type;
 
     public int getId() {

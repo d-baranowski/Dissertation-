@@ -1,0 +1,230 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+<head th:fragment="head">
+    <title>Edit Question</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link th:href="@{/webjars/google-code-prettify/1.0.4/loader/src/prettify.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}" rel="stylesheet"/>
+
+    <!-- Include Editor style. -->
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/froala_editor.min.css' rel='stylesheet'
+          type='text/css'/>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/froala_style.min.css' rel='stylesheet'
+          type='text/css'/>
+
+    <!-- Include Editor plugins CSS style. -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/char_counter.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/code_view.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/colors.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/fullscreen.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/image.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/image_manager.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/line_breaker.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/quick_insert.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/table.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/video.min.css"/>
+
+    <!-- Include Code Mirror CSS. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css"/>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.css"/>
+
+    <link th:href="@{/css/editor/editor.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<th:block layout:fragment="headerText">
+
+</th:block>
+
+<th:block layout:fragment="upper-right-header-content">
+
+</th:block>
+
+<th:block layout:fragment="rightText">
+
+</th:block>
+
+<div layout:fragment="content" id="content" class="contentWrapper container">
+    <div class="col-md-12 style-main-content">
+        <form class="js-ajax-form" role="form" method="post"
+              th:action="${ENDPOINT}"
+              th:object="${formObject}"
+              th:attr="data-update-endpoint=${UPDATE_ENDPOINT}">
+
+            <input class="js-hook-update-instructionsText" type="hidden" th:field="*{instructionsText}"/>
+
+            <div id="form-group-id" class="form-group js-hook-form-id">
+                <label class="form-control-label" for="id">Id: </label>
+                <input type="text" readonly="readonly" th:field="*{id}" th:value="*{id}"/>
+            </div>
+
+            <div id="form-group-versionNumber" class="form-group js-hook-form-versionNumber">
+                <label class="form-control-label" for="versionNumber">Version Number: </label>
+                <input type="number" class="form-control" readonly="readonly" th:value="*{versionNumber}" th:field="*{versionNumber}"/>
+            </div>
+
+            <div id="form-group-language" class="form-group js-hook-form-status-referenceName">
+                <label class="form-control-label" for="referenceName">Reference Name:</label>
+                <input class="form-control" type="text" th:field="*{referenceName}"/>
+                <div class="js-hook-error-msg" id="error-language"></div>
+            </div>
+
+            <div id="form-group-referenceName" class="form-group js-hook-form-status-noOfQuestionsToAnswer">
+                <label class="form-control-label" for="noOfQuestionsToAnswer">Number of Questions to Answer: </label>
+                <input class="form-control" min="1" max="99" type="number" th:field="*{noOfQuestionsToAnswer}"/>
+                <div class="js-hook-error-msg" id="error-referenceName"></div>
+            </div>
+
+            <div id="form-group-difficulty" class="form-group js-hook-form-status-timeScale">
+                <label class="form-control-label" for="timeScale">Proposed Time to Complete: </label>
+                <input class="form-control" min="1" max="99" type="number" th:field="*{timeScale}"/>
+                <div class="js-hook-error-msg" id="error-difficulty"></div>
+            </div>
+
+            <div id="form-group-text" class="form-group js-hook-form-status-text">
+                <label class="form-control-label" for="froala-for-question-text">Instructions Text</label>
+                <textarea id="froala-for-instructions-text" class="js-hook-froala" data-paste-to="js-hook-update-instructionsText"></textarea><br/>
+                <div class="js-hook-error-msg" id="error-text"></div>
+            </div>
+
+            <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Section'"/>
+        </form>
+
+        <h4 class="hidden js-unhide-me">Available Questions</h4>
+        <table id="availableQuestions" style="width: 100%" class="hidden hover stripe">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <td>Version No</td>
+                    <th>Reference Name</th>
+                    <th>Language</th>
+                    <th>Difficulty</th>
+                    <th>Time Scale</th>
+                    <th>Type</th>
+                    <th>View</th>
+                    <th>Add</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:id="${question.hashCode()}" th:each="question : ${questions}">
+                    <td th:text="${question.getId()}"></td>
+                    <td th:text="${question.getVersionNo()}"></td>
+                    <td th:text="${question.getReferenceName()}"></td>
+                    <td th:text="${question.getLanguage()}"></td>
+                    <td th:text="${question.getDifficulty()}"></td>
+                    <td th:text="${question.getTimeScale()}"></td>
+                    <td th:text="${question.getType()}"></td>
+                    <td><a th:href="${'/test-paper/view-question/' + question.getId() + '/' + question.getVersionNo()}">View</a></td>
+                    <td><a class="js-add-question-handle"
+                           th:attr="data-section-id=${formObject.getId()},
+                           data-question-id=${question.getId()},
+                           data-question-ver=${question.getVersionNo()},
+                           data-parent-id=${question.hashCode()}"
+                           th:href="${ADD_QUESTION_ENDPOINT}">Add</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Section Questions</h4>
+        <table id="sectionQuestions" style="width: 100%" class="hover stripe">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Id</th>
+                <td>Version No</td>
+                <th>Reference Name</th>
+                <th>Language</th>
+                <th>Difficulty</th>
+                <th>Time Scale</th>
+                <th>Type</th>
+                <th>View</th>
+                <th>Remove</th>
+            </tr>
+            </thead>
+            <tbody th:with="sectionQuestionsTableList=${formObject.questions}">
+            <th:block
+                    th:replace="/fragments/author/sectionEditor/sectionQuestionsTableBody">
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<th:block layout:fragment="script">
+    <script type='text/javascript'
+            src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/froala_editor.min.js'></script>
+
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/prettify.js}"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/lang-sql.js}"></script>
+    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/run_prettify.js}"></script>
+
+    <!-- Include the plugins JS files. -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/align.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/char_counter.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/code_view.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/colors.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/entities.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/font_family.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/font_size.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/fullscreen.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/image.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/image_manager.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/inline_style.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/line_breaker.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/link.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/lists.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/paragraph_format.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/paragraph_style.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/quick_insert.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/quote.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/save.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/special_characters.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/table.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/url.min.js"></script>
+
+    <!-- Include Code Mirror JS. -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.js"></script>
+    <script th:src="@{~/js/editor/editSection.js}"></script>
+</th:block>
+</body>
+</html>

@@ -1,20 +1,19 @@
 package uk.ac.ncl.daniel.baranowski.models.admin;
 
-import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
 import uk.ac.ncl.daniel.baranowski.models.TestDayModel;
-import java.util.Objects;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.ATTEMPT_PREFIX;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.ATTEMPT_SETUP_COMPLETE;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.EXAM_SETUP_COMPLETE;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.EXAM_PREFIX;
 
 public final class SetupExamFormModel {
-    private static final String ENDPOINT = ATTEMPT_PREFIX + ATTEMPT_SETUP_COMPLETE;
-    @Valid
-    private CandidateModel candidate;
+    private static final String ENDPOINT = EXAM_PREFIX + EXAM_SETUP_COMPLETE;
+
     @NotNull(message = "Pick a valid paper")
     private int paperId;
     @Valid
@@ -25,6 +24,13 @@ public final class SetupExamFormModel {
     @Max(1000)
     private Integer timeAllowed;
 
+    @NotNull(message = "Pick a valid module")
+    private int moduleId;
+
+    public Integer getModuleId() {
+        return moduleId;
+    }
+
     public Integer getTimeAllowed() {
         return timeAllowed;
     }
@@ -33,12 +39,9 @@ public final class SetupExamFormModel {
         this.timeAllowed = timeAllowed;
     }
 
-    public CandidateModel getCandidate() {
-        return candidate;
-    }
-
-    public void setCandidate(CandidateModel candidate) {
-        this.candidate = candidate;
+    public SetupExamFormModel setModuleId(int moduleId) {
+        this.moduleId = moduleId;
+        return this;
     }
 
     public int getPaperId() {
@@ -67,19 +70,19 @@ public final class SetupExamFormModel {
         if (o == null || getClass() != o.getClass()) return false;
         SetupExamFormModel that = (SetupExamFormModel) o;
         return getPaperId() == that.getPaperId() &&
-                Objects.equals(getCandidate(), that.getCandidate()) &&
+                Objects.equals(getModuleId(), that.getModuleId()) &&
                 Objects.equals(getDay(), that.getDay()) &&
                 Objects.equals(getTimeAllowed(), that.getTimeAllowed());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCandidate(), getPaperId(), getDay(), getTimeAllowed());
+        return Objects.hash(getModuleId(), getPaperId(), getDay(), getTimeAllowed());
     }
 
     @Override
     public String toString() {
-        return String.format("SetupExamFormModel [candidate=%s, paperId=%s, day=%s]", candidate, paperId, day);
+        return String.format("SetupExamFormModel [module=%s, paperId=%s, day=%s]", moduleId, paperId, day);
     }
 
 

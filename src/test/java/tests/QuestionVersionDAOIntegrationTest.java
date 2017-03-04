@@ -34,7 +34,7 @@ public class QuestionVersionDAOIntegrationTest {
 
     @Test
     public void canGetQuestionVersionCount() {
-        assertEquals(18, dao.getCount());
+        assertEquals(28, dao.getCount());
     }
 
     @Test

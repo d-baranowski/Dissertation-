@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+
 import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_CURRENT_TESTS;
 import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_GENERATE_TESTS;
 import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_MARKED_TESTS;
@@ -56,8 +58,8 @@ public class DashboardController {
         however that would cause an error, when spring will try to instantiate the parameter annotated with @ModelAttribute
      **/
     @RequestMapping(DASHBOARD_GENERATE_TESTS)
-    public ModelAndView generateTests(@ModelAttribute("errors") ArrayList<FieldError> errors, @ModelAttribute("target") SetupExamFormModel target) { //NOSONAR
-        return dashboardService.getGenerateTestViewModel(errors, target);
+    public ModelAndView generateTests(@ModelAttribute("errors") ArrayList<FieldError> errors, @ModelAttribute("target") SetupExamFormModel target, HttpSession loggedInUser) { //NOSONAR
+        return dashboardService.getGenerateTestViewModel(errors, target, loggedInUser);
     }
 
     /**

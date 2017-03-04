@@ -1,0 +1,13 @@
+<tr th:each="questionNumber : ${sectionQuestionsTableList.keySet()}" xmlns:th="http://www.thymeleaf.org">
+    <td class="move-me" th:text="${questionNumber}"></td>
+    <td th:text="${sectionQuestionsTableList.get(questionNumber).getId()}"></td>
+    <td th:text="${sectionQuestionsTableList.get(questionNumber).getVersionNo()}"></td>
+    <td th:text="${sectionQuestionsTableList.get(questionNumber).getReferenceName()}"></td>
+    <td th:text="${sectionQuestionsTableList.get(questionNumber).getLanguage()}"></td>
+    <td th:text="${sectionQuestionsTableList.get(questionNumber).getDifficulty()}"></td>
+    <td th:text="${sectionQuestionsTableList.get(questionNumber).getTimeScale()}"></td>
+    <td th:text="${sectionQuestionsTableList.get(questionNumber).getType()}"></td>
+    <td><a target="_blank"
+            th:href="${'/test-paper/view-question/' +  sectionQuestionsTableList.get(questionNumber).getId() + '/' + sectionQuestionsTableList.get(questionNumber).getVersionNo()}">View</a></td>
+    <td><a class="js-remove-question-handle" th:href="${REMOVE_ENDPOINT}">Remove</a></td>
+</tr>

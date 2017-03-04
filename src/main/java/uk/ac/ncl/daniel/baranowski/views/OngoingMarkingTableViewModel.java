@@ -18,7 +18,6 @@ public class OngoingMarkingTableViewModel {
                 "Candidate Name",
                 "Paper",
                 "Date",
-                "Location",
                 "Checked out by",
                 "Link to mark",
                 "Link to force unlock"));

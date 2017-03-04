@@ -51,7 +51,7 @@ public class LoginService {
 
         List<SimpleGrantedAuthority> roles = new ArrayList<>();
         if (user != null) {
-            if (user.getPassword().contains(password)) {
+            if (user.getPassword().equals(password)) {
                 List<Roles> userRoles = user.getRoles();
                 for (int i = 0; i < userRoles.size(); i++) {
                     roles.add(new SimpleGrantedAuthority(userRoles.get(i).toString()));

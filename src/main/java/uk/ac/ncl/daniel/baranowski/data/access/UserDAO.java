@@ -38,8 +38,18 @@ public class UserDAO {
         return users;
     }
 
-    public void createUser(User obj) {
-        // NOSONAR BEYOND MVP TODO
+    public List<User> getModuleLeaders(int moduleId) {
+        final String sql = String.format(
+                "SELECT u.`_id`, u.surname, u.name From %s u LEFT JOIN %s ml ON ml.userId = u.`_id` WHERE moduleId = ?",
+                TableNames.USER, TableNames.MODULE_LEADER);
+
+        List<Map<String, Object>> resultList = jdbcTemplate.queryForList(sql, moduleId);
+        List<User> users = new ArrayList<>();
+        for (Map<String, Object> row : resultList) {
+            users.add(mapUser(row));
+        }
+
+        return users;
     }
 
     public User readUser(String objId) {
@@ -50,14 +60,6 @@ public class UserDAO {
     public User readUserByLogin(String login) {
         final String sql = String.format("SELECT * FROM %s t WHERE t.login = ?", TableNames.USER);
         return mapUser(jdbcTemplate.queryForMap(sql, login));
-    }
-
-    public void updateUser(User obj) {
-        // NOSONAR BEYOND MVP TODO
-    }
-
-    public void deleteUser(User obj) {
-        // NOSONAR BEYOND MVP TODO
     }
 
     public int getRolesCount() {

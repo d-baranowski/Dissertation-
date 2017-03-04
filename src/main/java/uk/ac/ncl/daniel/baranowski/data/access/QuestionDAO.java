@@ -1,14 +1,19 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Question;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import static uk.ac.ncl.daniel.baranowski.data.access.QuestionDAO.ColumnNames.*;
+import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.QUESTION;
 
 @DataAccessObject
 public class QuestionDAO {
@@ -20,12 +25,28 @@ public class QuestionDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void create(Question obj) {
-        //TODO BEYOND MVP NOSONAR
+    public int create(Question obj) {
+        Map<String, Object> args = new HashMap<>();
+
+        args.put(LANGUAGE.toString(),  obj.getLanguage());
+        args.put(DIFFICULTY.toString(), obj.getDifficulty());
+        args.put(REFERENCE_NAME.toString(),  obj.getReferenceName());
+        args.put(QUESTION_TYPE_ID.toString(),obj.getType());
+
+        Number key = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(QUESTION.toString())
+                .usingColumns(
+                        LANGUAGE.toString()
+                        , DIFFICULTY.toString()
+                        , REFERENCE_NAME.toString()
+                        , QUESTION_TYPE_ID.toString())
+                .usingGeneratedKeyColumns(ID.toString())
+                .executeAndReturnKey(args);
+        return key.intValue();
     }
 
     public Question read(int objId) {
-        final String sql = String.format("SELECT * FROM %s t WHERE t._id = ?", TableNames.QUESTION);
+        final String sql = String.format("SELECT * FROM %s t WHERE t._id = ?", QUESTION);
         Map<String, Object> row = jdbcTemplate.queryForMap(sql, objId);
         return mapQuestion(row, getQuestionTypeByQuestionId((String) row.get("questionTypeId")));
     }
@@ -35,7 +56,7 @@ public class QuestionDAO {
     }
 
     public List<Question> readAll() {
-        final String sql = String.format("SELECT * FROM %s t", TableNames.QUESTION);
+        final String sql = String.format("SELECT * FROM %s t", QUESTION);
         List<Question> result = new ArrayList<>();
 
         for (Map<String, Object> row : jdbcTemplate.queryForList(sql)) {
@@ -46,7 +67,7 @@ public class QuestionDAO {
     }
 
     public int getCount() {
-        final String sql = String.format("select count(*) from %s", TableNames.QUESTION);
+        final String sql = String.format("select count(*) from %s", QUESTION);
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
@@ -68,5 +89,36 @@ public class QuestionDAO {
     private String getQuestionTypeByQuestionId(String questionId) {
         final String sql = String.format("select * from %s WHERE referenceName = ?", TableNames.QUESTION_TYPE);
         return (String) jdbcTemplate.queryForMap(sql, questionId).get("referenceName");
+    }
+
+    public enum ColumnNames {
+        ID("_id"),
+        LANGUAGE("language"),
+        DIFFICULTY("difficulty"),
+        REFERENCE_NAME("referenceName"),
+        QUESTION_TYPE_ID("questionTypeId");
+
+        private final String columnName;
+
+        ColumnNames(String tableName) {
+            this.columnName = tableName;
+        }
+
+        @Override
+        public String toString() {
+            return columnName;
+        }
+    }
+
+    private String getFieldNames(String prepend) {
+        StringBuilder builder = new StringBuilder();
+        for (ColumnNames column : ColumnNames.values()) {
+            builder.append(prepend);
+            builder.append(column.columnName);
+            if (!column.equals(ColumnNames.values()[ColumnNames.values().length - 1])) {
+                builder.append(",");
+            }
+        }
+        return builder.toString();
     }
 }

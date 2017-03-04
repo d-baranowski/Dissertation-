@@ -1,7 +1,14 @@
 $(document).ready(function () {
+    var csrf_token = $('#csrf-token').attr('content');
+    var header = "X-CSRF-TOKEN";
+
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, csrf_token);
+    });
+
     bindNavigationBarToEndPoints();
     $(window).load(function() {
-      $('#datepicker').datepicker();
+      $('#datepicker').datepicker({altFormat: "dd/mm/yy", dateFormat: "dd/mm/yy"});
     });
 });
 
@@ -25,4 +32,12 @@ function bindNavigationBarToEndPoints() {
                 break;
         }
     })
+}
+
+function showLoading() {
+    $('#loading').show();
+}
+
+function hideLoading() {
+    $('#loading').hide();
 }

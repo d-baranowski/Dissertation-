@@ -41,6 +41,7 @@ public class MarkDAO {
     }
 
     enum ColumnNames {
+        ID("_id"),
         MARKER_ID("markerId"),
         COMMENT("comment"),
         ACTUAL_MARK("actualMark");

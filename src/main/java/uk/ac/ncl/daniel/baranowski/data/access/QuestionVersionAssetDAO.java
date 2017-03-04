@@ -1,14 +1,20 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersionAsset;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import static uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO.ColumnNames.BLOB;
+import static uk.ac.ncl.daniel.baranowski.data.access.QuestionVersionAssetDAO.ColumnNames.*;
+import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.QUESTION_VERSION_ASSET;
 
 @DataAccessObject
 public class QuestionVersionAssetDAO {
@@ -39,4 +45,60 @@ public class QuestionVersionAssetDAO {
                 .setFile((byte[]) row.get("blob"))
                 .setFileType((String) row.get("blobType")).build();
     }
+
+    public int create(QuestionVersionAsset obj) {
+        Map<String, Object> args = new HashMap<>();
+        args.put(ID.toString(), obj.getId());
+        args.put(QUESTION_ID.toString(), obj.getQuestionId());
+        args.put(QUESTION_VERSION_NO.toString(), obj.getQuestionVersionNo());
+        args.put(REFERENCE_NAME.toString(),  obj.getReferenceName());
+        args.put(BLOB.toString(), obj.getFile());
+        args.put(BLOB_TYPE.toString(),  obj.getFileType());
+
+        Number key = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(QUESTION_VERSION_ASSET.toString())
+                .usingColumns(
+                        ID.toString()
+                        , QUESTION_ID.toString()
+                        , QUESTION_VERSION_NO.toString()
+                        , REFERENCE_NAME.toString()
+                        , BLOB.toString()
+                        , BLOB_TYPE.toString())
+                .usingGeneratedKeyColumns("_id")
+                .executeAndReturnKey(args);
+        return key.intValue();
+    }
+
+    public enum ColumnNames {
+        ID("_id"),
+        QUESTION_ID("questionId"),
+        QUESTION_VERSION_NO("questionVersionNumber"),
+        REFERENCE_NAME("referenceName"),
+        BLOB("blob"),
+        BLOB_TYPE("blobType");
+
+        private final String columnName;
+
+        ColumnNames(String tableName) {
+            this.columnName = tableName;
+        }
+
+        @Override
+        public String toString() {
+            return columnName;
+        }
+    }
+
+    private String getFieldNames(String prepend) {
+        StringBuilder builder = new StringBuilder();
+        for (ColumnNames column : ColumnNames.values()) {
+            builder.append(prepend);
+            builder.append(column.columnName);
+            if (!column.equals(ColumnNames.values()[ColumnNames.values().length - 1])) {
+                builder.append(",");
+            }
+        }
+        return builder.toString();
+    }
+
 }

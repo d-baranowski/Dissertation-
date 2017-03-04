@@ -36,6 +36,7 @@ public class AnswerAssetDAO {
     }
 
     enum ColumnNames {
+        ID("_id"),
         QUESTION_ID("questionId"),
         QUESTION_VERSION_NO("questionVersionNumber"),
         TEST_DAY_ENTRY_ID("testDayEntryId"),

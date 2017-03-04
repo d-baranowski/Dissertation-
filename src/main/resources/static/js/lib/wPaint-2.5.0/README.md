@@ -69,7 +69,7 @@ No settings.
 
 ### file
 
-Note that the callbacks for `file` are user generated for the most part as they deal heavily with client/server side code.  You can view the demo code to get a feeling for how they might be setup.
+Note that the callbacks for `file` are moduleLeader generated for the most part as they deal heavily with client/server side code.  You can view the demo code to get a feeling for how they might be setup.
 
 ```js
 $.extend($.fn.wPaint.defaults, {

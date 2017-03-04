@@ -1,17 +1,16 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Candidate;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 @DataAccessObject
 public class CandidateDAO {
@@ -64,13 +63,19 @@ public class CandidateDAO {
         return result;
     }
 
-    public Set<Candidate> getByTestDayId(int testDayId) {
-        return null; //TODO
+    public List<Candidate> readAllEnrolledToModule(int moduleId) {
+        final List<Candidate> result = new ArrayList<>();
+        final String sql = String.format("SELECT c.`_id`, c.name, c.surname, c.hasExtraTime FROM %s c LEFT JOIN %s cm ON c.`_id` = cm.candidateId WHERE cm.moduleId = ?", TableNames.CANDIDATE, TableNames.CANDIDATE_MODULE);
+        jdbcTemplate.queryForList(sql, moduleId).forEach(row -> result.add(mapCandidate(row)));
+        return result;
     }
 
+
     private enum ColumnNames {
+        ID("_id"),
         NAME("name"),
-        SURNAME("surname");
+        SURNAME("surname"),
+        HAS_EXTRA_TIME("hasExtraTime");
 
         private final String columnName;
 
@@ -89,6 +94,7 @@ public class CandidateDAO {
                 .setId((int) row.get("_id"))
                 .setName((String) row.get("name"))
                 .setSurname((String) row.get("surname"))
+                .setHasExtraTime((boolean) row.get("hasExtraTime"))
                 .build();
     }
 }

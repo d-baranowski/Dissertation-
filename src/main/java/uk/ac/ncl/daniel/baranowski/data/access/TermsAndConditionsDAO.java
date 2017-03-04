@@ -1,9 +1,13 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,7 +17,7 @@ import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.TERMS_AND_CONDI
 
 @DataAccessObject
 public class TermsAndConditionsDAO {
-
+    private static final Logger LOGGER = Logger.getLogger(TermsAndConditionsDAO.class.getName());
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -37,9 +41,14 @@ public class TermsAndConditionsDAO {
         return jdbcTemplate.queryForObject(sql, String.class, id);
     }
 
-    public String getLatestId(){
+    public Integer getLatestId(){
         final String sql = String.format("SELECT %s FROM %s ORDER BY %s DESC LIMIT 1", ColumnNames._ID.toString(), TERMS_AND_CONDITIONS, ColumnNames._ID.toString());
-        return jdbcTemplate.queryForObject(sql, String.class);
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.log(Level.FINE, "There are no terms and conditions available in the database");
+            return null;
+        }
     }
 
     public int createNewTermsAndConditions(String newTerms){

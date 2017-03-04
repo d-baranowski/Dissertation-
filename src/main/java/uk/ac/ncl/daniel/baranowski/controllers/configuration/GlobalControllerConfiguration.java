@@ -1,11 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.controllers.configuration;
 
 import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
-import uk.ac.ncl.daniel.baranowski.exceptions.AttemptMissingException;
-import uk.ac.ncl.daniel.baranowski.exceptions.InvalidUserStateException;
-import uk.ac.ncl.daniel.baranowski.exceptions.NotLockedForMarkingException;
-import uk.ac.ncl.daniel.baranowski.exceptions.TestPaperDoesNotExistException;
-import uk.ac.ncl.daniel.baranowski.exceptions.InvalidAttemptStatusException;
+import uk.ac.ncl.daniel.baranowski.exceptions.*;
 import uk.ac.ncl.daniel.baranowski.views.GenericErrorPageViewModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +76,21 @@ public class GlobalControllerConfiguration {
     @ExceptionHandler(value = NotLockedForMarkingException.class)
     public ModelAndView handleNotLockedForMarking(NotLockedForMarkingException e) { //NOSONAR as above
         return new GenericErrorPageViewModel(e.getMessage(), "Not Locked For Marking", "errorPuzzle.png").getModelAndView();
+    }
+
+    @ExceptionHandler(value = ExamMissingException.class)
+    public ModelAndView handleExamMissing(ExamMissingException e) { //NOSONAR as above
+        return new GenericErrorPageViewModel(e.getMessage(), "Unable To Retrieve Exam", "errorPuzzle.png").getModelAndView();
+    }
+
+    @ExceptionHandler(value = FailedToCreateExamException.class)
+    public ModelAndView handleExamMissing(FailedToCreateExamException e) { //NOSONAR as above
+        return new GenericErrorPageViewModel(e.getMessage(), "Unable To Create Exam", "errorPuzzle.png").getModelAndView();
+    }
+
+    @ExceptionHandler(value = FailedToCreateQuestionException.class)
+    public ModelAndView handleExamMissing(FailedToCreateQuestionException e) { //NOSONAR as above
+        return new GenericErrorPageViewModel(e.getMessage(), "Unable To Create Question", "errorPuzzle.png").getModelAndView();
     }
 
     /**

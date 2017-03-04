@@ -246,15 +246,10 @@ div.accordion-active-question + div.collapse-panel-decorator {
 }
 
 /** Carousel style End **/
-#timer {
-    right:0;
-    top:0;
-    font-size: 35px;
-    color: WHITE;
-    max-height: 100%;
-    margin-right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+#clockText {
+    text-align:center;
+    font-size:200%;
+    font-weight: bold;
 }
 
 #print-button {
@@ -310,26 +305,6 @@ div.accordion-active-question + div.collapse-panel-decorator {
 .panel-answer-section {
     border-style: solid;
     border-color: #92C741;
-}
-
-#loading {
-   width: 100%;
-   height: 100%;
-   top: 0px;
-   left: 0px;
-   position: fixed;
-   display: block;
-   background-color: #fff;
-   z-index: 99;
-   text-align: center;
-}
-
-#loading-image {
-    display: block;
-    margin-top: 10%;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 100;
 }
 
 div.accordion-question-submitted + div.collapse-panel-decorator {

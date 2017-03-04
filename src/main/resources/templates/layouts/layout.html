@@ -16,11 +16,15 @@
     <input type="hidden" id= "csrf-token" th:name="${_csrf.parameterName}" th:content="${_csrf.token}" />
     <div th:replace="/fragments/main/header"></div>
     <div>
-        <div id="alert" class="alert alert-dismissible" role="alert">
+        <div id="alert" class="alert alert-dismissible" style="z-index: 9999; position: fixed; right: 10px; top: 10px;" role="alert">
             <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <p></p>
         </div>
         <div layout:fragment="content"/>
+    </div>
+
+    <div id="loading">
+        <img id="loading-image" src="../images/ajax-loader.gif" alt="Loading..." />
     </div>
 
     <div layout:fragment="modals"></div>

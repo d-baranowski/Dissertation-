@@ -9,11 +9,17 @@ public final class Candidate {
     private final int id;
     private final String name;
     private final String surname;
+    private final boolean hasExtraTime;
 
     private Candidate(Builder builder) {
         id = builder.id;
         name = builder.name;
         surname = builder.surname;
+        hasExtraTime = builder.hasExtraTime;
+    }
+
+    public boolean getHasExtraTime() {
+        return hasExtraTime;
     }
 
     public int getId() {
@@ -35,18 +41,25 @@ public final class Candidate {
         Candidate candidate = (Candidate) o;
         return getId() == candidate.getId() && //NOSONAR
                 Objects.equals(getName(), candidate.getName()) &&
-                Objects.equals(getSurname(), candidate.getSurname());
+                Objects.equals(getSurname(), candidate.getSurname()) &&
+                Objects.equals(getHasExtraTime(), candidate.getHasExtraTime());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getSurname());
+        return Objects.hash(getId(), getName(), getSurname(), getHasExtraTime());
     }
 
     public static class Builder {
         private int id;
         private String name;
         private String surname;
+        private boolean hasExtraTime;
+
+        public Builder setHasExtraTime(boolean hasExtraTime) {
+            this.hasExtraTime = hasExtraTime;
+            return this;
+        }
 
         public Builder setId(int id) {
             this.id = id;

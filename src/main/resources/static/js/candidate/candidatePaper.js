@@ -9,14 +9,6 @@ $(document).ready(function(){
     });
 });
 
-function showLoading() {
-    $('#loading').show();
-}
-
-function hideLoading() {
-    $('#loading').hide();
-}
-
 function enableCarousel() {
     $('.carousell').slick({
         adaptiveHeight: true,
