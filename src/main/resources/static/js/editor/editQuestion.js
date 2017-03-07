@@ -10,11 +10,13 @@ $(document).ready(function(){
     if (parseInt(versionNumber) > 0) {
         if ($('#type').val() == 'Multiple Choice') {
             showMultipleChoiceanswerBuilder();
+        } else if ($('#type').val() == 'Expression') {
+            showExpressionAnswerBuilder();
         }
         beginUpdating();
     }
 
-    handleMultipleChoiceAnswerBuilder();
+    handleAnswerBuilder();
 });
 
 function beginUpdating(questionId, questionVersionNo) {
@@ -36,7 +38,7 @@ function beginUpdating(questionId, questionVersionNo) {
     $('#difficulty').attr('readonly','readonly');
     $('#referenceName').attr('readonly','readonly');
     $('#questionTypeId').attr('readonly','readonly');
-    $('#type').attr('disabled',true);
+    $('#type').attr('readonly','readonly');
     setInterval(ajaxUpdate, 10 * 1000);
 }
 
@@ -137,10 +139,17 @@ function showMultipleChoiceanswerBuilder() {
     buildMultipleChoiceQuestionWizard();
 }
 
-function handleMultipleChoiceAnswerBuilder() {
+function showExpressionAnswerBuilder() {
+    $('.js-answer-builder').removeClass('hidden');
+    buildExpressionQuestionWizard();
+}
+
+function handleAnswerBuilder() {
     $('#type').change(function () {
         if ($(this).val() == 'Multiple Choice') {
             showMultipleChoiceanswerBuilder()
+        } else if ($(this).val() == 'Expression') {
+            showExpressionAnswerBuilder();
         } else {
             $('#correctAnswer').val('');
             $('.js-answer-builder').addClass('hidden');
@@ -149,13 +158,19 @@ function handleMultipleChoiceAnswerBuilder() {
     });
 }
 
-function getAnswerCharactersFromText() {
+function getPatternFromText(pattern) {
     var questionText = $('#text').val();
-    var patt = /[A-Z]\)/g;
-    var result = questionText.match(patt);
+    var result = questionText.match(pattern);
     return result ? result : [];
 }
 
+function getCurrentJson() {
+    var current = $('#correctAnswer').val();
+    if (current.length > 0) {
+        return currentJson = JSON.parse(current);
+    }
+    return {};
+}
 
 function buildMultipleChoiceQuestionWizard() {
     var maxScore = $('#difficulty').val();
@@ -163,7 +178,8 @@ function buildMultipleChoiceQuestionWizard() {
 
     for (i = 0; i < maxScore; i++) {
         tableBody +="<tr><td>"+i+"</td><td>";
-        getAnswerCharactersFromText().forEach(function (val) {
+        var patt = /[A-Z]\)/g;
+        getPatternFromText(patt).forEach(function (val) {
             function getChecked() {
                 var current = $('#correctAnswer').val();
                 if (current.length > 0) {
@@ -196,14 +212,6 @@ function buildMultipleChoiceQuestionWizard() {
 
     $('.js-insert-auto-marking-wizard').html(wizardHtmlTemplate);
 
-    function getCurrentJson() {
-        var current = $('#correctAnswer').val();
-        if (current.length > 0) {
-            return currentJson = JSON.parse(current);
-        }
-        return {};
-    }
-
     var correctAnswer = getCurrentJson();
 
     $('.js-build-score').change(function () {
@@ -228,5 +236,59 @@ function buildMultipleChoiceQuestionWizard() {
     $('#js-rebuild-wizard').click(function () {
         $('.js-insert-auto-marking-wizard').html('');
         buildMultipleChoiceQuestionWizard();
+    });
+}
+
+function buildExpressionQuestionWizard() {
+    var patt = /\[\[\d]]/g;
+    var tableBody = "";
+    getPatternFromText(patt).forEach(function (val) {
+        tableBody +=
+            "<tr><td>" + val + "</td>" +
+            "<td><input class='js-build-regex' data-blank='" + val + "' type='text'/></td>" +
+            "<td><input class='js-build-mark' data-blank='" + val + "' type='number'></td></tr>"
+    });
+
+    var current = $('#correctAnswer').val();
+    var currentJson = {};
+    if (current.length > 0) {
+        currentJson = JSON.parse(current);
+    }
+
+
+    var wizardHtmlTemplate =
+        "<table class='table table-striped'>" +
+        "   <thead>" +
+        "       <tr><td>Blank No</td><td>RegEx</td><td>Mark</td></tr>   " +
+        "   </thead>" +
+        "   <tbody>" +
+        tableBody +
+        "   </tbody>" +
+        "</table>" +
+        "<button id='js-rebuild-wizard' class='btn btn-primary'>Update</button>";
+
+    $('.js-insert-auto-marking-wizard').html(wizardHtmlTemplate);
+
+    $('.js-build-regex').change(function () {
+        var blankNo = $(this).data('blank');
+        if (!currentJson[blankNo]) {
+            currentJson[blankNo] = {'regex':''};
+        }
+        currentJson[blankNo]['regex'] = $(this).val();
+        $('#correctAnswer').val(JSON.stringify(currentJson))
+    });
+
+    $('.js-build-mark').change(function () {
+        var blankNo = $(this).data('blank');
+        if (!currentJson[blankNo]) {
+            currentJson[blankNo] = {'mark':0}
+        }
+        currentJson[blankNo]['mark'] = $(this).val();
+        $('#correctAnswer').val(JSON.stringify(currentJson))
+    });
+
+    $('#js-rebuild-wizard').click(function () {
+        $('.js-insert-auto-marking-wizard').html('');
+        buildExpressionQuestionWizard();
     });
 }

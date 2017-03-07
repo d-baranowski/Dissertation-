@@ -146,7 +146,7 @@ function handleAddingQuestions(table) {
             current = $(this);
             var questionId = current.data('questionId');
             var questionVer = current.data('questionVer');
-            var sectionId = current.data('sectionId');
+            var sectionId = $('#id').val();
             var url = current.attr('href');
             var parent = table.row("#" + current.data('parentId'));
 

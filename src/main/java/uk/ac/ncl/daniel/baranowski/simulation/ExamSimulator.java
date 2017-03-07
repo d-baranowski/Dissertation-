@@ -110,6 +110,15 @@ public class ExamSimulator {
             List<String> possibleAnswers = questionModel.getAnswerLetters();
             int pick = getRandomIntBetween(0, possibleAnswers.size() - 1);
             answer.setText(possibleAnswers.get(pick));
+        } else if (questionModel.getType().equals(QuestionType.EXPRESSION.toString())) {
+            List<String> possibleNumbers = questionModel.getAnswerBlanks();
+            String answerString = "{";
+            for (String number :  possibleNumbers) {
+                answerString+="\"" + number.replace("[","").replace("]","") + "\":\"Lorem Ipsium Dolore\",";
+            }
+            answerString = answerString.substring(0, answerString.length() - 1);
+            answerString+="}";
+            answer.setText(answerString);
         }
     }
 

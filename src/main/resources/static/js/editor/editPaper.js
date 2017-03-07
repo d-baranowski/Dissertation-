@@ -165,7 +165,7 @@ function handleAddingSections(table) {
             current = $(this);
             var sectionId = current.data('sectionId');
             var sectionVersion = current.data('sectionVer');
-            var paperId = current.data('paperId');
+            var paperId = $('#id').val();
             var url = current.attr('href');
             var parent = table.row("#" + current.data('parentId'));
 

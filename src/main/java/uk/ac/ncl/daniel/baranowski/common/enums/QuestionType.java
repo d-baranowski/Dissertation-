@@ -4,7 +4,8 @@ public enum QuestionType {
     CODE("Code"),
     DRAWING("Drawing"),
     ESSAY("Essay"),
-    MULTIPLE_CHOICE("Multiple Choice");
+    MULTIPLE_CHOICE("Multiple Choice"),
+    EXPRESSION("Expression");
 
     private final String columnName;
 

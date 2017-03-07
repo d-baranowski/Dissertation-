@@ -25,6 +25,7 @@ INSERT INTO QuestionType VALUES ('Code');
 INSERT INTO QuestionType VALUES ('Essay');
 INSERT INTO QuestionType VALUES ('Multiple Choice');
 INSERT INTO QuestionType VALUES ('Drawing');
+INSERT INTO QuestionType VALUES ('Expression');
 INSERT INTO Question(language, referenceName, questionTypeId, difficulty) VALUES ('Java', 'Develop isEven()', 'Code', 5);
 INSERT INTO Question(language, referenceName, questionTypeId, difficulty) VALUES ('Java', 'Develop isDateInvalid()', 'Code', 5);
 INSERT INTO Question(language, referenceName, questionTypeId, difficulty) VALUES ('Java', 'Ask about output of class NewTester', 'Essay',5);

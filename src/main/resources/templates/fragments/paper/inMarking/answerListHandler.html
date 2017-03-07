@@ -1,12 +1,12 @@
 <div th:each="attempt : ${examAttempts}" xmlns:th="http://www.thymeleaf.org">
     <div th:with="answers=${attempt.answerMap},attemptId=${attempt.id}">
-        <th:block th:unless="${currentQuestion.type} == 'Multiple Choice'">
+        <th:block th:unless="${currentQuestion.type} == 'Multiple Choice' or ${currentQuestion.type} == 'Expression'">
             <div th:replace="/fragments/paper/inMarking/candidate-answer"/>
             <div th:replace="/fragments/paper/inMarking/markSubmissionForm"/>
         </th:block>
     </div>
 </div>
-<th:block th:if="${currentQuestion.type} == 'Multiple Choice'" xmlns:th="http://www.thymeleaf.org">
+<th:block th:if="${currentQuestion.type} == 'Multiple Choice' or ${currentQuestion.type} == 'Expression'" xmlns:th="http://www.thymeleaf.org">
     <div th:each="attempt : ${examAttempts}">
         <th:block th:with="answers=${attempt.answerMap}">
             <form th:id="${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" class="submitMark codeQuestion" role="form" method="post"

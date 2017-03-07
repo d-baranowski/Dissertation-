@@ -156,7 +156,7 @@ public class SectionVersionDAO {
 
     public void copyEntries(int id, int oldVersionNo, int newVersionNo) {
         final String sql =
-                "INSERT INTO TestPaperSectionVersionEntry (testPaperSectionVersionNo, testPaperSectionId, testPaperId, testPaperVersionNumber, referenceNumber)\n" +
+                "INSERT INTO TestPaperSectionVersionEntry (testPaperSectionVersionNo, testPaperSectionId, testPaperId, testPaperVersionNo, referenceNumber)\n" +
                         "    SELECT  testPaperSectionVersionNo,testPaperSectionId, testPaperId,"+newVersionNo+", referenceNumber\n" +
                         "    FROM TestPaperSectionVersionEntry WHERE testPaperId = ? AND testPaperVersionNo = ? ";
 
