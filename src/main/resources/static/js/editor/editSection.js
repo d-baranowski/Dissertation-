@@ -190,6 +190,12 @@ function beginUpdating(questionId, questionVersionNo) {
     $('.js-hide-when-updating').hide();
     $('.js-show-when-updating').hide();
 
+    /*$('.js-create-new-version').removeClass('hidden');
+    $('.js-create-new-version').click(function () {
+        var version = $('#versionNumber').val();
+        $('#versionNumber').val(parseInt(version)+1);
+    });*/
+
     if (questionId && questionVersionNo) {
         $('#id').val(questionId);
         $('#versionNumber').val(questionVersionNo);
@@ -228,7 +234,6 @@ function ajaxUpdate() {
             url: url,
             data: formData, // serializes the form's elements.
             success: function (data) {
-                hideErrorMessages();
                 $('#versionNumber').val(data);
                 buildSuccessAlert("Successfully Saved");
                 oldFormData = formData;
@@ -254,7 +259,6 @@ function bindCreationForm() {
             url: url,
             data: formData, // serializes the form's elements.
             success: function (data) {
-                hideErrorMessages();
                 beginUpdating(data, 1); // show response from the php script.
                 oldFormData = formData;
             },

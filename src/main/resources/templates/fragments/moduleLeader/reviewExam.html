@@ -30,9 +30,13 @@
         <input class="button btn-primary" value="Begin Exam" type="submit"/>
     </form>
 
+    <a th:if="${EXAM_STATUS.equals(STARTED) == true}" th:href="'/logout?redir=/test-attempt/' + ${exam.getId()} + '/login'">Log In as Candidate</a>
+
     <form role="form" method="post" th:action="${END_ENDPOINT}" th:if="${EXAM_STATUS.equals(STARTED) == true}">
         <input class="button btn-primary" value="End Exam" type="submit"/>
     </form>
     <br/>
     <button onclick="simulateExam(this)" th:if="${EXAM_STATUS.equals(CREATED) == true}" th:attr="data-exam-id=${exam.getId()}" class="button btn-warning">Simulate Random Exam</button>
+    <br/>
+    <a th:href="'/exam/mark/' + ${exam.getId()}" th:if="${EXAM_STATUS.equals(FINISHED) == true}">Mark Exam</a>
 </div>

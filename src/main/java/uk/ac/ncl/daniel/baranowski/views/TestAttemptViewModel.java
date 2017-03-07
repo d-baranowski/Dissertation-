@@ -15,6 +15,7 @@ public class TestAttemptViewModel {
         mav.addObject("paper", testAttemptModel.getPaper());
         mav.addObject("answerable", isAnswerable());
         mav.addObject("inMarking", isInMarking());
+        mav.addObject("examMarking", false);
         mav.addObject("attemptId", testAttemptModel.getId());
         mav.addObject("answers", testAttemptModel.getAnswerMap());
         mav.addObject("candidateName", testAttemptModel.getCandidate().getFullName());
@@ -37,10 +38,10 @@ public class TestAttemptViewModel {
 	}
 
 	private boolean isAnswerable() {
-		return testAttemptModel.getStatus().equals(ExamStatus.STARTED.name());
+		return testAttemptModel.getStatus().equals(ExamStatus.STARTED.toString());
 	}
 
 	private boolean isInMarking() {
-		return testAttemptModel.getStatus().equals(ExamStatus.MARKING_ONGOING.name());
+		return testAttemptModel.getStatus().equals(ExamStatus.MARKING_ONGOING.toString());
 	}
 }

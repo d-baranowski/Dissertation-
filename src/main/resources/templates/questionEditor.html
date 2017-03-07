@@ -61,50 +61,55 @@
               th:attr="data-update-endpoint=${UPDATE_ENDPOINT}"
               xmlns:th="http://www.w3.org/1999/xhtml">
 
-            <input type="hidden" th:field="*{id}"/>
-            <input type="hidden" th:field="*{versionNo}"/>
             <input class="js-hook-update-text" type="hidden" th:field="*{text}"/>
+            <input class="form-control" type="hidden" th:field="*{versionNo}"/>
             <input class="js-hook-update-marking-guide" type="hidden" th:field="*{markingGuide}"/>
+
+            <div id="form-group-id" class="form-group js-hook-form-status-id">
+                <label class="form-control-label" for="id">Id:</label>
+                <input class="form-control" type="text" readonly="false" th:field="*{id}"/>
+                <div class="js-hook-error-msg" id="error-id"></div>
+            </div>
 
             <div id="form-group-language" class="form-group js-hook-form-status">
                 <label class="form-control-label" for="language">Language:</label>
-                <input class="form-control" type="text" th:field="*{language}"/>
+                <input class="form-control" type="text" th:field="*{language}" th:value="*{language}"/>
                 <div class="js-hook-error-msg" id="error-language"></div>
             </div>
 
             <div id="form-group-referenceName" class="form-group js-hook-form-status-referenceName">
                 <label class="form-control-label" for="referenceName">Reference Name: </label>
-                <input class="form-control" type="text" th:field="*{referenceName}"/>
+                <input class="form-control" type="text" th:field="*{referenceName}" th:value="*{referenceName}"/>
                 <div class="js-hook-error-msg" id="error-referenceName"></div>
             </div>
 
             <div id="form-group-difficulty" class="form-group js-hook-form-status-difficulty">
                 <label class="form-control-label" for="difficulty">Max Mark: </label>
-                <input class="form-control" min="0" max="100" type="number" th:field="*{difficulty}"/>
+                <input class="form-control" min="0" max="100" type="number" th:field="*{difficulty}" th:value="*{difficulty}"/>
                 <div class="js-hook-error-msg" id="error-difficulty"></div>
             </div>
 
             <div id="form-group-timeScale" class="form-group js-hook-form-status-timeScale">
                 <label class="form-control-label" for="timeScale">Proposed Time Scale: </label>
-                <input class="form-control" min="0" type="number" th:field="*{timeScale}"/>
+                <input class="form-control" min="0" type="number" th:field="*{timeScale}" th:value="*{timeScale}"/>
                 <div class="js-hook-error-msg" id="error-timeScale"></div>
             </div>
 
             <div id="form-group-type" class="form-group js-hook-form-status-type">
                 <label class="form-control-label" for="type">Type</label>
                 <p>Type:
-                    <select class="form-control formItem js-change-type-hook" th:field="*{type}">
-                        <option th:value="Code" th:text="Code"></option>
-                        <option th:value="Essay" th:text="Essay"></option>
-                        <option th:value="'Multiple Choice'" th:text="'Multiple Choice'"></option>
-                        <option th:value="Drawing" th:text="Drawing"></option>
+                    <select class="form-control formItem js-change-type-hook" th:field="*{type}" >
+                        <option th:attr="selected=*{type == 'Code'}" th:value="Code" th:text="Code"></option>
+                        <option th:attr="selected=*{type == 'Essay'}" th:value="Essay" th:text="Essay"></option>
+                        <option th:attr="selected=*{type == 'Multiple Choice'}" th:value="'Multiple Choice'" th:text="'Multiple Choice'"></option>
+                        <option th:attr="selected=*{type == 'Drawing'}" th:value="Drawing" th:text="Drawing"></option>
                     </select></p><br/>
                 <div class="js-hook-error-msg" id="error-type" ></div>
             </div>
 
             <div id="form-group-correctAnswer" class="form-group hidden js-hook-form-status-correctAnswer js-answer-builder">
                 <label class="form-control-label" for="correctAnswer">Auto Marking Wizard</label>
-                <input class="form-control" type="hidden" th:field="*{correctAnswer}"/>
+                <input class="form-control" type="hidden" th:field="*{correctAnswer}" th:value="*{correctAnswer}"/>
                 <div class="js-insert-auto-marking-wizard"></div>
                 <div class="js-hook-error-msg"  id="error-correctAnswer" ></div>
             </div>
@@ -123,6 +128,7 @@
             </div>
             <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Question'"/>
         </form>
+        <button class="btn btn-success hidden js-create-new-version">Create new version</button>
     </div>
 </div>
 

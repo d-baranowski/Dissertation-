@@ -22,6 +22,7 @@ public class ReviewExamViewModel {
         mav.addObject("EXAM_STATUS", examModel.getStatus().toString());
         mav.addObject("CREATED", ExamStatus.CREATED.toString());
         mav.addObject("STARTED", ExamStatus.STARTED.toString());
+        mav.addObject("FINISHED",ExamStatus.FINISHED.toString());
     }
 
     public ModelAndView getModelAndView() {

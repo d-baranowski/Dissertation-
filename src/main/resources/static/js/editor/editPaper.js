@@ -54,12 +54,22 @@ $(document).ready(function () {
         if (parseInt(versionNumber) > 0) {
             beginUpdating();
         }
-        PR.prettyPrint()
+        PR.prettyPrint();
     });
-
-
     hideLoading();
 });
+
+function updateUrl() {
+    var queryParameters = {}, queryString = location.search.substring(1),
+        re = /([^&=]+)=([^&]*)/g, m;
+    while (m = re.exec(queryString)) {
+        queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+    queryParameters['paperId'] = $('#id').val();
+    queryParameters['paperVersion'] = $('#versionNo').val();
+
+    window.location.search = $.param(queryParameters);
+}
 
 function bindCreationForm() {
     var form = $('.js-ajax-form')[0];
@@ -117,6 +127,12 @@ function enableFroalaEditor() {
 function beginUpdating(paperId, paperVer) {
     $('.js-hide-when-updating').hide();
     $('.js-show-when-updating').hide();
+
+   /* $('.js-create-new-version').removeClass('hidden');
+    $('.js-create-new-version').click(function () {
+        var version = $('#versionNo').val();
+        $('#versionNo').val(parseInt(version)+1);
+    });*/
 
     if (paperId && paperVer) {
         $('#id').val(paperId);

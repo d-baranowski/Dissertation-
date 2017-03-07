@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
-import uk.ac.ncl.daniel.baranowski.tables.annotations.ColumnGetter;
-import uk.ac.ncl.daniel.baranowski.tables.annotations.GetAllMethod;
-import uk.ac.ncl.daniel.baranowski.tables.annotations.TableRepo;
-import uk.ac.ncl.daniel.baranowski.tables.annotations.ViewEndpoint;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -96,6 +93,10 @@ public class TablesService {
             if (method.isAnnotationPresent(ViewEndpoint.class)) {
                 columnNameToGetter.put("VIEW_ENDPOINT",method);
                 mav.addObject("includeView", true);
+            }
+            if (method.isAnnotationPresent(EditEndpoint.class)) {
+                columnNameToGetter.put("EDIT_ENDPOINT",method);
+                mav.addObject("includeEdit", true);
             }
         }
 

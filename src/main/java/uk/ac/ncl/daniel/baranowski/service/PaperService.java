@@ -141,6 +141,27 @@ public class PaperService {
         return mav;
     }
 
+    public ModelAndView getQuestionEditor(int questionId, int questionVersion) {
+        ModelAndView mav = new ModelAndView("questionEditor");
+        mav.addObject("ENDPOINT", PAPER_PREFIX + PAPER_CREATE_QUESTION);
+        mav.addObject("UPDATE_ENDPOINT", PAPER_PREFIX + PAPER_UPDATE_QUESTION);
+        mav.addObject("REMOVE_ENDPOINT", PAPER_PREFIX + PAPER_REMOVE_QUESTION_FROM_SECTION);
+
+        if (questionId != 0 && questionVersion != 0) {
+            try {
+                mav.addObject("formObject", repo.getQuestionModel(questionId, questionVersion));
+            } catch (AccessException e) {
+                final String errorMsg = "Failed specified section. Adding an empty section instead.";
+                LOGGER.log(SEVERE, errorMsg, e);
+                mav.addObject("formObject", new QuestionModel());
+            }
+        } else {
+            mav.addObject("formObject", new QuestionModel());
+        }
+
+        return mav;
+    }
+
     public ModelAndView getPaperEditor(int paperId, int paperVersion) {
         ModelAndView mav = new ModelAndView("paperEditor");
         try {

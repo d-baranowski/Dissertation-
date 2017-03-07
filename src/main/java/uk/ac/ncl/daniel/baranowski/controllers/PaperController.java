@@ -67,18 +67,15 @@ public class PaperController {
         return service.getViewTestLibrary();
     }
 
-    @RequestMapping("question-editor")
+    @RequestMapping(PAPER_QUESTION_EDITOR)
     @PreAuthorize("hasAnyAuthority('Author')")
-    public ModelAndView questionEditor() {
-        ModelAndView mav = new ModelAndView("questionEditor");
-        mav.addObject("ENDPOINT", PAPER_PREFIX + PAPER_CREATE_QUESTION);
-        mav.addObject("UPDATE_ENDPOINT", PAPER_PREFIX + PAPER_UPDATE_QUESTION);
-        mav.addObject("REMOVE_ENDPOINT", PAPER_PREFIX + PAPER_REMOVE_QUESTION_FROM_SECTION);
-        mav.addObject("formObject", new QuestionModel());
-        return mav;
+    public ModelAndView questionEditor(@RequestParam(required = false, defaultValue = "0") int questionId,
+                                       @RequestParam(required = false, defaultValue = "0") int questionVersion) {
+
+        return service.getQuestionEditor(questionId,questionVersion);
     }
 
-    @RequestMapping("section-editor")
+    @RequestMapping(PAPER_SECTION_EDITOR)
     @PreAuthorize("hasAnyAuthority('Author')")
     public ModelAndView sectionEditor(
             @RequestParam(required = false, defaultValue = "0") int sectionId,
@@ -94,13 +91,13 @@ public class PaperController {
         return service.getPaperEditor(paperId, paperVersion);
     }
 
-    @RequestMapping("/view-question/{questionId}/{questionVersion}")
+    @RequestMapping(PAPER_VIEW_QUESTION)
     @PreAuthorize("hasAnyAuthority('Marker', 'Admin', 'Author','ModuleLeader')")
     public ModelAndView viewQuestion(@PathVariable int questionId, @PathVariable int questionVersion) {
         return service.getViewQuestion(questionId, questionVersion);
     }
 
-    @RequestMapping("/view-section/{sectionId}/{sectionVersion}")
+    @RequestMapping(PAPER_VIEW_SECTION)
     @PreAuthorize("hasAnyAuthority('Marker', 'Admin', 'Author','ModuleLeader')")
     public ModelAndView viewSection(@PathVariable int sectionId, @PathVariable int sectionVersion) {
         return service.getViewSection(sectionId, sectionVersion);

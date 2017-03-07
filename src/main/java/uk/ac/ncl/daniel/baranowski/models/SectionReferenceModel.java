@@ -1,10 +1,18 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import uk.ac.ncl.daniel.baranowski.tables.annotations.ColumnGetter;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.EditEndpoint;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.ViewEndpoint;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
+
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_PREFIX;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_SECTION_EDITOR;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_VIEW_SECTION;
 
 public class SectionReferenceModel {
     private int id;
@@ -27,6 +35,7 @@ public class SectionReferenceModel {
         timeScale = 0;
     }
 
+    @ColumnGetter(name = "Questions To Answer", order = 4)
     public int getNoOfQuestionsToAnswer() {
         return noOfQuestionsToAnswer;
     }
@@ -36,6 +45,7 @@ public class SectionReferenceModel {
         return this;
     }
 
+    @ColumnGetter(name = "Time Scale", order = 3)
     public int getTimeScale() {
         return timeScale;
     }
@@ -45,6 +55,7 @@ public class SectionReferenceModel {
         return this;
     }
 
+    @ColumnGetter(name = "Id", order = 0)
     public int getId() {
         return id;
     }
@@ -53,6 +64,7 @@ public class SectionReferenceModel {
         this.id = id;
     }
 
+    @ColumnGetter(name = "Version", order = 1)
     public int getVersionNumber() {
         return versionNumber;
     }
@@ -61,12 +73,23 @@ public class SectionReferenceModel {
         this.versionNumber = versionNumber;
     }
 
+    @ColumnGetter(name = "Name", order = 2)
     public String getReferenceName() {
         return referenceName;
     }
 
     public void setReferenceName(String referenceName) {
         this.referenceName = referenceName;
+    }
+
+    @ViewEndpoint
+    public String getViewEndpoint() {
+        return PAPER_PREFIX + PAPER_VIEW_SECTION.replace("{sectionId}", getId() + "").replace("{sectionVersion}",getVersionNumber()+"");
+    }
+
+    @EditEndpoint
+    public String getEditEndpoint() {
+        return PAPER_PREFIX + PAPER_SECTION_EDITOR + "?sectionId=" + getId() + "&sectionVersion=" + getVersionNumber();
     }
 
     /* Read this: http://www.artima.com/lejava/articles/equality.html Pitfall #4 */

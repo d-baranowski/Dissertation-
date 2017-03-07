@@ -1,10 +1,18 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import uk.ac.ncl.daniel.baranowski.tables.annotations.ColumnGetter;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.EditEndpoint;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.ViewEndpoint;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
+
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_EDITOR;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_PREFIX;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_VIEW;
 
 public class PaperReferenceModel {
     private int id;
@@ -23,6 +31,7 @@ public class PaperReferenceModel {
         timeAllowed = 5;
     }
 
+    @ColumnGetter(name = "Id", order = 0)
     public int getId() {
         return id;
     }
@@ -31,6 +40,7 @@ public class PaperReferenceModel {
         this.id = id;
     }
 
+    @ColumnGetter(name = "Version", order = 1)
     public int getVersionNo() {
         return versionNo;
     }
@@ -39,6 +49,7 @@ public class PaperReferenceModel {
         this.versionNo = versionNo;
     }
 
+    @ColumnGetter(name = "Name", order = 2)
     public String getReferenceName() {
         return referenceName;
     }
@@ -47,12 +58,23 @@ public class PaperReferenceModel {
         this.referenceName = referenceName;
     }
 
+    @ColumnGetter(name = "Time Allowed", order = 3)
     public Integer getTimeAllowed() {
         return timeAllowed;
     }
 
     public void setTimeAllowed(Integer timeAllowed) {
         this.timeAllowed = timeAllowed;
+    }
+
+    @ViewEndpoint
+    public String getViewEndpoint() {
+        return PAPER_PREFIX + PAPER_VIEW.replace("{paperId}", getId() + "").replace("{paperVersionNo}",getVersionNo()+"");
+    }
+
+    @EditEndpoint
+    public String getEditEndpoint() {
+        return PAPER_PREFIX + PAPER_EDITOR + "?paperId=" + getId() + "&paperVersion=" + getVersionNo();
     }
 
     @Override

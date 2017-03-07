@@ -37,7 +37,6 @@ public class ViewAllController {
         }
         ModelAndView mav = new ModelAndView("viewList");
         return service.populateTable(mav, model);
-
     }
 
     private Class findClassByName(String name) {

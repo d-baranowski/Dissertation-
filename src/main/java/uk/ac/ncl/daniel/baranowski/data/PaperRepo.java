@@ -30,17 +30,17 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.GetAllMethod;
 import uk.ac.ncl.daniel.baranowski.tables.annotations.TableRepo;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapQuestionVersionAssetFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.PaperModelMapper.*;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionAssetsFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionFrom;
-import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.mapQuestionVersionFrom;
+import static uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper.*;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.SectionReferenceModelMapper.*;
 
 @Repository
+@TableRepo(models = {PaperReferenceModel.class, SectionReferenceModel.class, QuestionReferenceModel.class}, friendlyNames = {"papers","sections","questions"})
 public class PaperRepo {
     private final SectionDAO sectionDao;
     private final SectionVersionDAO sectionVersionDao;
@@ -66,6 +66,8 @@ public class PaperRepo {
         this.termsAndConditionsDAO = termsAndConditionsDAO;
     }
 
+
+    @GetAllMethod(model = QuestionReferenceModel.class, friendlyName = "Questions")
     public List<QuestionReferenceModel> getAllQuestionReferences() throws AccessException {
         final List<QuestionReferenceModel> result = new ArrayList<>();
 
@@ -135,6 +137,7 @@ public class PaperRepo {
         }
     }
 
+    @GetAllMethod(model = SectionReferenceModel.class, friendlyName = "Sections")
     public List<SectionReferenceModel> getAllSectionReferences() throws AccessException {
         try {
             List<SectionReferenceModel> result = new ArrayList<>();
@@ -187,6 +190,7 @@ public class PaperRepo {
         return getPaperReference(paperId,getLatestVersionNo(paperId));
     }
 
+    @GetAllMethod(model = PaperReferenceModel.class, friendlyName = "Papers")
     public List<PaperReferenceModel> getAllPaperReferences() throws AccessException {
         try {
             List<PaperReferenceModel> result = new ArrayList<>();
@@ -362,6 +366,19 @@ public class PaperRepo {
         } catch (DataAccessException e) {
             LOGGER.log(Level.WARNING, String.format("Failed to get section with id %s and versionNo %s",
                     sectionId, sectionVersionNo), e);
+            throw new AccessException(e.getMessage());
+        }
+    }
+
+    public QuestionModel getQuestionModel(int questionId, int questionVersionNo) throws AccessException {
+        try {
+            QuestionVersion questionVersion = questionVersionDao.read(questionId,questionVersionNo);
+            Question questionParent = questionDao.read(questionId);
+            return  mapQuestionModelFrom(questionParent, questionVersion,
+                    new ArrayList<>(0));
+        } catch (DataAccessException e) {
+            LOGGER.log(Level.WARNING, String.format("Failed to get question with id %s and versionNo %s",
+                    questionId, questionVersionNo), e);
             throw new AccessException(e.getMessage());
         }
     }
@@ -557,4 +574,6 @@ public class PaperRepo {
             throw new AccessException(errorMsg);
         }
     }
+
+
 }

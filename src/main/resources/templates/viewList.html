@@ -12,7 +12,7 @@
         <div id="limit">
             <div id="loadedContent" class="minimum-height padded">
                 <h1 th:text="${header}"></h1>
-                <table th:attr="data-with-view=${includeView != null}" id="viewListTable" class="table table-striped">
+                <table th:attr="data-with-view=${includeView != null},data-with-edit=${includeEdit != null}" id="viewListTable" class="table table-striped">
                     <thead>
                         <tr>
                             <th th:each="columnName : ${columnNames}" th:text="${columnName}"></th>
@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                     <th:block th:each="rowData : ${tableData}">
-                        <tr  th:attr="data-view-link=${rowData.get('VIEW_ENDPOINT')}">
+                        <tr  th:attr="data-view-link=${rowData.get('VIEW_ENDPOINT')},data-edit-link=${rowData.get('EDIT_ENDPOINT')}">
                             <th:block th:each="column : ${columnNames}">
                                 <td th:text="${rowData.get(column)}"></td>
                             </th:block>

@@ -64,15 +64,11 @@
               th:attr="data-update-endpoint=${UPDATE_ENDPOINT}">
 
             <input class="js-hook-update-instructionsText" type="hidden" th:field="*{instructionsText}"/>
+            <input class="form-control" type="hidden" th:field="*{versionNo}"/>
 
             <div id="form-group-id" class="form-group js-hook-form-id">
                 <label class="form-control-label" for="id">Id: </label>
-                <input type="number" class="form-control" readonly="readonly" th:field="*{id}" th:value="*{id}"/>
-            </div>
-
-            <div id="form-group-versionNumber" class="form-group js-hook-form-versionNumber">
-                <label class="form-control-label" for="versionNumber">Version Number: </label>
-                <input type="number" class="form-control" readonly="readonly" th:value="*{versionNo}" th:field="*{versionNo}"/>
+                <input type="number" class="form-control" readonly="false" th:field="*{id}" th:value="*{id}"/>
             </div>
 
             <div id="form-group-language" class="form-group js-hook-form-referenceName">
@@ -95,6 +91,8 @@
 
             <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Paper'"/>
         </form>
+
+        <button class="btn btn-success hidden js-create-new-version">Create new version</button>
 
         <h4 class="hidden js-unhide-me">Available Sections</h4>
         <table id="availableSections" style="width: 100%" class="hidden hover stripe">

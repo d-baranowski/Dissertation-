@@ -19,7 +19,10 @@ function getButtons() {
         buttons.push({
             text: 'Edit Selected',
             action: function () {
-                console.log(this);
+                var selected = viewListDataTable.rows( { selected: true } );
+                if (selected[0].length > 0) {
+                    window.location.href = $(selected.nodes()).data('editLink');
+                }
             }
         })
     }

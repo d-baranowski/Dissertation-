@@ -102,12 +102,12 @@ public class LoginController {
      */
     @RequestMapping(ControllerEndpoints.LOGIN_LOGOUT)
     @PreAuthorize("isAuthenticated()")
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, @RequestParam(required = false, defaultValue = ControllerEndpoints.LOGIN_LOGIN)String redir) {
         Object attribute = session.getAttribute(Constants.SESSION_USERNAME);
         String username = attribute != null ? attribute.toString() : "Unknown";
         session.invalidate();
         LOGGER.log(Level.INFO, "User " + username + " logged out.");
-        return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.LOGIN_LOGIN;
+        return ControllerEndpoints.REDIRECT_PREFIX + redir;
     }
 }
 

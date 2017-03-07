@@ -51,6 +51,13 @@ public class ControllerEndpoints {
     public static final String PAPER_TEST_LIBRARY = "/test-library";
     public static final String PAPER_CREATE_QUESTION = "/create-question";
     public static final String PAPER_UPDATE_QUESTION = "/update-question";
+    public static final String PAPER_EDITOR = "/paper-editor";
+
+    public static final String PAPER_VIEW_SECTION = "/view-section/{sectionId}/{sectionVersion}";
+    public static final String PAPER_SECTION_EDITOR = "/section-editor";
+
+    public static final String PAPER_VIEW_QUESTION = "/view-question/{questionId}/{questionVersion}";
+    public static final String PAPER_QUESTION_EDITOR = "/question-editor";
 
     public static final String PAPER_CREATE_SECTION = "/create-section";
     public static final String PAPER_UPDATE_SECTION = "/update-section";
