@@ -40,10 +40,14 @@
             </div>
         </div>
         <th:block th:if="${answerable or inMarking}">
-            <div id="submitAllBtn" class="submit-all-btn"><p>Submit &amp; Complete</p></div>
-        </th:block>
-        <th:block th:if="${inMarking}">
-            <div id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+            <th:block th:unless="${examMarking}">
+                <div id="submitAllBtn" class="submit-all-btn"><p>Submit &amp; Complete</p></div>
+                <div id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+            </th:block>
+            <th:block th:if="${examMarking}">
+                <div th:attr="data-exam-id=${examId}" id="submitAllBtn" class="submit-all-btn"><p>Finnish Marking</p></div>
+                <div th:attr="data-exam-id=${examId}" id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+            </th:block>
         </th:block>
     </div>
 </div>

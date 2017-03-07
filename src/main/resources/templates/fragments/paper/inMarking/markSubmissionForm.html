@@ -1,12 +1,12 @@
 <form class="submitMark codeQuestion" role="form" method="post"
       th:action="${submitMarkForm.getENDPOINT()}"
       th:object="${submitMarkForm}"
-       th:attr="questionName=${currentQuestion.referenceName},
+      th:attr="questionName=${currentQuestion.referenceName},
       isMarked=${answers.isQuestionMarked(sectionKey, questionKey)}"
       xmlns:th="http://www.w3.org/1999/xhtml">
 
     <input type="hidden" name="testAttemptId" th:value="${attemptId}"/>
-    <input type="hidden" name="paperId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
     <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
 
     <div class="form-comment-section collapsible-element">
@@ -23,13 +23,11 @@
         <p>Allocated Mark: </p>
         <select name="mark">
             <option th:text="${'Not Marked'}" th:value="${-1}" th:attr="selected=${-1 == answers.getNonNullMark(sectionKey, questionKey)}"></option>
-            <option th:each="i : ${#numbers.sequence( 0, currentQuestion.getTimeScale())}"
+            <option th:each="i : ${#numbers.sequence( 0, currentQuestion.getDifficulty())}"
                     th:value="${i}"
                     th:attr="selected=${i == answers.getNonNullMark(sectionKey, questionKey)}"
                     th:text="${i}"></option>
         </select>
+        <input id="submit-mark-button" value="Save" type="submit"/>
     </div>
-
-    <br/>
-    <input id="submit-mark-button" value="Submit Mark" type="submit"/>
 </form>

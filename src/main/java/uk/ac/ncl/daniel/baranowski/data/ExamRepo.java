@@ -12,6 +12,8 @@ import uk.ac.ncl.daniel.baranowski.data.access.pojos.User;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.DateFormatException;
 import uk.ac.ncl.daniel.baranowski.models.*;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.GetAllMethod;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.TableRepo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ import static uk.ac.ncl.daniel.baranowski.data.mappers.TestDayModelMapper.mapTes
 import static uk.ac.ncl.daniel.baranowski.data.mappers.UserModelMapper.mapUserReferenceModelFrom;
 
 @Repository
+@TableRepo(models = {ExamModel.class}, friendlyNames = {"exams"})
 public class ExamRepo
 {
     private final ExamDAO examDAO;
@@ -143,21 +146,38 @@ public class ExamRepo
         }
     }
 
-    public ExamModel getExam(int examId) throws AccessException  {
-        try {
-            Exam exam = examDAO.read(examId);
+    @GetAllMethod(model = ExamModel.class, friendlyName = "Exams")
+    public List<ExamModel> getAllExams() throws AccessException {
+        List<ExamModel> result = new ArrayList<>();
+        List<Exam> exams = examDAO.readAll();
+        for (Exam exam : exams) {
+            result.add(buildExam(exam));
+        }
+        return result;
+    }
 
+    public ExamModel getExam(Exam exam) throws AccessException {
+        return buildExam(exam);
+    }
+
+    public ExamModel getExam(int examId) throws AccessException {
+        Exam exam = examDAO.read(examId);
+        return buildExam(exam);
+    }
+
+    private ExamModel buildExam(Exam exam) throws AccessException {
+        try {
             return new ExamModel.Builder()
-                    .setAttempts(attemptRepo.getAllAttemptReferencesForExam(examId))
+                    .setAttempts(attemptRepo.getAllAttemptReferencesForExam(exam.getId()))
                     .setTermsAndConditions(termsDao.getTermsById(exam.getTermsAndConditionsId()))
                     .setModule(moduleRepo.get(exam.getModuleId()))
                     .setStatus(exam.getStatus())
                     .setPaperRef(paperRepo.getPaperReference(exam.getPaperId(), exam.getPaperVersionNo()))
-                    .setId(examId)
+                    .setId(exam.getId())
                     .setTestDayModel(mapTestDayModelFrom(dayDAO.read(exam.getTestDayId())))
                     .build();
         } catch (DataAccessException e) {
-            final String errorMsg = "Failed to get exam with id: " + examId;
+            final String errorMsg = "Failed to get exam with id: " + exam.getId();
             LOGGER.log(Level.WARNING, errorMsg, e);
             throw new AccessException(errorMsg, e);
         }
@@ -192,6 +212,46 @@ public class ExamRepo
             examDAO.setEndTimeExtra(examId,endTime);
         } catch (DataAccessException e) {
             final String errorMsg = "Unable to start exam " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg, e);
+        }
+    }
+
+    public void startMarking(int examId, String userId) throws AccessException {
+        try {
+            examDAO.lockForMarking(examId, userId);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Unable to mark exam " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg, e);
+        }
+    }
+
+    public boolean isMarking(int examId, String userId) throws AccessException {
+        try {
+            return examDAO.isMarking(examId, userId);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Can't check if user " + userId + " is marking exam " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg, e);
+        }
+    }
+
+    public void unlockFromMarker(int examId) throws AccessException {
+        try {
+            examDAO.unlockFromMarker(examId);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Unable to unlock exam " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new AccessException(errorMsg, e);
+        }
+    }
+
+    public void finnishMarkingExam(int examId) throws AccessException {
+        try {
+            examDAO.setExamStatus(examId,ExamStatus.MARKED);
+        } catch (DataAccessException e) {
+            final String errorMsg = "Unable to finnish marking exam " + examId;
             LOGGER.log(Level.WARNING, errorMsg, e);
             throw new AccessException(errorMsg, e);
         }

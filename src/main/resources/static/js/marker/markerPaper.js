@@ -46,7 +46,7 @@ function loadAccordionSubmittedMarks() {
 
 function handleFinishMarking() {
     var attemptId = getAttemptId();
-    var url = ENDPOINTS.ATTEMPT_PREFIX + (ENDPOINTS.ATTEMPT_FINISH_MARKING.replace("{testAttemptId}", attemptId))
+    var url = ENDPOINTS.ATTEMPT_PREFIX + (ENDPOINTS.ATTEMPT_FINISH_MARKING.replace("{testAttemptId}", attemptId));
     $("#submitAllBtn").click(function() {
         $.ajax({
             type: "POST",

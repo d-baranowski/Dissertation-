@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+<head th:fragment="head">
+    <title>View Paper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/dashboard.css}"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.13/b-1.2.4/r-2.1.1/se-1.2.0/datatables.min.css"/>
+</head>
+<body>
+<div layout:fragment="content" class="contentWrapper container">
+    <div class="dashboardWindow" id="dashboardWindow">
+        <div id="limit">
+            <div id="loadedContent" class="minimum-height padded">
+                <h1 th:text="${header}"></h1>
+                <table th:attr="data-with-view=${includeView != null}" id="viewListTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th th:each="columnName : ${columnNames}" th:text="${columnName}"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="rowData : ${tableData}">
+                        <tr  th:attr="data-view-link=${rowData.get('VIEW_ENDPOINT')}">
+                            <th:block th:each="column : ${columnNames}">
+                                <td th:text="${rowData.get(column)}"></td>
+                            </th:block>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.13/b-1.2.4/r-2.1.1/se-1.2.0/datatables.min.js"></script>
+    <script th:src="@{~/js/viewList.js}"></script>
+</th:block>
+</body>
+</html>

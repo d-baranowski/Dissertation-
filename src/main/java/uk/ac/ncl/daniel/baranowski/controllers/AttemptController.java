@@ -139,19 +139,7 @@ public class AttemptController {
     @RequestMapping(ControllerEndpoints.ATTEMPT_MARK)
     @PreAuthorize("hasAnyAuthority('Marker')")
     public ModelAndView mark(@PathVariable int testAttemptId, HttpSession markerSession) {
-        if (markingService.userIsMarking(testAttemptId, SessionUtility.getUserId(markerSession))) {
-            attemptService.validateStatus(testAttemptId, ExamStatus.MARKING_ONGOING);
-        } else try {
-            if(markingService.isInMarking(testAttemptId)) {
-                throw new NotLockedForMarkingException("This attempt is currently being marked by a different user.", testAttemptId, null);
-            } else {
-                attemptService.validateStatus(testAttemptId, ExamStatus.FINISHED);
-                markingService.startMarkingAttempt(testAttemptId,markerSession);
-            }
-        } catch (Exception e) {
-            String msg = String.format("Attempt with id: %s does not exist", testAttemptId);
-            throw new AttemptMissingException(msg,e);
-        }
+        markingService.startMarking(testAttemptId, markerSession);
         return markingService.getMarkableViewForTestAttempt(testAttemptId);
     }
 

@@ -58,6 +58,8 @@ dependencies {
     compile group: 'joda-time', name: 'joda-time', version: '2.9.7'
     compile group: 'com.googlecode.owasp-java-html-sanitizer', name: 'owasp-java-html-sanitizer', version: '20160628.1'
 
+    // https://mvnrepository.com/artifact/de.sven-jacobs/loremipsum
+    compile group: 'de.sven-jacobs', name: 'loremipsum', version: '1.0'
 
 
     //Webjars

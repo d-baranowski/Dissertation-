@@ -69,6 +69,9 @@ public class ControllerEndpoints {
     public static final String EXAM_REVIEW = "/review-exam/{examId}";
     public static final String EXAM_BEGIN = "/start/{examId}";
     public static final String EXAM_FINNISH = "/finnish/{examId}";
+    public static final String MARK_EXAM = "/mark/{examId}";
+    public static final String EXAM_UNLOCK_MARKING = "/unlock/{examId}";
+    public static final String EXAM_FINNISH_MARKING = "/finnish-marking/{examId}";
 
     private static final Logger LOGGER = Logger.getLogger(ControllerEndpoints.class.getName());
 

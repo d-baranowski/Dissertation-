@@ -5,6 +5,7 @@ $(document).ready(function(){
         hideLoading();
         PR.prettyPrint()
     });
+    handleMultipleChoiceAnswerBuilder();
 });
 
 function beginUpdating(questionId, questionVersionNo) {
@@ -16,7 +17,7 @@ function beginUpdating(questionId, questionVersionNo) {
     $('#difficulty').attr('readonly','readonly');
     $('#referenceName').attr('readonly','readonly');
     $('#questionTypeId').attr('readonly','readonly');
-
+    $('#type').attr('disabled',true);
     setInterval(ajaxUpdate, 10 * 1000);
 }
 
@@ -107,4 +108,100 @@ function displayErrorMessages(errors) {
         field.text(error.defaultMessage);
         formGroup.addClass('has-danger')
     });
+}
+
+
+function handleMultipleChoiceAnswerBuilder() {
+    $('#type').change(function () {
+        if ($(this).val() == 'Multiple Choice') {
+            $('.js-answer-builder').removeClass('hidden');
+            buildMultipleChoiceQuestionWizard();
+        } else {
+            $('#correctAnswer').val('');
+            $('.js-answer-builder').addClass('hidden');
+            $('.js-insert-auto-marking-wizard').html('')
+        }
+    });
+
+    function getAnswerCharactersFromText() {
+        var questionText = $('#text').val();
+        var patt = /[A-Z]\)/g;
+        var result = questionText.match(patt);
+        return result ? result : [];
+    }
+
+
+    function buildMultipleChoiceQuestionWizard() {
+        var maxScore = $('#difficulty').val();
+        var tableBody = "";
+
+        for (i = 0; i < maxScore; i++) {
+            tableBody +="<tr><td>"+i+"</td><td>";
+            getAnswerCharactersFromText().forEach(function (val) {
+                function getChecked() {
+                    var current = $('#correctAnswer').val();
+                    if (current.length > 0) {
+                        var currentJson = JSON.parse(current);
+                        if (currentJson[i]) {
+                            var checked = currentJson[i].match(val.replace("\)",''));
+                            return checked ? 'checked' : '';
+                        }
+                    }
+                    return '';
+                }
+
+                tableBody += " <b>" + val + "</b> <input class='js-build-score' data-score='" + i + "' data-letter-required='" + val + "' type='checkbox' " + getChecked() + ">"
+            });
+
+
+            tableBody += "</td></tr>";
+        }
+
+        var wizardHtmlTemplate =
+            "<table class='table table-striped'>" +
+            "   <thead>" +
+            "       <tr><td>Score</td><td>Answers</td></tr>   " +
+            "   </thead>" +
+            "   <tbody>" +
+            tableBody +
+            "   </tbody>" +
+            "</table>" +
+            "<button id='js-rebuild-wizard' class='btn btn-primary'>Update</button>";
+
+        $('.js-insert-auto-marking-wizard').html(wizardHtmlTemplate);
+
+        function getCurrentJson() {
+            var current = $('#correctAnswer').val();
+            if (current.length > 0) {
+                return currentJson = JSON.parse(current);
+            }
+            return {};
+        }
+
+        var correctAnswer = getCurrentJson();
+
+        $('.js-build-score').change(function () {
+            var score = $(this).data('score');
+            var checkboxes = $(this).parent().children('.js-build-score:checked');
+            var letters = [];
+            for (var i = 0; i<checkboxes.length; i++) {
+                letters.push($(checkboxes[i]).data('letterRequired').replace("\)",''));
+            }
+            var scoreRow = "\\b";
+            scoreRow +="(["+letters+"])";
+            if (letters.length > 1) {
+                for (var j = 0; j < letters.length - 1; j++) {
+                    scoreRow +="(?!\\1)(["+letters+"])";
+                }
+            }
+            scoreRow += "\\b";
+            correctAnswer[scoreRow] = score;
+            $('#correctAnswer').val(JSON.stringify(correctAnswer))
+        });
+        
+        $('#js-rebuild-wizard').click(function () {
+            $('.js-insert-auto-marking-wizard').html('');
+            buildMultipleChoiceQuestionWizard();
+        });
+    }
 }

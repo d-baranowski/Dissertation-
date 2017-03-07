@@ -9,6 +9,9 @@
                     <li th:classappend="${dashboardContent} == 'viewTests' ? active : ''">
                         <a id="navViewTest" href="#" data-toggle="tab"><span class="tabText">View Exams</span></a>
                     </li>
+                    <li th:classappend="${dashboardContent} == 'edit' ? active : ''">
+                        <a id="navEdit" href="#" data-toggle="tab"><span class="tabText">Edit</span></a>
+                    </li>
                     <li th:classappend="${dashboardContent} == 'testLibrary' ? active : ''">
                         <a id="navTestLibrary" href="#" data-toggle="tab"><span class="tabText">Test Papers</span></a>
                     </li>

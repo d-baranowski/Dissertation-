@@ -7,10 +7,10 @@ public enum ExamStatus {
     MARKING_ONGOING("Marking Ongoing"),
     MARKED("Marked");
 
-    private final String roleName;
+    private final String status;
 
-    ExamStatus(String roleName) {
-        this.roleName = roleName;
+    ExamStatus(String status) {
+        this.status = status;
     }
 
     public static ExamStatus getByName(String name) {
@@ -18,7 +18,7 @@ public enum ExamStatus {
             case "CREATED" : return CREATED;
             case "STARTED" : return STARTED;
             case "FINISHED" : return FINISHED;
-            case "MARKING_ONGOING" : return MARKING_ONGOING;
+            case "MARKING ONGOING" : return MARKING_ONGOING;
             case "MARKED" : return MARKED;
             default: throw new IllegalArgumentException("No such status");
         }
@@ -26,7 +26,7 @@ public enum ExamStatus {
 
     @Override
     public String toString() {
-        return roleName;
+        return status;
     }
 }
 

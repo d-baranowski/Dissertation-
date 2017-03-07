@@ -9,8 +9,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Exam;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.GetAllMethod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static uk.ac.ncl.daniel.baranowski.data.access.ExamDAO.ColumnNames.*;
@@ -56,7 +59,7 @@ public class ExamDAO {
 
     private Exam mapExam(Map<String, Object> row) {
         return new Exam.Builder()
-                .setModuleId((int) row.get("moduleId"))
+                .setModuleId((Integer) (row.get("moduleId") != null ? row.get("moduleId") : -1))
                 .setId((int) row.get("_id"))
                 .setTestDayId((int) row.get("testDayId"))
                 .setPaperVersionNo((int) row.get("testPaperVersionNo"))
@@ -101,8 +104,44 @@ public class ExamDAO {
         jdbcTemplate.update(sql, endTime, examId);
     }
 
+    public boolean isMarking(int examId, String userId) {
+        String sql = "SELECT CASE WHEN markingLock = ? THEN 1 ELSE 0 END FROM Exam WHERE `_id` = ?";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, userId, examId);
+    }
+
+    public void lockForMarking(int examId, String userId) {
+        String sql =
+                "UPDATE " + TableNames.EXAM + " e " +
+                        "SET " + STATUS + "= ? " +
+                        ", " + MARKING_LOCK + "=? " +
+                        "WHERE e." + ID + " = ?";
+
+        jdbcTemplate.update(sql, ExamStatus.MARKING_ONGOING.toString(), userId, examId);
+    }
+
+    public void unlockFromMarker(int examId) {
+        String sql =
+                "UPDATE " + TableNames.EXAM + " e " +
+                        "SET " + STATUS + "= ? " +
+                        ", " + MARKING_LOCK + "=NULL " +
+                        "WHERE e." + ID + " = ?";
+
+        jdbcTemplate.update(sql, ExamStatus.FINISHED.toString(), examId);
+    }
+
+    public List<Exam> readAll() {
+        final String sql = "SELECT * FROM " + TableNames.EXAM;
+        List<Exam> result = new ArrayList<>();
+
+        jdbcTemplate.queryForList(sql).forEach(row -> result.add(mapExam(row)));
+
+        return  result;
+    }
+
     public enum ColumnNames {
         ID("_id"),
+        MARKING_LOCK("markingLock"),
         TEST_PAPER_VERSION_NO("testPaperVersionNo"),
         TEST_PAPER_ID("testPaperId"),
         TEST_DAY_ID("testDayId"),

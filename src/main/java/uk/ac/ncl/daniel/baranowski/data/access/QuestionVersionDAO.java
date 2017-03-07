@@ -246,7 +246,7 @@ public class QuestionVersionDAO {
         Map<String, Object> args = new HashMap<>();
         args.put(EntryColumnNames.QUESTION_NO.toString(), e.getReferenceNumber());
         args.put(EntryColumnNames.QUESTION_ID.toString(), e.getQuestionId());
-        args.put(EntryColumnNames.QUESTION_VERISON.toString(),  e.getSectionVersionNo());
+        args.put(EntryColumnNames.QUESTION_VERISON.toString(),  e.getQuestionVersionNumber());
         args.put(EntryColumnNames.SECTION_ID.toString(), e.getSectionId());
         args.put(EntryColumnNames.SECTION_VERSION.toString(), e.getSectionVersionNo());
 

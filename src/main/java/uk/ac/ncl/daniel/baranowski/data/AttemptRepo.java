@@ -345,7 +345,7 @@ public class AttemptRepo {
 
     public void setAttemptStatus(ExamStatus status, int id) throws AccessException {
         try {
-            attemptDao.updateStatus(status.name(), id);
+            attemptDao.updateStatus(status.toString(), id);
         } catch (DataAccessException e) {
             final String errorMsg = String.format("Failed to set attempt with id %s to status %s", id, status);
             LOGGER.log(Level.WARNING, errorMsg, e);

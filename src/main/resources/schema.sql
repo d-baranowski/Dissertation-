@@ -171,6 +171,7 @@ CREATE TABLE Exam(
   `testPaperVersionNo` INT,
   `testPaperId` INT,
   `status` VARCHAR(20),
+  `markingLock` varchar(36),
   `termsAndConditionsId` INT,
   `testDayId` INT,
   `moduleId` INT,
@@ -180,6 +181,8 @@ CREATE TABLE Exam(
   REFERENCES TestPaperVersion(testPaperId,versionNumber),
   FOREIGN KEY (termsAndConditionsId) REFERENCES TermsAndConditions(`_id`),
   FOREIGN KEY (moduleId) REFERENCES Module(`_id`),
+  FOREIGN KEY (markingLock)
+  REFERENCES User(_id),
   PRIMARY KEY (`_id`)
 );
 
@@ -212,7 +215,7 @@ CREATE TABLE CandidateModule(
 
 CREATE TABLE Mark(
   `_id` INT NOT NULL AUTO_INCREMENT,
-  `markerId` varchar(36) NOT NULL,
+  `markerId` varchar(36),
   `comment` VARCHAR(5000),
   `actualMark` INT,
   FOREIGN KEY (markerId)
@@ -221,29 +224,29 @@ CREATE TABLE Mark(
 );
 
 CREATE TABLE Answer(
-  `paperId`  INT NOT NULL,
-  `paperVersionNumber` INT NOT NULL,
+  questionId  INT NOT NULL,
+  questionVersionNumber INT NOT NULL,
   `testDayEntryId` INT NOT NULL,
   `text` VARCHAR(50000),
   `markId` INT,
   FOREIGN KEY (markId)
   REFERENCES Mark(_id),
-  FOREIGN KEY (paperVersionNumber,paperId)
+  FOREIGN KEY (questionVersionNumber,questionId)
   REFERENCES QuestionVersion(versionNumber, questionId),
   FOREIGN KEY (testDayEntryId)
   REFERENCES TestDayEntry(_id),
-  PRIMARY KEY (paperId,paperVersionNumber,testDayEntryId)
+  PRIMARY KEY (questionId,questionVersionNumber,testDayEntryId)
 );
 
 CREATE TABLE AnswerAsset(
   `_id` INT NOT NULL AUTO_INCREMENT,
-  `paperId`  INT NOT NULL,
-  `paperVersionNumber` INT NOT NULL,
+  questionId  INT NOT NULL,
+  questionVersionNumber INT NOT NULL,
   `testDayEntryId` INT NOT NULL,
   `referenceName` VARCHAR(150),
   `_blob` MEDIUMBLOB,
-  FOREIGN KEY (paperId,paperVersionNumber,testDayEntryId)
-  REFERENCES Answer(paperId,paperVersionNumber,testDayEntryId)
+  FOREIGN KEY (questionId, questionVersionNumber, testDayEntryId)
+  REFERENCES Answer(questionId, questionVersionNumber, testDayEntryId)
     ON DELETE CASCADE,
   PRIMARY KEY (_id)
 );

@@ -145,43 +145,43 @@ INSERT INTO TestPaperSectionVersion(noOfQuestionsToAnswer, versionNumber,timeSca
 INSERT INTO TestPaperSectionVersionEntry VALUES (1,7,1,3,1);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 1', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (32, 1,'Correct answer is B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'B');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (32, 1,'Correct answer is B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"B": 1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,32,1);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 2', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (33, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (33, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"A": 1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,33,2);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 3', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (34, 1,'Correct answer is C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'C');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (34, 1,'Correct answer is C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"C": 1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,34,3);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 4', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (35, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (35, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"A": 1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,35,4);
 
-INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 5', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (36, 1,'Correct answer are A,B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A,B');
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 5', 'Multiple Choice', 2);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (36, 1,'Correct answer are A,B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"A,B": 2,"A|B": 1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,36,5);
 
-INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 6', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (37, 1,'Correct answer are A,B,C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A,B,C');
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 6', 'Multiple Choice', 3);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (37, 1,'Correct answer are A,B,C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"([abc])(?!\1)[abc](?!\1)[abc]": 3,"([abc])(?!\1)[abc]": 2,"A|B|C": 1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,37,6);
 
-INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 7', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (38, 1,'Correct answer are A,B,C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A,B,C');
+INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 7', 'Multiple Choice', 3);
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (38, 1,'Correct answer are A,B,C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"([abc])(?!\1)[abc](?!\1)[abc]" : 3,"([abc])(?!\1)[abc]": 2,"A|B|C": 1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,38,7);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 8', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (39, 1,'Correct answer is B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'B');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (39, 1,'Correct answer is B A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"B":1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,39,8);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 9', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (40, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'A');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (40, 1,'Correct answer is A A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"A":1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,40,9);
 
 INSERT INTO Question(referenceName, questionTypeId, difficulty) VALUES ('Sample multiple choice 10', 'Multiple Choice', 1);
-INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (41, 1,'Correct answer is C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, 'C');
+INSERT INTO QuestionVersion(questionId, versionNumber, text, timeScale, correctAnswer) VALUES (41, 1,'Correct answer is C A) Some text <br/>B) Some text <br/>C) Some text <br/>', 1, '{"C":1}');
 INSERT INTO QuestionVersionEntry VALUES (1,7,1,41,10);
 
 INSERT INTO Module(referenceName, moduleCode) VALUES ('Sample Module 1', 'CSC001');

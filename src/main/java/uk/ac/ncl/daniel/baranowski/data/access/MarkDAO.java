@@ -37,7 +37,12 @@ public class MarkDAO {
 
     public int getMarkSumForTestDayEntry(int testDayEntryId) {
         final String sql = String.format("SELECT SUM(%s) FROM %s WHERE _id IN (SELECT markId From %s where testDayEntryId =  ?)", ACTUAL_MARK, TableNames.MARK, TableNames.ANSWER);
-        return jdbcTemplate.queryForObject(sql, Integer.class, testDayEntryId);
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, testDayEntryId);
+        } catch (NullPointerException e) {
+            return 0;
+        }
+
     }
 
     enum ColumnNames {

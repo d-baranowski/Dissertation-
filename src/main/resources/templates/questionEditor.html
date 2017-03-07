@@ -79,7 +79,7 @@
             </div>
 
             <div id="form-group-difficulty" class="form-group js-hook-form-status-difficulty">
-                <label class="form-control-label" for="difficulty">Difficulty: </label>
+                <label class="form-control-label" for="difficulty">Max Mark: </label>
                 <input class="form-control" min="0" max="100" type="number" th:field="*{difficulty}"/>
                 <div class="js-hook-error-msg" id="error-difficulty"></div>
             </div>
@@ -93,7 +93,7 @@
             <div id="form-group-type" class="form-group js-hook-form-status-type">
                 <label class="form-control-label" for="type">Type</label>
                 <p>Type:
-                    <select class="form-control formItem" th:field="*{type}">
+                    <select class="form-control formItem js-change-type-hook" th:field="*{type}">
                         <option th:value="Code" th:text="Code"></option>
                         <option th:value="Essay" th:text="Essay"></option>
                         <option th:value="'Multiple Choice'" th:text="'Multiple Choice'"></option>
@@ -102,9 +102,10 @@
                 <div class="js-hook-error-msg" id="error-type" ></div>
             </div>
 
-            <div id="form-group-correctAnswer" class="form-group js-hook-form-status-correctAnswer">
-                <label class="form-control-label" for="correctAnswer">(Only for multiple choice)Correct Answer:</label>
-                <input class="form-control" type="text" th:field="*{correctAnswer}"/>
+            <div id="form-group-correctAnswer" class="form-group hidden js-hook-form-status-correctAnswer js-answer-builder">
+                <label class="form-control-label" for="correctAnswer">Auto Marking Wizard</label>
+                <input class="form-control" type="hidden" th:field="*{correctAnswer}"/>
+                <div class="js-insert-auto-marking-wizard"></div>
                 <div class="js-hook-error-msg"  id="error-correctAnswer" ></div>
             </div>
 

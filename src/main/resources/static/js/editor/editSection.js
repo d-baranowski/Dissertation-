@@ -144,9 +144,9 @@ function handleAddingQuestions(table) {
     table.rows().every(function () {
         $('.js-add-question-handle', this.node()).each(function () {
             current = $(this);
+            var questionId = current.data('questionId');
+            var questionVer = current.data('questionVer');
             var sectionId = current.data('sectionId');
-            var sectionVersion = current.data('sectionVer');
-            var paperId = current.data('paperId');
             var url = current.attr('href');
             var parent = table.row("#" + current.data('parentId'));
 
@@ -154,10 +154,10 @@ function handleAddingQuestions(table) {
                 e.preventDefault();
 
                 var jsonData = JSON.stringify({
-                    "questionId": sectionId,
-                    "questionVersion": sectionVersion,
-                    "paperId": sectionId,
-                    "paperVersion": $('#versionNo').val()
+                    "questionId": questionId,
+                    "questionVersion": questionVer,
+                    "sectionId": sectionId,
+                    "sectionVersion": $('#versionNumber').val()
                 });
 
                 $.ajax({
@@ -171,7 +171,12 @@ function handleAddingQuestions(table) {
                             .add($(getSectionQuestionFromRow(parent, data))).draw();
                     },
                     error: function (data) {
-                        var msg = "Failed to add question. " + data.responseJSON.message ? data.responseJSON.message : "";
+                        var msg = "Failed to add question. " + (data.responseJSON.message ? data.responseJSON.message : "");
+                        if (data.responseJSON.constructor === Array) {
+                            data.responseJSON.forEach(function (element) {
+                                msg += (element.defaultMessage ? element.defaultMessage + ", " : "")
+                            });
+                        }
                         buildWarningAlert(msg)
                     }
                 });

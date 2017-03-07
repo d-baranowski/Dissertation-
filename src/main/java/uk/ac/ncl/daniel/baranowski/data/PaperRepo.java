@@ -10,6 +10,8 @@ import uk.ac.ncl.daniel.baranowski.data.access.SectionVersionDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.TermsAndConditionsDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
+import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddQuestionToSectionException;
+import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddSectionToPaperException;
 import uk.ac.ncl.daniel.baranowski.models.AssetModel;
 import uk.ac.ncl.daniel.baranowski.models.PaperModel;
 import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
@@ -28,6 +30,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.TableRepo;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapQuestionVersionAssetFrom;
@@ -381,8 +384,11 @@ public class PaperRepo {
         }
     }
 
-    public int addQuestionToSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException {
+    public int addQuestionToSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException, FailedToAddQuestionToSectionException {
         try {
+            if (sectionVersionDao.checkIfVersionIsUsed(sectionId,sectionVersion)) {
+                throw new FailedToAddQuestionToSectionException("This section is used in an exam you can't add more questions to this version");
+            }
             QuestionVersionEntry entry = questionVersionDao.getEntry(questionId, questionVersion, sectionId, sectionVersion);
 
             //If entry already exists in the section
@@ -407,8 +413,12 @@ public class PaperRepo {
         }
     }
 
-    public int addSectionToSection(int paperId, int paperVersion, int sectionId, int sectionVersion) throws AccessException {
+    public int addSectionToSection(int paperId, int paperVersion, int sectionId, int sectionVersion) throws AccessException, FailedToAddSectionToPaperException {
         try {
+            if (paperVersionDao.checkIfVersionIsUsed(paperId,paperVersion)) {
+                throw new FailedToAddSectionToPaperException("This paper is used. You can't add sections to this version");
+            }
+
             SectionVersionEntry entry =  sectionVersionDao.getEntry(paperId, paperVersion, sectionId, sectionVersion);
 
             //If entry already exists in the paper
