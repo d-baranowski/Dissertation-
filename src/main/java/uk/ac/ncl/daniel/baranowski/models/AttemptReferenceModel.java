@@ -95,6 +95,7 @@ public class AttemptReferenceModel {
                 Objects.equals(getExamId(), that.getExamId()) &&
                 Objects.equals(getLogin(), that.getLogin()) &&
                 Objects.equals(getPassword(), that.getPassword()) &&
+                Objects.equals(getDate(), that.getDate()) &&
                 that.canEqual(this);
     }
 

@@ -1,12 +1,13 @@
-<div th:each="attempt : ${examAttempts}" xmlns:th="http://www.thymeleaf.org">
+<!--<div th:each="attempt : ${examAttempts}" xmlns:th="http://www.thymeleaf.org">
     <div th:with="answers=${attempt.answerMap},attemptId=${attempt.id}">
         <th:block th:unless="${currentQuestion.type} == 'Multiple Choice' or ${currentQuestion.type} == 'Expression'">
-            <div th:replace="/fragments/paper/inMarking/candidate-answer"/>
-            <div th:replace="/fragments/paper/inMarking/markSubmissionForm"/>
+            &lt;!&ndash;<div th:replace="/fragments/paper/inMarking/candidate-answer"/>
+            <div th:replace="/fragments/paper/inMarking/markSubmissionForm"/>&ndash;&gt;
         </th:block>
     </div>
-</div>
-<th:block th:if="${currentQuestion.type} == 'Multiple Choice' or ${currentQuestion.type} == 'Expression'" xmlns:th="http://www.thymeleaf.org">
+</div>-->
+<!--th:if="${currentQuestion.type} == 'Multiple Choice' or ${currentQuestion.type} == 'Expression'"-->
+<th:block  xmlns:th="http://www.thymeleaf.org">
     <div th:each="attempt : ${examAttempts}">
         <th:block th:with="answers=${attempt.answerMap}">
             <form th:id="${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" class="submitMark codeQuestion" role="form" method="post"
@@ -26,13 +27,14 @@
                 <td>Attempt Id</td>
                 <td>Answer</td>
                 <td>Mark</td>
+                <td>View Full</td>
             </tr>
         </thead>
         <tbody>
             <tr th:each="attempt : ${examAttempts}">
                 <th:block th:with="answers=${attempt.answerMap}">
                     <td th:text="${attempt.getId()}"></td>
-                    <td th:text="${answers.getNotNullAnswerText(sectionKey, questionKey)}"></td>
+                    <td th:text="${answers.getNotNullAnswerTextShort(sectionKey, questionKey)}"></td>
                     <td>
                         <select class="form-control js-submit-on-change" th:attr="form=${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" name="mark">
                         <option th:text="${'Not Marked'}" th:value="${-1}" th:attr="selected=${-1 == answers.getNonNullMark(sectionKey, questionKey)}"></option>
@@ -42,6 +44,7 @@
                                 th:text="${i}"></option>
                         </select>
                     </td>
+                    <td><a target="_blank" th:href="${'/test-attempt/' + attempt.getId() + '/mark?sectionNo=' + sectionKey + '&amp;questionNo=' + questionKey}">View Full Answer</a></td>
                 </th:block>
             </tr>
         </tbody>

@@ -1,6 +1,6 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
-enum TableNames {
+public enum TableNames {
     ANSWER("Answer"),
     ANSWER_ASSET("AnswerAsset"),
     CANDIDATE("Candidate"),

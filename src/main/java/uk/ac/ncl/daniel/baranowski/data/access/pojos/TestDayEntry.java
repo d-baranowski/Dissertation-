@@ -6,8 +6,8 @@ import java.util.Objects;
  * A candidate sitting a test on a particular day.
  */
 public final class TestDayEntry {
-    private final int id;
-    private final int candidateId;
+    private final Integer id;
+    private final Integer candidateId;
     private final String status;
     private final Integer finalMark;
     private final Integer examId;
@@ -30,15 +30,15 @@ public final class TestDayEntry {
         return markingLock;
     }
 
-    public int getExamId() {
+    public Integer getExamId() {
         return examId;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public int getCandidateId() {
+    public Integer getCandidateId() {
         return candidateId;
     }
 
@@ -59,18 +59,19 @@ public final class TestDayEntry {
         if (this == o) return true; //NOSONAR
         if (o == null || getClass() != o.getClass()) return false; //NOSONAR
         TestDayEntry that = (TestDayEntry) o;
-        return getId() == that.getId() && //NOSONAR
-                getCandidateId() == that.getCandidateId() &&
+        return Objects.equals(getId(), that.getId()) && //NOSONAR
+                Objects.equals(getCandidateId(),that.getCandidateId()) &&
                 Objects.equals(status, that.status) &&
                 Objects.equals(finalMark, that.getFinalMark()) &&
                 Objects.equals(password, that.getPassword()) &&
                 Objects.equals(login, that.getLogin()) &&
+                Objects.equals(getMarkingLock(), that.getMarkingLock()) &&
         Objects.equals(examId, that.getExamId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCandidateId(), getStatus(), getFinalMark(), getExamId(), getLogin(), getPassword());
+        return Objects.hash(getMarkingLock(),getId(), getCandidateId(), getStatus(), getFinalMark(), getExamId(), getLogin(), getPassword());
     }
 
     @Override
@@ -92,11 +93,11 @@ public final class TestDayEntry {
     }
 
     public static class Builder {
-        private int id;
-        private int candidateId;
+        private Integer id;
+        private Integer candidateId;
         private String status;
         private Integer finalMark;
-        private int examId;
+        private Integer examId;
         private String password;
         private String login;
         private String markingLock;
@@ -116,7 +117,7 @@ public final class TestDayEntry {
             return this;
         }
 
-        public Builder setCandidateId(int candidateId) {
+        public Builder setCandidateId(Integer candidateId) {
             this.candidateId = candidateId;
             return this;
         }
@@ -126,7 +127,7 @@ public final class TestDayEntry {
             return this;
         }
 
-        public Builder setId(int id) {
+        public Builder setId(Integer id) {
             this.id = id;
             return this;
         }
@@ -135,7 +136,7 @@ public final class TestDayEntry {
             return new TestDayEntry(this);
         }
 
-        public Builder setExamId(int examId) {
+        public Builder setExamId(Integer examId) {
             this.examId = examId;
             return this;
         }

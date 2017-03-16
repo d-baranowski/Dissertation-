@@ -73,4 +73,14 @@ public final class Paper {
             return new Paper(this);
         }
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Paper{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", timeAllowed=").append(timeAllowed);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -55,8 +55,8 @@ public class ModuleDAO {
 
     public boolean isModuleLeader(int moduleId, String userId) {
         final String sql = String.format(
-                "SELECT m.`_id` = ? FROM %s m INNER JOIN %s ml ON m.`_id` = ml.moduleId AND ml.userId = ?",
-                TableNames.MODULE, TableNames.MODULE_LEADER);
+                "SELECT count(*) > 0 FROM %s ml WHERE ml.moduleId = ? AND ml.userId = ?",
+                TableNames.MODULE_LEADER);
         boolean result;
 
         try {

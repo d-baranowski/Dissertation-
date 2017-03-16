@@ -30,7 +30,7 @@ public class SectionReferenceModelMapper {
         section.setNoOfQuestionsToAnswer(sv.getNoOfQuestionsToAnswer());
         section.setTimeScale(sv.getTimeScale());
         section.setReferenceName(s.getReferenceName());
-        section.setInstructionsText(sv.getDescription());
+        section.setInstructionsText(sv.getDescription() != null ? sv.getDescription() : "");
         section.setQuestions(questions);
 
         return section;

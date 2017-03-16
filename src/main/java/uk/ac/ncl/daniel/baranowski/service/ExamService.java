@@ -2,8 +2,6 @@ package uk.ac.ncl.daniel.baranowski.service;
 
 import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
@@ -170,7 +168,7 @@ public class ExamService {
             examRepo.endExam(examId);
             autoMarkExam(examId);
         } catch (AccessException e) {
-            final String errorMsg = "Failed to start exam " + examId;
+            final String errorMsg = "Failed to end exam " + examId;
             LOGGER.log(Level.WARNING, errorMsg, e);
             throw new HttpServerErrorException(INTERNAL_SERVER_ERROR, errorMsg);
         }
@@ -193,7 +191,7 @@ public class ExamService {
     }
 
     private TestDayModel appendEndTime(TestDayModel day, int timeAllowed) {
-        LocalTime startTime = day.getStartTime();
+        LocalTime startTime = day.getStartTimeAsLocalTime();
         LocalTime endTime = startTime.plusMinutes(timeAllowed);
         LocalTime endTimeExtra = endTime.plusMinutes((int)(timeAllowed * 0.5));
         day.setEndTime(endTime);

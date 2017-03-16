@@ -7,84 +7,84 @@ import uk.ac.ncl.daniel.baranowski.models.*;
 
 import java.util.*;
 
-class TestResources {
+public class TestResources {
     /**
      * Candidate resources
      **/
-    static final Candidate CANDIDATE_ID_1;
+    public static final Candidate CANDIDATE_ID_1;
 
     /**
      * Question resources
      **/
-    static final Question SAMPLE_QUESTION;
-    static final Question QUESTION_ID_1;
+    public static final Question SAMPLE_QUESTION;
+    public static final Question QUESTION_ID_1;
 
     /**
      * Question version resources
      **/
-    static final QuestionVersion QUESTION_VERSION_SAMPLE;
-    static final QuestionVersion QUESTION_VERSION_ID_1_VERNO_1;
-    static final QuestionVersion QUESTION_VERSION_ID_30_VERNO_1;
-    static final QuestionVersion QUESTION_VERSION_ID_31_VERNO_1;
+    public static final QuestionVersion QUESTION_VERSION_SAMPLE;
+    public static final QuestionVersion QUESTION_VERSION_ID_1_VERNO_1;
+    public static final QuestionVersion QUESTION_VERSION_ID_30_VERNO_1;
+   public static final QuestionVersion QUESTION_VERSION_ID_31_VERNO_1;
 
     /**
      * Section resources
      **/
-    static final Section SECTION_SAMPLE;
-    static final Section SECTION_ID_1;
+   public static final Section SECTION_SAMPLE;
+   public static final Section SECTION_ID_1;
 
     /**
      * Section Version Resources
      **/
-    static final SectionVersion SECTION_VERSION_SAMPLE;
-    static final SectionVersion SECTION_VERSION_ID_1_VERNO_1;
+   public static final SectionVersion SECTION_VERSION_SAMPLE;
+   public static final SectionVersion SECTION_VERSION_ID_1_VERNO_1;
 
     /**
      * Paper resources
      **/
-    static final Paper PAPER_ID_1;
-    private static final Paper PAPER_ID_2;
-    static final Paper PAPER_ID_3;
+   public static final Paper PAPER_ID_1;
+   public static final Paper PAPER_ID_2;
+   public static final Paper PAPER_ID_3;
 
     /**
      * PaperVersion resources
      **/
-    static final PaperVersion PAPER_VERSION_ID_1_VERNO_1;
-    static final PaperVersion PAPER_VERSION_ID_2_VERNO_1;
+   public static final PaperVersion PAPER_VERSION_ID_1_VERNO_1;
+   public static final PaperVersion PAPER_VERSION_ID_2_VERNO_1;
 
     /**
      * User Roles resources
      **/
-    static final Role ROLE_ADMIN = new Role("Admin");
-    static final Role ROLE_MARKER = new Role("Marker");
-    static final Role ROLE_AUTHOR = new Role("Author");
-    static final Role ROLE_MODULE_LEADER = new Role("ModuleModel");
+   public static final Role ROLE_ADMIN = new Role("Admin");
+   public static final Role ROLE_MARKER = new Role("Marker");
+   public static final Role ROLE_AUTHOR = new Role("Author");
+   public static final Role ROLE_MODULE_LEADER = new Role("ModuleLeader");
 
     /**
      * User resources
      **/
-    static final User USER_MARKER = new User.Builder()
+    public static final User USER_MARKER = new User.Builder()
             .setId("3ca33b4f-009a-4403-829b-e2d20b3d47c2")
             .setLogin("sampleMarker")
             .setPassword("pass")
             .setName("Bob")
             .setSurname("Smith").build();
 
-    static final User USER_ADMIN = new User.Builder()
+    public static final User USER_ADMIN = new User.Builder()
             .setId("94cbbbc4-f94d-40d2-b0cf-e642eb36e73a")
             .setLogin("sampleAdmin")
             .setPassword("pass")
             .setName("Sam")
             .setSurname("Armstrong").build();
 
-    static final User USER_AUTHOR = new User.Builder()
+    public static final User USER_AUTHOR = new User.Builder()
             .setId("fba6a561-8999-4b19-9c57-232895d024c6")
             .setLogin("sampleAuthor")
             .setPassword("pass")
             .setName("Grzegorz")
             .setSurname("Brzenczyszczykiewicz").build();
 
-    static final User USER_ALL = new User.Builder()
+    public static final User USER_ALL = new User.Builder()
             .setId("9f4db0ac-b18a-4777-8b04-b72a0eeccf5d")
             .setLogin("sampleAll")
             .setPassword("pass")
@@ -94,7 +94,7 @@ class TestResources {
     /**
      *  Module Resources
      */
-    static final Module MODULE_ONE = new Module.Builder()
+    public static final Module MODULE_ONE = new Module.Builder()
             .setModuleCode("CSC001")
             .setId(1)
             .setReferenceName("Sample Module 1")
@@ -104,157 +104,158 @@ class TestResources {
     /**
      * QuestionVersionAsset Resources
      **/
-    static final QuestionVersionAsset QUESTION_VERSION_ASSET_ID_1;
+    public static final QuestionVersionAsset QUESTION_VERSION_ASSET_ID_1;
 
     /**
      * AnswerAsset resources
      **/
-    static final AnswerAsset ANSWER_ASSET_EXAMPLE;
+    public static final AnswerAsset ANSWER_ASSET_EXAMPLE;
 
     /**
      * Asset Models
      **/
-    static final AssetModel QUESTION_ASSET_MODEL_ID_1;
+    public static final AssetModel QUESTION_ASSET_MODEL_ID_1;
 
     /**
      * QuestionReferenceModels
      */
-    static final QuestionReferenceModel QUESTION_REFERENCE_MODEL_ID_1_VER_1;
+    public static final QuestionReferenceModel QUESTION_REFERENCE_MODEL_ID_1_VER_1;
 
     /**
      * QuestionModel resources
      **/
-    static final QuestionModel QUESTION_MODEL_ID_1_VER_1;
-    private static final QuestionModel QUESTION_MODEL_ID_15;
-    private static final QuestionModel QUESTION_MODEL_ID_16;
-    private static final QuestionModel QUESTION_MODEL_ID_17;
-    private static final QuestionModel QUESTION_MODEL_ID_18;
-    private static final QuestionModel QUESTION_MODEL_ID_19;
-    private static final QuestionModel QUESTION_MODEL_ID_20;
-    private static final QuestionModel QUESTION_MODEL_ID_21;
-    private static final QuestionModel QUESTION_MODEL_ID_22;
-    private static final QuestionModel QUESTION_MODEL_ID_23;
-    private static final QuestionModel QUESTION_MODEL_ID_24;
-    private static final QuestionModel QUESTION_MODEL_ID_25;
-    private static final QuestionModel QUESTION_MODEL_ID_26;
-    private static final QuestionModel QUESTION_MODEL_ID_27;
-    private static final QuestionModel QUESTION_MODEL_ID_28;
-    private static final QuestionModel QUESTION_MODEL_ID_29;
-    private static final QuestionModel QUESTION_MODEL_ID_30;
-    private static final QuestionModel QUESTION_MODEL_ID_31;
+    public static final QuestionModel QUESTION_MODEL_ID_1_VER_1;
+    public static final QuestionModel QUESTION_MODEL_ID_15;
+    public static final QuestionModel QUESTION_MODEL_ID_16;
+    public static final QuestionModel QUESTION_MODEL_ID_17;
+    public static final QuestionModel QUESTION_MODEL_ID_18;
+    public static final QuestionModel QUESTION_MODEL_ID_19;
+    public static final QuestionModel QUESTION_MODEL_ID_20;
+    public static final QuestionModel QUESTION_MODEL_ID_21;
+    public static final QuestionModel QUESTION_MODEL_ID_22;
+    public static final QuestionModel QUESTION_MODEL_ID_23;
+    public static final QuestionModel QUESTION_MODEL_ID_24;
+    public static final QuestionModel QUESTION_MODEL_ID_25;
+    public static final QuestionModel QUESTION_MODEL_ID_26;
+    public static final QuestionModel QUESTION_MODEL_ID_27;
+    public static final QuestionModel QUESTION_MODEL_ID_28;
+    public static final QuestionModel QUESTION_MODEL_ID_29;
+    public static final QuestionModel QUESTION_MODEL_ID_30;
+    public static final QuestionModel QUESTION_MODEL_ID_31;
 
     /**
      * SectionReferenceModel resources
      **/
-    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_1;
-    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_2;
-    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_3;
-    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_4;
-    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_5;
-    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_6;
-    static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_7;
+    public static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_1;
+    public static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_2;
+    public static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_3;
+    public static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_4;
+    public static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_5;
+    public static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_6;
+    public static final SectionReferenceModel SECTION_REFERENCE_MODEL_ID_7;
 
 
     /**
      * Section Questions resources
      **/
-    static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_1_VER_1;
-    private static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_2_VER_1;
-    private static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_3_VER_1;
-    private static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_4_VER_1;
-    private static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_5_VER_1;
-    private static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_6_VER_1;
+    public static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_1_VER_1;
+    public static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_2_VER_1;
+    public static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_3_VER_1;
+    public static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_4_VER_1;
+    public static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_5_VER_1;
+    public static final Map<Integer, QuestionModel> SECTION_QUESTIONS_FOR_ID_6_VER_1;
 
     /**
      * SectionModel resources
      **/
-    private static final SectionModel SECTION_MODEL_SAMPLE;
-    private static final SectionModel SECTION_MODEL_ID_1;
-    private static final SectionModel SECTION_MODEL_ID_2;
-    private static final SectionModel SECTION_MODEL_ID_3;
-    private static final SectionModel SECTION_MODEL_ID_4;
-    private static final SectionModel SECTION_MODEL_ID_5;
-    private static final SectionModel SECTION_MODEL_ID_6;
+    public static final SectionModel SECTION_MODEL_SAMPLE;
+    public static final SectionModel SECTION_MODEL_ID_1;
+    public static final SectionModel SECTION_MODEL_ID_2;
+    public static final SectionModel SECTION_MODEL_ID_3;
+    public static final SectionModel SECTION_MODEL_ID_4;
+    public static final SectionModel SECTION_MODEL_ID_5;
+    public static final SectionModel SECTION_MODEL_ID_6;
 
     /**
      * Paper Sections
      **/
-    static final Map<Integer, SectionModel> PAPER_SECTIONS_FOR_PAPER_MODEL_ID_1;
-    private static final Map<Integer, SectionModel> PAPER_SECTIONS_FOR_PAPER_MODEL_ID_2;
+    public static final Map<Integer, SectionModel> PAPER_SECTIONS_FOR_PAPER_MODEL_ID_1;
+    public static final Map<Integer, SectionModel> PAPER_SECTIONS_FOR_PAPER_MODEL_ID_2;
 
     /**
      * Answer resources
      */
-    static final Answer ANSWER_ID_1;
+    public static final Answer ANSWER_ID_1;
 
     /**
      * AnswerModel resources
      **/
-    static final AnswerModel ANSWER_MODEL_ID_1;
+    public static final AnswerModel ANSWER_MODEL_ID_1;
 
     /**
      * AnswersMapModel resources
      **/
-    private static final AnswersMapModel ANSWERS_FOR_ATTEMPT_MODEL_ID_1;
-    private static final AnswersMapModel ANSWERS_FOR_ATTEMPT_MODEL_ID_2;
+    public static final AnswersMapModel ANSWERS_FOR_ATTEMPT_MODEL_ID_1;
+    public static final AnswersMapModel ANSWERS_FOR_ATTEMPT_MODEL_ID_2;
 
     /**
      * CandidateModel resources
      **/
-    static final CandidateModel CANDIDATE_MODEL_ID_1;
+    public static final CandidateModel CANDIDATE_MODEL_ID_1;
 
     /**
      * PaperReferenceModel resources
      **/
-    static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_1;
-    static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_2;
-    static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_3;
+    public static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_1;
+    public static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_2;
+    public static final PaperReferenceModel PAPER_REFERENCE_MODEL_ID_3;
 
     /**
      * PaperModel resources
      **/
-    static final PaperModel PAPER_MODEL_ID_1_VER_1;
-    static final PaperModel PAPER_MODEL_ID_2_VER_1;
+    public static final PaperModel PAPER_MODEL_ID_1_VER_1;
+    public static final PaperModel PAPER_MODEL_ID_2_VER_1;
 
     /**
      * TestDayModel resources
      **/
-    static final TestDayModel SAMPLE_DAY;
+    public static final TestDayModel SAMPLE_DAY;
 
     /**
      * AttemptModel resources
      **/
-    static final AttemptModel TEST_ATTEMPT_MODEL_ID_1;
-    static final AttemptModel TEST_ATTEMPT_MODEL_ID_2;
+    public static final AttemptModel TEST_ATTEMPT_MODEL_ID_1;
+    public static final AttemptModel TEST_ATTEMPT_MODEL_ID_2;
 
     /**
      * AttemptReferenceModel resources
      **/
-    static final AttemptReferenceModel TEST_ATTEMPT_REFERENCE_MODEL_ID_1;
-    static final AttemptReferenceModel TEST_ATTEMPT_REFERENCE_MODEL_ID_2;
+    public static final AttemptReferenceModel TEST_ATTEMPT_REFERENCE_MODEL_ID_1;
+    public static final AttemptReferenceModel TEST_ATTEMPT_REFERENCE_MODEL_ID_2;
 
     /**
      * Mark resources
      **/
-    static final Mark SAMPLE_MARK;
+    public static final Mark SAMPLE_MARK;
 
     /**
      * MarkModel resources
      */
 
-    static final MarkModel SAMPLE_MARK_MODEL;
+    public static final MarkModel SAMPLE_MARK_MODEL;
 
     /**
      * Exam resources
      */
-    static final Exam SAMPLE_EXAM;
+    public static final Exam SAMPLE_EXAM;
 
     static {
         /** Candidate resources **/
         CANDIDATE_ID_1 = new Candidate.Builder()
                 .setId(1)
-                .setName("Agent")
-                .setSurname("Smith")
+                .setName("Mercedes")
+                .setSurname("Fedya")
+                .setHasExtraTime(true)
                 .build();
 
         /** Question resources **/
@@ -641,31 +642,43 @@ class TestResources {
         SECTION_REFERENCE_MODEL_ID_1 = new SectionReferenceModel();
         SECTION_REFERENCE_MODEL_ID_1.setId(1);
         SECTION_REFERENCE_MODEL_ID_1.setVersionNumber(1);
+        SECTION_REFERENCE_MODEL_ID_1.setNoOfQuestionsToAnswer(14);
+        SECTION_REFERENCE_MODEL_ID_1.setTimeScale(60);
         SECTION_REFERENCE_MODEL_ID_1.setReferenceName(SECTION_ID_1.getReferenceName());
 
         SECTION_REFERENCE_MODEL_ID_2 = new SectionReferenceModel();
         SECTION_REFERENCE_MODEL_ID_2.setId(2);
         SECTION_REFERENCE_MODEL_ID_2.setVersionNumber(1);
         SECTION_REFERENCE_MODEL_ID_2.setReferenceName("C# Language");
+        SECTION_REFERENCE_MODEL_ID_2.setNoOfQuestionsToAnswer(8);
+        SECTION_REFERENCE_MODEL_ID_2.setTimeScale(22);
 
         SECTION_REFERENCE_MODEL_ID_3 = new SectionReferenceModel();
         SECTION_REFERENCE_MODEL_ID_3.setId(3);
         SECTION_REFERENCE_MODEL_ID_3.setVersionNumber(1);
+        SECTION_REFERENCE_MODEL_ID_3.setNoOfQuestionsToAnswer(2);
+        SECTION_REFERENCE_MODEL_ID_3.setTimeScale(10);
         SECTION_REFERENCE_MODEL_ID_3.setReferenceName("Problem Solving");
 
         SECTION_REFERENCE_MODEL_ID_4 = new SectionReferenceModel();
         SECTION_REFERENCE_MODEL_ID_4.setId(4);
         SECTION_REFERENCE_MODEL_ID_4.setVersionNumber(1);
+        SECTION_REFERENCE_MODEL_ID_4.setNoOfQuestionsToAnswer(1);
+        SECTION_REFERENCE_MODEL_ID_4.setTimeScale(10);
         SECTION_REFERENCE_MODEL_ID_4.setReferenceName("Architecture and Theory");
 
         SECTION_REFERENCE_MODEL_ID_5 = new SectionReferenceModel();
         SECTION_REFERENCE_MODEL_ID_5.setId(5);
         SECTION_REFERENCE_MODEL_ID_5.setVersionNumber(1);
+        SECTION_REFERENCE_MODEL_ID_5.setNoOfQuestionsToAnswer(1);
+        SECTION_REFERENCE_MODEL_ID_5.setTimeScale(8);
         SECTION_REFERENCE_MODEL_ID_5.setReferenceName("Written Communication");
 
         SECTION_REFERENCE_MODEL_ID_6 = new SectionReferenceModel();
         SECTION_REFERENCE_MODEL_ID_6.setId(6);
         SECTION_REFERENCE_MODEL_ID_6.setVersionNumber(1);
+        SECTION_REFERENCE_MODEL_ID_6.setTimeScale(10);
+        SECTION_REFERENCE_MODEL_ID_6.setNoOfQuestionsToAnswer(1);
         SECTION_REFERENCE_MODEL_ID_6.setReferenceName("Test Case Design");
 
 
@@ -673,6 +686,8 @@ class TestResources {
         SECTION_REFERENCE_MODEL_ID_7.setId(7);
         SECTION_REFERENCE_MODEL_ID_7.setVersionNumber(1);
         SECTION_REFERENCE_MODEL_ID_7.setReferenceName("Multiple Choice");
+        SECTION_REFERENCE_MODEL_ID_7.setTimeScale(20);
+        SECTION_REFERENCE_MODEL_ID_7.setNoOfQuestionsToAnswer(10);
 
 
         /** Section Questions resources **/
@@ -820,6 +835,7 @@ class TestResources {
         CANDIDATE_MODEL_ID_1.setId(1);
         CANDIDATE_MODEL_ID_1.setFirstName(CANDIDATE_ID_1.getName());
         CANDIDATE_MODEL_ID_1.setSurname(CANDIDATE_ID_1.getSurname());
+        CANDIDATE_MODEL_ID_1.setHasExtraTime(true);
 
         /** PaperReferenceModel resources **/
         PAPER_REFERENCE_MODEL_ID_1 = new PaperReferenceModel();
@@ -931,7 +947,7 @@ class TestResources {
         //Private constructor to stop users from instantiating this class
     }
 
-    static List<AttemptReferenceModel> getAllAttemptReferenceModels() {
+    public static List<AttemptReferenceModel> getAllAttemptReferenceModels() {
         return Arrays.asList(TestResources.TEST_ATTEMPT_REFERENCE_MODEL_ID_1, TestResources.TEST_ATTEMPT_REFERENCE_MODEL_ID_2);
     }
 }

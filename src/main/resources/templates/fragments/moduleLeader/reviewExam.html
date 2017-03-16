@@ -2,9 +2,9 @@
     <h1>Review Exam</h1>
     <b><div th:text="${exam.module.getModuleCode()}"></div></b>
     <div th:text="${'Exam Date: ' + exam.getTestDayModel().getDate()}"></div>
-    <div th:text="${'Status: ' + exam.getStatus()}"></div>
-    <div th:text="${'Start Time: ' + exam.getTestDayModel().getStartTime()}"></div>
-    <div th:text="${'End Time: ' + exam.getTestDayModel().getEndTime()}"></div>
+    <div th:text="${'Status: ' + exam.getStatus().toString()}"></div>
+    <div th:text="${'Start Time: ' + exam.getTestDayModel().getStartTimeAsLocalTime()}"></div>
+    <div th:text="${'End Time: ' + exam.getTestDayModel().getEndTimeAsLocalTime()}"></div>
     <div>Paper: <a th:href="${paperLink}" th:text="${exam.getPaperRef().getReferenceName()}"></a></div>
 
     <table class="table table-striped">
@@ -38,5 +38,5 @@
     <br/>
     <button onclick="simulateExam(this)" th:if="${EXAM_STATUS.equals(CREATED) == true}" th:attr="data-exam-id=${exam.getId()}" class="button btn-warning">Simulate Random Exam</button>
     <br/>
-    <a th:href="'/exam/mark/' + ${exam.getId()}" th:if="${EXAM_STATUS.equals(FINISHED) == true}">Mark Exam</a>
+    <a th:href="'/exam/mark/' + ${exam.getId()}" th:if="${EXAM_STATUS.equals(FINISHED) == true or EXAM_STATUS.equals(MARKING_ONGOING)}">Mark Exam</a>
 </div>

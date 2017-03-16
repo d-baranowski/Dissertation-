@@ -40,7 +40,7 @@ public class TablesService {
                 header = header.substring(0, 1).toUpperCase() + header.substring(1);
                 mav.addObject("header",header);
 
-                populateModelAndView(mav, objects);
+                populateModelAndView(mav, objects, modelType);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 LOGGER.log(Level.WARNING, "Failed to populate a dynamic table.", e);
                 throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -77,8 +77,7 @@ public class TablesService {
         return null;
     }
 
-    private List<Map<String, String>> getTableData(List<Object> objects, List<String> columnNames, ModelAndView mav) {
-        Class listType = objects.get(0).getClass();
+    private List<Map<String, String>> getTableData(List<Object> objects, Class listType ,List<String> columnNames, ModelAndView mav) {
         List<Map<String, String>> listOfValues = new ArrayList<>();
         Map<String, Method> columnNameToGetter = new HashMap<>();
         Map<Integer, String> tempColumnNames = new HashMap<>();
@@ -114,7 +113,7 @@ public class TablesService {
                                     .get(columnName)
                                     .invoke(object).toString());
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    LOGGER.log(Level.WARNING, "Failed to populate a dynamic table.");
+                    LOGGER.log(Level.WARNING, "Failed to populate a dynamic table.",e);
                     throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
                 }
             }
@@ -125,9 +124,9 @@ public class TablesService {
     }
 
 
-    private ModelAndView populateModelAndView(ModelAndView mav, List<Object> objects) {
+    private ModelAndView populateModelAndView(ModelAndView mav, List<Object> objects, Class listType) {
         List<String> columnNames = new ArrayList<>();
-        List<Map<String, String>> tableData = getTableData(objects,columnNames, mav);
+        List<Map<String, String>> tableData = getTableData(objects,listType,columnNames, mav);
 
         mav.addObject("columnNames",columnNames);
         mav.addObject("tableData", tableData);

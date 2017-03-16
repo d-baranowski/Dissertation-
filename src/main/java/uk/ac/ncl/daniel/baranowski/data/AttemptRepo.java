@@ -157,7 +157,7 @@ public class AttemptRepo {
         final List<AttemptReferenceModel> result = new ArrayList<>();
 
         try {
-            final List<TestDayEntry> attempts = attemptDao.getByEntryStatus(status.name());
+            final List<TestDayEntry> attempts = attemptDao.getByEntryStatus(status.toString());
 
             for (TestDayEntry attempt : attempts) {
                 final Exam exam = examDAO.read(attempt.getExamId());

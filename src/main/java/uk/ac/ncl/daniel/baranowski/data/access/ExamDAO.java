@@ -1,15 +1,11 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
-import javafx.scene.control.Tab;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Exam;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
-import uk.ac.ncl.daniel.baranowski.tables.annotations.GetAllMethod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,24 +80,32 @@ public class ExamDAO {
     }
 
     public void setStartTime(int examId, String s) {
-        String sql =
-                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.startTime = ? WHERE e.`_id` = ?";
+        final String findIdSql = "SELECT e.testDayId FROM Exam e WHERE e._id = ?";
+        int testDayId = jdbcTemplate.queryForObject(findIdSql, Integer.class ,examId);
 
-        jdbcTemplate.update(sql, s, examId);
+        String sql =
+                "UPDATE TestDay td SET td.startTime = ? WHERE td.`_id` = ?";
+
+        jdbcTemplate.update(sql, s, testDayId);
     }
 
     public void setEndTimeExtra(int examId, String s) {
-        String sql =
-                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.endTimeWithExtraTime = ? WHERE e.`_id` = ?";
+        final String findIdSql = "SELECT e.testDayId FROM Exam e WHERE e._id = ?";
+        int testDayId = jdbcTemplate.queryForObject(findIdSql, Integer.class ,examId);
 
-        jdbcTemplate.update(sql, s, examId);
+        String sql =
+                "UPDATE TestDay td SET td.endTimeWithExtraTime = ? WHERE td.`_id` = ?";
+
+        jdbcTemplate.update(sql, s, testDayId);
     }
 
     public void setEndTime(int examId, String endTime) {
+        final String findIdSql = "SELECT e.testDayId FROM Exam e WHERE e._id = ?";
+        int testDayId = jdbcTemplate.queryForObject(findIdSql, Integer.class ,examId);
         String sql =
-                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.endTime = ? WHERE e.`_id` = ?";
+                "UPDATE TestDay td SET td.endTime = ? WHERE td.`_id` = ?";
 
-        jdbcTemplate.update(sql, endTime, examId);
+        jdbcTemplate.update(sql, endTime, testDayId);
     }
 
     public boolean isMarking(int examId, String userId) {

@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                     <th:block th:each="rowData : ${tableData}">
-                        <tr  th:attr="data-view-link=${rowData.get('VIEW_ENDPOINT')},data-edit-link=${rowData.get('EDIT_ENDPOINT')}">
+                        <tr th:attr="data-view-link=${rowData.get('VIEW_ENDPOINT')},data-edit-link=${rowData.get('EDIT_ENDPOINT')}">
                             <th:block th:each="column : ${columnNames}">
                                 <td th:text="${rowData.get(column)}"></td>
                             </th:block>

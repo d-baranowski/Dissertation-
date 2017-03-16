@@ -16,6 +16,8 @@ $(document).ready(function(){
         beginUpdating();
     }
 
+    $('#type').val($('.js-change-type-hook').val());
+
     handleAnswerBuilder();
 });
 
@@ -27,6 +29,9 @@ function beginUpdating(questionId, questionVersionNo) {
         var version = $('#versionNo').val();
         $('#versionNo').val(parseInt(version)+1);
     });*/
+    $('.js-show-when-updating').removeClass("hidden");
+
+
     if (questionId) {
         $('#id').val(questionId);
     }
@@ -34,11 +39,18 @@ function beginUpdating(questionId, questionVersionNo) {
         $('#versionNo').val(questionVersionNo);
     }
 
+    updatePreviewButton();
+
     $('#language').attr('readonly','readonly');
     $('#difficulty').attr('readonly','readonly');
     $('#referenceName').attr('readonly','readonly');
     $('#questionTypeId').attr('readonly','readonly');
-    $('#type').attr('readonly','readonly');
+    $('.js-change-type-hook').attr('disabled', 'true');
+
+    $('.js-save').click(function () {
+        ajaxUpdate();
+    });
+
     setInterval(ajaxUpdate, 10 * 1000);
 }
 
@@ -57,7 +69,11 @@ function ajaxUpdate() {
             success: function(data)
             {
                 hideErrorMessages();
-                $('#versionNo').val(data);
+                if ($('#versionNo').val() != data) {
+                    window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_QUESTION_EDITOR
+                        + '?questionId='+$('#id').val()+'&questionVersion='+data;
+                }
+
                 buildSuccessAlert("Successfully Saved");
                 oldFormData = formData;
             },
@@ -83,7 +99,8 @@ function bindCreationForm() {
             success: function(data)
             {
                 hideErrorMessages();
-                beginUpdating(data, 1); // show response from the php script.
+                window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_QUESTION_EDITOR
+                    + '?questionId='+data+'&questionVersion='+1;
             },
             error: function (data) {
                 displayErrorMessages(data.responseJSON);
@@ -139,16 +156,25 @@ function showMultipleChoiceanswerBuilder() {
     buildMultipleChoiceQuestionWizard();
 }
 
+function updatePreviewButton() {
+    var newHref = '/test-paper/view-question/{questionId}/{questionVer}'.replace('{questionId}',$('#id').val());
+    newHref = newHref.replace('{questionVer}',$('#versionNo').val());
+    $('.js-preview').attr('href',newHref);
+}
+
 function showExpressionAnswerBuilder() {
     $('.js-answer-builder').removeClass('hidden');
     buildExpressionQuestionWizard();
 }
 
 function handleAnswerBuilder() {
-    $('#type').change(function () {
-        if ($(this).val() == 'Multiple Choice') {
+    $('.js-change-type-hook').change(function () {
+        var newValue = $(this).val();
+        $('#type').val(newValue);
+
+        if (newValue == 'Multiple Choice') {
             showMultipleChoiceanswerBuilder()
-        } else if ($(this).val() == 'Expression') {
+        } else if (newValue == 'Expression') {
             showExpressionAnswerBuilder();
         } else {
             $('#correctAnswer').val('');
@@ -167,9 +193,21 @@ function getPatternFromText(pattern) {
 function getCurrentJson() {
     var current = $('#correctAnswer').val();
     if (current.length > 0) {
-        return currentJson = JSON.parse(current);
+        try {
+            return currentJson = JSON.parse(current);
+        } catch(err) {
+            return {}
+        }
     }
     return {};
+}
+
+function safeParse(someString) {
+    try {
+        return JSON.parse(someString)
+    } catch(err) {
+        return {}
+    }
 }
 
 function buildMultipleChoiceQuestionWizard() {
@@ -183,7 +221,7 @@ function buildMultipleChoiceQuestionWizard() {
             function getChecked() {
                 var current = $('#correctAnswer').val();
                 if (current.length > 0) {
-                    var currentJson = JSON.parse(current);
+                    var currentJson = safeParse(current);
                     if (currentJson[i]) {
                         var checked = currentJson[i].match(val.replace("\)",''));
                         return checked ? 'checked' : '';

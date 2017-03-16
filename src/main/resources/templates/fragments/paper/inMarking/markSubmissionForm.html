@@ -1,4 +1,6 @@
-<form class="submitMark codeQuestion" role="form" method="post"
+<form
+      th:id="${'form-for-attempt-' + attemptId + '-question-' + currentQuestion.id + '-version-' + currentQuestion.versionNo}"
+      class="submitMark codeQuestion" role="form" method="post"
       th:action="${submitMarkForm.getENDPOINT()}"
       th:object="${submitMarkForm}"
       th:attr="questionName=${currentQuestion.referenceName},
@@ -15,13 +17,13 @@
         </div>
 
         <div class="panel-comment-section collapsible in" th:id="${#ids.seq('panel-comment-section')}">
-            <textarea th:text="${answers.getNonNullMarkComment(sectionKey, questionKey)}" type="text" name="comment" style="resize: none;"></textarea>
+            <textarea th:attr="form=${'form-for-attempt-' + attemptId + '-question-' + currentQuestion.id + '-version-' + currentQuestion.versionNo}" th:text="${answers.getNonNullMarkComment(sectionKey, questionKey)}" type="text" name="comment" style="resize: none;"></textarea>
         </div>
     </div>
 
     <div class="form-mark-select">
         <p>Allocated Mark: </p>
-        <select name="mark">
+        <select th:attr="form=${'form-for-attempt-' + attemptId + '-question-' + currentQuestion.id + '-version-' + currentQuestion.versionNo}" name="mark">
             <option th:text="${'Not Marked'}" th:value="${-1}" th:attr="selected=${-1 == answers.getNonNullMark(sectionKey, questionKey)}"></option>
             <option th:each="i : ${#numbers.sequence( 0, currentQuestion.getDifficulty())}"
                     th:value="${i}"

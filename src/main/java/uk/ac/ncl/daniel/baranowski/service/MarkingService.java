@@ -64,7 +64,7 @@ public class MarkingService {
         }
     }
 
-    public void submitMark(SubmitMarkFormModel formBody, HttpSession markerSession) {
+    public int submitMark(SubmitMarkFormModel formBody, HttpSession markerSession) {
         final UserReferenceModel userRef = userRepo.getUserReference(SessionUtility.getUserId(markerSession));
 
         final MarkModel mark = new MarkModel();
@@ -83,8 +83,19 @@ public class MarkingService {
 
         try {
             attemptRepo.markAnswer(formBody.getTestAttemptId(), formBody.getQuestionId(), formBody.getQuestionVersionNo(), markId);
+            return markId;
         } catch (AccessException e) {
             final String errorMsg = String.format("Failed to save mark: %s", mark);
+            LOGGER.log(Level.SEVERE, errorMsg, e);
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR , errorMsg);
+        }
+    }
+
+    public MarkModel get(int markId) {
+	    try {
+	        return marksRepo.get(markId);
+        } catch (AccessException e) {
+            final String errorMsg = String.format("Failed to get mark with id %s", markId);
             LOGGER.log(Level.SEVERE, errorMsg, e);
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR , errorMsg);
         }

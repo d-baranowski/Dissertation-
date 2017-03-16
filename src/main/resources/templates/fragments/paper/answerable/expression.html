@@ -6,7 +6,7 @@
 >
 
     <input type="hidden" name="attemptId" th:value="${attemptId}"/>
-    <input type="hidden" name="paperId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
     <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
     <input th:id="'answer-for-' + ${sectionKey} + '-'+ ${questionKey}" type="hidden" name="text" th:value="${answers.getNotNullAnswerText(sectionKey, questionKey)}"/>
 

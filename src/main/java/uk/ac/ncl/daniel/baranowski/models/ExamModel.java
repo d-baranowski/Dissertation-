@@ -83,17 +83,17 @@ public class ExamModel {
 
     @ColumnGetter(name = "Start Time", order = 5)
     public String getStartTime() {
-        return day != null ? day.getStartTime().toString(TIME_PATTERN) : "";
+        return day != null ? day.getStartTimeAsLocalTime().toString(TIME_PATTERN) : "";
     }
 
     @ColumnGetter(name = "End Time", order = 6)
     public String getEndTime() {
-        return day != null ? day.getEndTime().toString(TIME_PATTERN) : "";
+        return day != null ? day.getEndTimeAsLocalTime().toString(TIME_PATTERN) : "";
     }
 
     @ColumnGetter(name = "End Time Extra", order = 7)
     public String getEndTimeExtra() {
-        return day != null ? day.getEndTimeWithExtraTime().toString(TIME_PATTERN) : "";
+        return day != null ? day.getEndTimeWithExtraTimeAsLocalTime().toString(TIME_PATTERN) : "";
     }
 
     public static class Builder {

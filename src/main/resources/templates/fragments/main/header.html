@@ -3,16 +3,16 @@
         <div class="container">
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li th:classappend="${dashboardContent} == 'generateTest' ? active : ''">
+                    <li id="nav-setup-exam" th:classappend="${dashboardContent} == 'generateTest' ? active : ''">
                         <a href="/dashboard/generate-test"><span class="tabText">Setup an Exam</span></a>
                     </li>
-                    <li th:classappend="${dashboardContent} == 'browse' ? active : ''">
+                    <li id="nav-browse" th:classappend="${dashboardContent} == 'browse' ? active : ''">
                         <a href="/dashboard/browse"><span class="tabText">Browse</span></a>
                     </li>
-                    <li th:classappend="${dashboardContent} == 'edit' ? active : ''">
+                    <li id="nav-edit" th:classappend="${dashboardContent} == 'edit' ? active : ''">
                         <a href="/dashboard/create"><span class="tabText">Create</span></a>
                     </li>
-                    <li th:classappend="${dashboardContent} == 'settings' ? active : ''">
+                    <li id="nav-settings" th:classappend="${dashboardContent} == 'settings' ? active : ''">
                         <a href="/dashboard/settings"><span class="tabText">Settings</span></a>
                     </li>
                     <li>

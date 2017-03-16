@@ -1,4 +1,4 @@
-<div  class="question" xmlns:th="http://www.thymeleaf.org">
+<div class="question" xmlns:th="http://www.thymeleaf.org">
     <th:box th:unless="${examMarking}">
     <th:block th:if="${inMarking}">
         <div class="info-banner">
@@ -15,7 +15,7 @@
 
     <b><p th:text="${'('  + currentQuestion.timeScale + ' minutes)'}"></p></b>
 
-    <p th:utext="${currentQuestion.text}"></p>
+    <p th:id="${'question-text-for-' + currentQuestion.getId() + '-' + currentQuestion.getVersionNo()}" th:utext="${currentQuestion.text}"></p>
 
     <th:block th:each="questionAsset : ${currentQuestion.assets}">
         <img class="assetImage" th:src="${questionAsset.getBase64StringFile()}"/>

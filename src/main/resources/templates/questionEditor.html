@@ -98,13 +98,14 @@
             <div id="form-group-type" class="form-group js-hook-form-status-type">
                 <label class="form-control-label" for="type">Type</label>
                 <p>Type:
-                    <select class="form-control formItem js-change-type-hook" th:field="*{type}" >
+                    <select class="form-control formItem js-change-type-hook">
                         <option th:attr="selected=*{type == 'Code'}" th:value="Code" th:text="Code"></option>
                         <option th:attr="selected=*{type == 'Essay'}" th:value="Essay" th:text="Essay"></option>
                         <option th:attr="selected=*{type == 'Multiple Choice'}" th:value="'Multiple Choice'" th:text="'Multiple Choice'"></option>
                         <option th:attr="selected=*{type == 'Drawing'}" th:value="Drawing" th:text="Drawing"></option>
                         <option th:attr="selected=*{type == 'Expression'}" th:value="Expression" th:text="Expression"></option>
                     </select></p><br/>
+                <input th:field="*{type}" type="hidden" />
                 <div class="js-hook-error-msg" id="error-type" ></div>
             </div>
 
@@ -130,6 +131,8 @@
             <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Question'"/>
         </form>
         <button class="btn btn-success hidden js-create-new-version">Create new version</button>
+        <a target="_blank" class="btn btn-primary hidden js-show-when-updating js-preview" href="/test-paper/view-question/{questionId}/{questionVer}">View</a>
+        <button class="btn  js-show-when-updating  btn-success hidden js-save">Save Progress</button>
     </div>
 </div>
 

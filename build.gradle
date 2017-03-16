@@ -48,11 +48,9 @@ dependencies {
     compile("org.springframework:spring-jdbc")
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-devtools')
-    //compile('com.h2database:h2')
+
     compile('org.springframework.session:spring-session:1.2.0.RC1')
     runtime("mysql:mysql-connector-java")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('com.h2database:h2')
     compile('nl.jqno.equalsverifier:equalsverifier:2.0.2')
     // https://mvnrepository.com/artifact/joda-time/joda-time
     compile group: 'joda-time', name: 'joda-time', version: '2.9.7'
@@ -61,6 +59,13 @@ dependencies {
     // https://mvnrepository.com/artifact/de.sven-jacobs/loremipsum
     compile group: 'de.sven-jacobs', name: 'loremipsum', version: '1.0'
 
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('com.h2database:h2')
+    testRuntime('com.h2database:h2')
+    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    testCompile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.2.0'
+
+    compile("org.springframework.boot:spring-boot-starter-websocket")
 
     //Webjars
     compile("org.webjars:jquery:2.1.4")
@@ -71,6 +76,9 @@ dependencies {
     compile("org.webjars.bower:google-code-prettify:1.0.4")
     compile("org.webjars.npm:jquery-ui:1.12.0-rc.2")
     compile group: 'org.webjars', name: 'font-awesome', version: '4.7.0'
+    compile("org.webjars:webjars-locator")
+    compile("org.webjars:sockjs-client:1.0.2")
+    compile("org.webjars:stomp-websocket:2.3.3")
 
 
     compile fileTree(dir: 'libs', include: ['*.jar'])

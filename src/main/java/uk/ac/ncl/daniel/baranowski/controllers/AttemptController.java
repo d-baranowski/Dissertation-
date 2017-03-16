@@ -1,7 +1,10 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +24,7 @@ import uk.ac.ncl.daniel.baranowski.exceptions.*;
 import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
+import uk.ac.ncl.daniel.baranowski.models.websocket.MarkMessage;
 import uk.ac.ncl.daniel.baranowski.service.AttemptService;
 import uk.ac.ncl.daniel.baranowski.service.ExamService;
 import uk.ac.ncl.daniel.baranowski.service.MarkingService;
@@ -52,6 +56,7 @@ public class AttemptController {
     private final ExamService examService;
     private static final Logger LOGGER = Logger.getLogger(AttemptController.class.getName());
     private static final double GRACE_PERIOD = -0.3;
+    private final SimpMessagingTemplate simpMessager;
 
     /**
      * Please do not use this constructor. Spring automatically initializes all classes annotated with @Controller.
@@ -61,11 +66,12 @@ public class AttemptController {
      * @param markingService NOSONAR
      */
     @Autowired
-    public AttemptController(AttemptService attemptService, MarkingService markingService, PaperService paperService, ExamService examService) {
+    public AttemptController(AttemptService attemptService, MarkingService markingService, PaperService paperService, ExamService examService, SimpMessagingTemplate simpMessager) {
         this.attemptService = attemptService;
         this.markingService = markingService;
         this.paperService = paperService;
         this.examService = examService;
+        this.simpMessager = simpMessager;
     }
 
     /**
@@ -144,7 +150,10 @@ public class AttemptController {
      */
     @RequestMapping(ControllerEndpoints.ATTEMPT_MARK)
     @PreAuthorize("hasAnyAuthority('Marker')")
-    public ModelAndView mark(@PathVariable int testAttemptId, HttpSession markerSession) {
+    public ModelAndView mark(@PathVariable int testAttemptId,
+                             @RequestParam(required = false, defaultValue = "-1") int sectionNo,
+                             @RequestParam(required = false, defaultValue = "-1") int questionNo,
+                             HttpSession markerSession) {
         markingService.startMarking(testAttemptId, markerSession);
         return markingService.getMarkableViewForTestAttempt(testAttemptId);
     }
@@ -258,7 +267,8 @@ public class AttemptController {
         if (!bindingResult.hasErrors()) {
             if (markingService.userIsMarking(formBody.getTestAttemptId(), SessionUtility.getUserId(markerSession))) {
                 attemptService.validateStatus(formBody.getTestAttemptId(), ExamStatus.MARKING_ONGOING);
-                markingService.submitMark(formBody, markerSession);
+                int markId = markingService.submitMark(formBody, markerSession);
+                sendMarkMessage(markId, formBody);
                 return "ok";
             } else {
                 throw new InvalidIsolationLevelException("This test attempt is currently blocked by another Marker");
@@ -266,6 +276,14 @@ public class AttemptController {
         } else {
             return bindingResult.getFieldErrors();
         }
+    }
+
+    private void sendMarkMessage(int markId, SubmitMarkFormModel formBody) {
+        simpMessager.convertAndSend("/marking/mark-updated",  new MarkMessage()
+                .setMark(markingService.get(markId))
+                .setQuestionId(formBody.getQuestionId())
+                .setQuestionVersionNo(formBody.getQuestionVersionNo())
+                .setTestAttemptId(formBody.getTestAttemptId()));
     }
 
     /**

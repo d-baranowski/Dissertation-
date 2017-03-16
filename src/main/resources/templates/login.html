@@ -17,13 +17,13 @@
     <div class="col-md-4 col-md-offset-4 login-box">
         <form th:action="${ENDPOINT}" id="loginForm" method="post" class="form-signin">
             <h2 class="form-signin-heading">Please sign in</h2>
-            <label for="inputUserame" class="sr-only">Login</label>
-            <input type="text" name="usernameField" id="inputUserame" class="form-control" placeholder="Username"
+            <label for="inputUsername" class="sr-only">Login</label>
+            <input type="text" name="usernameField" id="inputUsername" class="form-control" placeholder="Username"
                    maxlength="30"/><br/>
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" id="inputPassword" name="passwordField" class="form-control" placeholder="Password"
                    maxlength="30"/><br/>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button><br/>
+            <button id="main-login-btn" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button><br/>
         </form>
     </div>
 </div>

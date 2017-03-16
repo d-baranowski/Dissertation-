@@ -218,7 +218,18 @@ function beginUpdating(questionId, questionVersionNo) {
     $('.js-unhide-me').removeClass('hidden');
     handleAddingQuestions(availableQuestionsDataTable);
 
+    $('.js-save').click(function () {
+        ajaxUpdate();
+    });
+    updatePreviewButton();
+
     setInterval(ajaxUpdate, 10 * 1000);
+}
+
+function updatePreviewButton() {
+    var newHref = '/test-paper/view-section/{sectionId}/{sectionVer}'.replace('{sectionId}',$('#id').val());
+    newHref = newHref.replace('{sectionVer}',$('#versionNumber').val());
+    $('.js-preview').attr('href',newHref);
 }
 
 
@@ -237,6 +248,9 @@ function ajaxUpdate() {
                 $('#versionNumber').val(data);
                 buildSuccessAlert("Successfully Saved");
                 oldFormData = formData;
+                if ($('#versionNumber').val() != data) {
+                    window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + $('#id').val() + "&sectionVersion=" + parseInt(data);
+                }
             },
             error: function (data) {
                 displayErrorMessages(data.responseJSON);
@@ -261,6 +275,7 @@ function bindCreationForm() {
             success: function (data) {
                 beginUpdating(data, 1); // show response from the php script.
                 oldFormData = formData;
+                window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + data + "&sectionVersion=1";
             },
             error: function (data) {
                 displayErrorMessages(data.responseJSON);

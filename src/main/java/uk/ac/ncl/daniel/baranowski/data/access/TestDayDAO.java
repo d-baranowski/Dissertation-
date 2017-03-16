@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static uk.ac.ncl.daniel.baranowski.common.Constants.TIME_PATTERN;
-import static uk.ac.ncl.daniel.baranowski.common.DateUtils.DATE_TIME_FORMATTER;
 import static uk.ac.ncl.daniel.baranowski.common.DateUtils.validDateFormat;
 import static uk.ac.ncl.daniel.baranowski.data.access.TestDayDAO.ColumnNames.*;
 
@@ -30,8 +29,11 @@ public class TestDayDAO {
     public void create(TestDay obj) throws DateFormatException {
         validDateFormat(obj.getDate());
 
-        jdbcTemplate.update(String.format("INSERT INTO %s ("+getFieldNames("")+") VALUES (?,?,?,?,?)",
-                TableNames.TEST_DAY),
+        jdbcTemplate.update(String.format("INSERT INTO %s (%s,%s,%s,%s,%s) VALUES (?,?,?,?,?)",
+                TableNames.TEST_DAY,
+                DATE,LOCATION,
+                START_TIME,END_TIME,
+                END_TIME_WITH_EXTRA),
                 obj.getDate(),
                 obj.getLocation(),
                 obj.getStartTime(),
@@ -58,9 +60,9 @@ public class TestDayDAO {
                 "select * from %s t WHERE t.date = ? AND t.startTime = ? AND t.endTime = ? AND t.endTimeWithExtraTime = ? AND t.location = ?"
                 , TableNames.TEST_DAY);
 
-        String startTime = model.getStartTime().toString(TIME_PATTERN);
-        String endTime = model.getEndTime().toString(TIME_PATTERN);
-        String endTimeWithExtra = model.getEndTimeWithExtraTime().toString(TIME_PATTERN);
+        String startTime = model.getStartTimeAsLocalTime().toString(TIME_PATTERN);
+        String endTime = model.getEndTimeAsLocalTime().toString(TIME_PATTERN);
+        String endTimeWithExtra = model.getEndTimeWithExtraTimeAsLocalTime().toString(TIME_PATTERN);
         validDateFormat(model.getDate());
 
         final boolean exists = jdbcTemplate.queryForObject(sqlCheck, Integer.class, model.getDate() ,startTime,endTime,endTimeWithExtra,model.getLocation()) > 0;
@@ -89,7 +91,7 @@ public class TestDayDAO {
         return read(key.intValue());
     }
 
-    enum ColumnNames {
+    public enum ColumnNames {
         ID("_id"),
         DATE("date"),
         LOCATION("location"),
