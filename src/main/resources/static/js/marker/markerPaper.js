@@ -32,6 +32,7 @@ function handleMarkSubmissions() {
             success: function (data) {
                 if (data == "ok") {
                     var parent = $(form).closest(".question");
+                    $(form).prop('ismarked', true);
                     notifyAccordionOfMarkSubmission($(parent).attr("data-slick-index"));
                 } else {
                     buildSubmissionFailedAlert(data);

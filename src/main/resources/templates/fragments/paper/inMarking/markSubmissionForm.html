@@ -30,6 +30,6 @@
                     th:attr="selected=${i == answers.getNonNullMark(sectionKey, questionKey)}"
                     th:text="${i}"></option>
         </select>
-        <input id="submit-mark-button" value="Save" type="submit"/>
+        <input th:id="${'submit-mark-button-for-' + attemptId + '-question-' + currentQuestion.id + '-version-' + currentQuestion.versionNo}" value="Save" type="submit"/>
     </div>
 </form>

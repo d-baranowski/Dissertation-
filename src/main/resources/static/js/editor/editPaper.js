@@ -87,6 +87,7 @@ function bindCreationForm() {
                 hideErrorMessages();
                 beginUpdating(data, 1); // show response from the php script.
                 oldFormData = formData;
+                updateUrl()
             },
             error: function (data) {
                 displayErrorMessages(data.responseJSON);
@@ -104,9 +105,10 @@ function enableFroalaEditor() {
             'prettyprint lang-sql': 'SQL',
             'prettyprint': 'Code'
         },
+        fontSizeDefaultSelection: '18',
         htmlRemoveTags: ['script', 'video', 'source', 'input', 'form', 'picture'],
         htmlAllowedTags: ["a", "abbr", "address", "area", "article", "aside", "b", "base", "bdi", "bdo", "blockquote", "br", "button", "caption", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "i", "img", "ins", "kbd", "keygen", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem", "meter", "nav", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "queue", "rp", "rt", "ruby", "s", "samp", "style", "section", "select", "small", "source", "span", "strike", "strong", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "wbr"],
-        toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
+        toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen', 'specialCharacters'],
         pluginsEnabled: null
     });
 
@@ -123,10 +125,16 @@ function enableFroalaEditor() {
         $('.' + $(this).data('paste-to')).val(html);
     });
 }
+function updatePreviewButton() {
+    var newHref = '/test-paper/view-section/{sectionId}/{sectionVer}'.replace('{sectionId}',$('#id').val());
+    newHref = newHref.replace('{sectionVer}',$('#versionNo').val());
+    $('.js-preview').attr('href',newHref);
+}
+
 
 function beginUpdating(paperId, paperVer) {
     $('.js-hide-when-updating').hide();
-    $('.js-show-when-updating').hide();
+    $('.js-show-when-updating').removeClass("hidden");
 
    /* $('.js-create-new-version').removeClass('hidden');
     $('.js-create-new-version').click(function () {
@@ -138,6 +146,10 @@ function beginUpdating(paperId, paperVer) {
         $('#id').val(paperId);
         $('#versionNo').val(paperVer);
     }
+
+    $('.js-save').click(function () {
+        ajaxUpdate();
+    });
 
     $('#referenceName').attr('readonly', 'readonly');
 
@@ -155,7 +167,7 @@ function beginUpdating(paperId, paperVer) {
 
     $('.js-unhide-me').removeClass('hidden');
     handleAddingSections(availableSectionsDataTable);
-
+    updatePreviewButton();
     setInterval(ajaxUpdate, 10 * 1000);
 }
 
@@ -237,7 +249,11 @@ function ajaxUpdate() {
             data: formData, // serializes the form's elements.
             success: function (data) {
                 hideErrorMessages();
-                $('#versionNo').val(data);
+
+                if ($('#versionNo').val() != data) {
+                    $('#versionNo').val(data);
+                    updateUrl()
+                }
                 buildSuccessAlert("Successfully Saved");
                 oldFormData = formData;
             },

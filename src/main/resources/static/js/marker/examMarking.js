@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 function attachSubmitOnChange() {
     $('.js-submit-on-change').change(function() {
-        var form = $('#' + $(this).attr('form'))
+        var form = $('#' + $(this).attr('form'));
         form.submit();
     });
 }
@@ -45,7 +45,7 @@ function handleFinishMarking() {
                 request.setRequestHeader("X-CSRF-TOKEN", getCsrfTokenValue());
             },
             success: function() {
-                window.location.replace(ENDPOINTS.DASHBOARD_PREFIX + ENDPOINTS.DASHBOARD_VIEW_TESTS);
+                window.location.replace(ENDPOINTS.DASHBOARD_PREFIX + ENDPOINTS.DASHBOARD_GENERATE_TESTS);
             },
             error: function (request, status, error) {
                 buildErrorDialog(request.responseJSON.message)

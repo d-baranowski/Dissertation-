@@ -1,9 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.marking;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
-import org.springframework.expression.ParseException;
 import uk.ac.ncl.daniel.baranowski.common.enums.QuestionType;
 import uk.ac.ncl.daniel.baranowski.models.AnswerModel;
 import uk.ac.ncl.daniel.baranowski.models.MarkModel;
@@ -31,10 +29,10 @@ public class MultiChoiceMarker implements AutoMarker {
     @Override
     public MarkModel getMark(QuestionModel question, AnswerModel answer) {
         String answerText = answer.getText() != null ? answer.getText() : "";
-        Map<String, Object> markMap;
+        Map<String, String> markMap;
         int markVal = 0;
         try {
-            markMap = jsonParser.parseMap(question.getCorrectAnswer());
+            markMap = (Map) jsonParser.parseMap(question.getCorrectAnswer());
         } catch (IllegalArgumentException e) {
             MarkModel mark = new MarkModel();
             mark.setComment("Auto marking failed because correct answer isn't in correct format.");
@@ -42,10 +40,10 @@ public class MultiChoiceMarker implements AutoMarker {
             LOGGER.log(Level.WARNING, "Could not parse correct answer for multiple choice question", e);
             return mark;
         }
-            for (String regex : markMap.keySet()) {
-                if (answerText.matches(regex) | answerText.toLowerCase().matches(regex)) {
-                    if ((int) markMap.get(regex) > markVal) {
-                        markVal = (int) markMap.get(regex);
+            for (String score : markMap.keySet()) {
+                if (answerText.matches(markMap.get(score)) | answerText.toLowerCase().matches(markMap.get(score))) {
+                    if (Integer.parseInt(score) > markVal) {
+                        markVal = Integer.parseInt(score);
                     }
                 }
             }
@@ -54,8 +52,6 @@ public class MultiChoiceMarker implements AutoMarker {
             mark.setComment("Auto Marked");
             mark.setMark(markVal);
             return mark;
-
-
     }
 
 }

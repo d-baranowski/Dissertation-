@@ -33,6 +33,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/table.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/video.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
 
     <!-- Include Code Mirror CSS. -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css"/>
@@ -93,6 +94,8 @@
         </form>
 
         <button class="btn btn-success hidden js-create-new-version">Create new version</button>
+        <a target="_blank" class="btn btn-primary hidden js-show-when-updating js-preview" href="/test-paper/view-section/{sectionId}/{sectionVer}">View</a>
+        <button class="btn  js-show-when-updating  btn-success hidden js-save">Save Progress</button>
 
         <h4 class="hidden js-unhide-me">Available Sections</h4>
         <table id="availableSections" style="width: 100%" class="hidden hover stripe">
@@ -209,6 +212,8 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/table.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/url.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/special_characters.min.js"></script>
 
     <!-- Include Code Mirror JS. -->
     <script type="text/javascript"

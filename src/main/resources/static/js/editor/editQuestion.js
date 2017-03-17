@@ -48,7 +48,11 @@ function beginUpdating(questionId, questionVersionNo) {
     $('.js-change-type-hook').attr('disabled', 'true');
 
     $('.js-save').click(function () {
-        ajaxUpdate();
+        var result = ajaxUpdate();
+
+        if (result == "up-to-date") {
+            buildSuccessAlert("Everything up to date.");
+        }
     });
 
     setInterval(ajaxUpdate, 10 * 1000);
@@ -82,6 +86,8 @@ function ajaxUpdate() {
                 oldFormData = formData;
             }
         });
+    } else {
+        return "up-to-date";
     }
 }
 
@@ -116,9 +122,10 @@ function enableFroalaEditor() {
             'prettyprint lang-sql': 'SQL',
             'prettyprint': 'Code'
         },
+        fontSizeDefaultSelection: '18',
         htmlRemoveTags: ['script','video','source','input','form','picture'],
         htmlAllowedTags: ["a", "abbr", "address", "area", "article", "aside", "b", "base", "bdi", "bdo", "blockquote", "br", "button", "caption", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "i", "img", "ins", "kbd", "keygen", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem", "meter", "nav", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "queue", "rp", "rt", "ruby", "s", "samp", "style", "section", "select", "small", "source", "span", "strike", "strong", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "wbr"],
-        toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
+        toolbarButtons: ['bold', 'italic', 'underline', 'specialCharacters', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
         pluginsEnabled: null
     });
 
@@ -263,11 +270,11 @@ function buildMultipleChoiceQuestionWizard() {
         scoreRow +="(["+letters+"])";
         if (letters.length > 1) {
             for (var j = 0; j < letters.length - 1; j++) {
-                scoreRow +="(?!\\1)(["+letters+"])";
+                scoreRow +=",(?!\\1)(["+letters+"])";
             }
         }
         scoreRow += "\\b";
-        correctAnswer[scoreRow] = score;
+        correctAnswer[score] = scoreRow;
         $('#correctAnswer').val(JSON.stringify(correctAnswer))
     });
 
@@ -278,55 +285,289 @@ function buildMultipleChoiceQuestionWizard() {
 }
 
 function buildExpressionQuestionWizard() {
-    var patt = /\[\[\d]]/g;
-    var tableBody = "";
-    getPatternFromText(patt).forEach(function (val) {
-        tableBody +=
-            "<tr><td>" + val + "</td>" +
-            "<td><input class='js-build-regex' data-blank='" + val + "' type='text'/></td>" +
-            "<td><input class='js-build-mark' data-blank='" + val + "' type='number'></td></tr>"
-    });
+    var getRegexBuilderRow = function(jsonRow) {
+        var getSelectForBlanks = function(id) {
+            var optionTemplate = '<option value="{blankNo}" data-blank="{blankNo}" {selected}>{blankNo}</option>';
+            var selectTemplate =
+                '<span class="input-group-addon" id="{describedBy}">Blank No</span>' +
+                '<select name="blankNo" class="form-control" id="{id}" aria-describedby="{describedBy}">{selectBody}</select>';
+            var result = '';
+            getPatternFromText(patt).forEach(function (val) {
+                result += optionTemplate.replaceAll('{blankNo}', val).replace('{selected}', (jsonRow ? jsonRow.blankNo : null) == val ? "selected" : "")
+            });
+            return selectTemplate.replaceAll('{selectBody}', result).replace('{id}', id).replaceAll('{describedBy}', id + '-describing');
+        };
 
-    var current = $('#correctAnswer').val();
-    var currentJson = {};
-    if (current.length > 0) {
-        currentJson = JSON.parse(current);
+        getRegexBuilderRow["getSelectForBlanks"] = getSelectForBlanks;
+
+        function getFormItem(id, name, label, type, value, style) {
+            var answerBoxTemplate =
+                '<span class="input-group-addon {style}" id="{describedBy}">{label}</span>' +
+                '<input {value} name="{name}" id="{id}" type="{type}" class="form-control {style}" placeholder="{label}" aria-describedby="{describedBy}">';
+
+            if (value) {
+                answerBoxTemplate.replace('{value}', 'value="' +value + '"')
+            }
+            return answerBoxTemplate
+                .replaceAll('{describedBy}', id + '-describing')
+                .replace('{id}', id)
+                .replaceAll('{label}', label)
+                .replace('{name}',name)
+                .replace('{type}', type)
+                .replaceAll('{style}', style ? style : "")
+        }
+        
+        function getOption(id, option, label) {
+            var rowTemplate =
+                '<div class="checkbox">' +
+                    '<label>' +
+                        '<input name="{option}" type="checkbox" id="{id}" aria-describedby="{describeBy}">{label}' +
+                    '</label>' +
+                '</div>';
+
+            return rowTemplate
+                .replaceAll('{describeBy}', id + '-describing')
+                .replace('{id}', id + '-' + option)
+                .replace('{option}', option)
+                .replace('{label}', label)
+        }
+
+        var patt = /\[\[\d]]/g;
+        var rowNo = $('div.regex-builder-row').length + 1;
+        var selectId = 'regex-builder-blank-select-' + rowNo;
+        var answerId  = 'regex-builder-answer-' + rowNo;
+        var optionId = 'regex-builder-option' + rowNo;
+        var rowTemplate =
+            '<div id="{row-id}" data-row-no="{rowNo}" class="row regex-builder-row margin-bottom">' +
+                '<div class="col-md-12 margin-bottom">' +
+                    '<div class="input-group">' +
+                        getSelectForBlanks(selectId) +
+                        getFormItem(answerId,'answer','Answer', 'text', jsonRow ? jsonRow.answer : null) +
+                        getFormItem('regex-for-' + rowNo,'regex','Regex', 'text', jsonRow ? jsonRow.regex : null, 'hidden js-enable-regex') +
+                        getFormItem('mark-for-' + rowNo,'mark','Mark', 'number', jsonRow ? jsonRow.mark : null) +
+                    '</div>' +
+                '</div>' +
+                '<div class="col-md-3">' +
+                    '<div class="btn-group-vertical" role="group" aria-label="Regex-options">' +
+                        getOption(optionId,'whiteSpace','White Space Collapsing') +
+                        getOption(optionId,'alternatePunctuation','Alternative Punctuation') +
+                        getOption(optionId,'caseInsensitive','Case Insensitive') +
+                    '</div>' +
+                '</div>' +
+                '<div class="col-md-6">' +
+                    '<div class="btn-group-vertical" role="group" aria-label="Regex-controls">' +
+                        '<button class="btn btn-success js-add-new-row">Add</button>' +
+                        '<button class="btn btn-primary js-click-to-customize">Customize Regex</button>' +
+                    '</div>' +
+                    '<div class="btn-group-vertical" role="group" aria-label="Regex-controls">' +
+                        '<button class="btn btn-warning js-click-to-update">Update</button>' +
+                        '<button class="btn btn-danger js-click-to-remove">Remove</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+
+
+        return rowTemplate.replace('{rowNo}', rowNo).replace('{rowId}', 'regex-builder-row-' + rowNo);
+    };
+
+    function isCorrectFormat(json) {
+        var keys = Object.keys(json);
+        var nonNullKey;
+        keys.forEach(function (val) {
+            if (val) {
+                nonNullKey = val;
+            }
+        });
+        try {
+            if (nonNullKey) {
+                return keys.length > 0 &&  json[nonNullKey].blankNo && json[nonNullKey].options;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
     }
 
 
-    var wizardHtmlTemplate =
-        "<table class='table table-striped'>" +
-        "   <thead>" +
-        "       <tr><td>Blank No</td><td>RegEx</td><td>Mark</td></tr>   " +
-        "   </thead>" +
-        "   <tbody>" +
-        tableBody +
-        "   </tbody>" +
-        "</table>" +
-        "<button id='js-rebuild-wizard' class='btn btn-primary'>Update</button>";
+    function buildJsonFromRow(row) {
+        var answer = $(row).find('[name=answer]').val();
+        var blankNo = $(row).find('[name=blankNo]').val();
+        var regex = $(row).find('[name=regex]').val();
+        var mark = $(row).find('[name=mark]').val();
+        var optSpace = $(row).find('[name=whiteSpace]').attr('checked');
+        var optPunctuation = $(row).find('[name=alternatePunctuation]').attr('checked');
+        var optCase = $(row).find('[name=caseInsensitive]').attr('checked');
 
-    $('.js-insert-auto-marking-wizard').html(wizardHtmlTemplate);
+        return {"blankNo": blankNo, "answer": answer, "regex": regex, "mark": mark, "options": {"space": optSpace, "punctuation": optPunctuation, "case": optCase}}
+    }
 
-    $('.js-build-regex').change(function () {
-        var blankNo = $(this).data('blank');
-        if (!currentJson[blankNo]) {
-            currentJson[blankNo] = {'regex':''};
+    function prepRegex(row) {
+        var answer = $(row).find('[name=answer]').val();
+        $(row).find('[name=regex]').val(answer);
+    }
+
+    function applyWhiteSpaceOption(row) {
+        var regex = $(row).find('[name=regex]');
+        var oldRegex = $(regex).val();
+        $(regex).val( oldRegex.replace(/\s+/g,'\\s+'));
+    }
+
+    function applyAlternativePunctuation(row) {
+        var regex = $(row).find('[name=regex]');
+        var oldRegex = $(regex).val();
+        $(regex).val(oldRegex.replace(/[,.:;/'|]/g,"[,.:;'|\\s]{1}"));
+    }
+
+    function applyCaseInsensitive(row) {
+        var regex = $(row).find('[name=regex]');
+        var oldRegex = $(regex).val();
+        oldRegex = '(?i)(' + oldRegex + ')';
+        $(regex).val(oldRegex);
+    }
+
+    function regenerateRegex(row) {
+        prepRegex(row);
+
+        if ($(row).find('[name=whiteSpace]').prop('checked')) {
+            applyWhiteSpaceOption(row);
         }
-        currentJson[blankNo]['regex'] = $(this).val();
-        $('#correctAnswer').val(JSON.stringify(currentJson))
-    });
-
-    $('.js-build-mark').change(function () {
-        var blankNo = $(this).data('blank');
-        if (!currentJson[blankNo]) {
-            currentJson[blankNo] = {'mark':0}
+        if ($(row).find('[name=alternatePunctuation]').prop('checked')) {
+            applyAlternativePunctuation(row);
         }
-        currentJson[blankNo]['mark'] = $(this).val();
-        $('#correctAnswer').val(JSON.stringify(currentJson))
-    });
+        if ($(row).find('[name=caseInsensitive]').prop('checked')) {
+            applyCaseInsensitive(row);
+        }
+    }
+    
+    function appendToCorrectAnswer(row) {
+        var correct = $('#correctAnswer');
+        var current = $(correct).val();
+        var currentJson = current.length > 0 ? JSON.parse(current) : [];
+        var rowNo = $(row).data('rowNo');
+        currentJson[parseInt(rowNo)] = buildJsonFromRow(row);
+        $(correct).val(JSON.stringify(currentJson));
+    }
 
-    $('#js-rebuild-wizard').click(function () {
-        $('.js-insert-auto-marking-wizard').html('');
-        buildExpressionQuestionWizard();
-    });
+    function removeRowFromAnswer(row) {
+        var correct = $('#correctAnswer');
+        var current = $(correct).val();
+        var currentJson = current.length > 0 ? JSON.parse(current) : [];
+        var rowNo = $(row).data('rowNo');
+        delete currentJson[parseInt(rowNo)];
+        $(correct).val(JSON.stringify(currentJson));
+    }
+    
+    function bindJavaScript() {
+        $('.regex-builder-row').each(function(){
+            regenerateRegex(this);
+            var row = this;
+
+            function refresh() {
+                if ($('.js-enable-regex').hasClass('hidden')) {
+                    regenerateRegex(row);
+                }
+                appendToCorrectAnswer(row);
+            }
+
+            var answer = $(row).find('[name=answer]');
+            $(answer).unbind();
+            $(answer).keyup((function(){
+                refresh();
+            }));
+
+            var mark = $(row).find('[name=mark]');
+            $(mark).unbind();
+            $(mark).change((function(){
+                refresh();
+            }));
+
+            $(mark).keyup((function(){
+                refresh();
+            }));
+
+            var whiteSpace = $(row).find('[name=whiteSpace]');
+            $(whiteSpace).unbind();
+            $(whiteSpace).change(function(){
+                refresh();
+            });
+
+            var punctuation = $(row).find('[name=alternatePunctuation]');
+            $(punctuation).unbind();
+            $(punctuation).change(function(){
+                refresh();
+            });
+
+            var caseInsensitive = $(row).find('[name=caseInsensitive]');
+            $(caseInsensitive).unbind();
+            $(caseInsensitive).change(function(){
+                refresh();
+            });
+
+            var addNewRow = $(row).find('.js-add-new-row');
+            $(addNewRow).unbind();
+            $(addNewRow).click(function(e) {
+                e.preventDefault();
+                $('.js-insert-auto-marking-wizard').append(getRegexBuilderRow());
+                bindJavaScript();
+            });
+
+            var customizeRegex = $(row).find('.js-click-to-customize');
+            $(customizeRegex).unbind();
+            $(customizeRegex).click(function (e) {
+                e.preventDefault();
+                $(row).find('.js-enable-regex').removeClass('hidden');
+                $(answer).prop('checked', false);
+                $(answer).attr("disabled", true);
+                $(answer).addClass('disabled');
+                $(whiteSpace).prop('checked', false);
+                $(whiteSpace).attr("disabled", true);
+                $(whiteSpace).addClass('disabled');
+                $(caseInsensitive).prop('checked', false);
+                $(caseInsensitive).attr("disabled", true);
+                $(caseInsensitive).addClass('disabled');
+                $(punctuation).prop('checked', false);
+                $(punctuation).attr("disabled", true);
+                $(punctuation).addClass('disabled');
+                appendToCorrectAnswer(row);
+                var regex = $(row).find('[name=regex]');
+                $(regex).unbind();
+                $(regex).keyup(function () {
+                    appendToCorrectAnswer(row);
+                })
+            });
+
+            var removeBtn = $(row).find('.js-click-to-remove');
+            $(removeBtn).unbind();
+            $(removeBtn).click(function (e) {
+                e.preventDefault();
+                removeRowFromAnswer(row);
+                $(row).remove();
+            });
+
+            var updateBtn = $(row).find('.js-click-to-update');
+            $(updateBtn).unbind();
+            $(updateBtn).click(function (e) {
+                e.preventDefault();
+                var rowNumber = $(row).data('rowNo');
+                var blanksId = 'regex-builder-blank-select-' + rowNumber;
+                var currentBlanks = $('#' + blanksId);
+                $('#' + $(currentBlanks).attr('aria-describedby')).remove();
+                $(currentBlanks).replaceWith(getRegexBuilderRow.getSelectForBlanks(blanksId))
+            });
+
+        });
+    }
+
+    var current = $('#correctAnswer').val();
+    var currentJson = current.length > 0 ? JSON.parse(current) : {};
+    var rows = '';
+    if (isCorrectFormat(currentJson)) {
+        currentJson.forEach(function (val) {
+            rows += getRegexBuilderRow(val)
+        })
+    }
+    rows += getRegexBuilderRow();
+    $('.js-insert-auto-marking-wizard').html(rows);
+    bindJavaScript();
 }

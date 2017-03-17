@@ -7,17 +7,26 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.ac.ncl.daniel.baranowski.DissertationApplication;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +48,15 @@ public class SimpleTest {
     private StringBuffer verificationErrors = new StringBuffer();
     private WebDriverWait wait;
     Actions action;
+
+    @Autowired
+    JdbcTemplate jdbc;
+
+    @Value("${backupUITestStages}")
+    private Boolean backupUITestStages;
+
+    @Value("${loadUITestStages}")
+    private Boolean loadUITestStages;
 
     @Before
     public void setUp() throws Exception {
@@ -154,50 +172,16 @@ public class SimpleTest {
         click(By.linkText("View Selected"));
         String actual = driver.findElement(By.id("loadedContent")).getAttribute("innerHTML");
 
-        assertTrue(actual.contains(
-                "    \n" +
-                "    \n" +
-                "    \n" +
-                "        <div>\n" +
-                "    <h1>Review Exam</h1>\n" +
-                "    <b><div>CSC001</div></b>\n" +
-                "    <div>Exam Date: 22/02/2017</div>\n" +
-                "    <div>Status: FINISHED</div>\n" +
-                "    <div>Start Time: 12:00 PM</div>\n" +
-                "    <div>End Time: 2:30 PM</div>\n" +
-                "    <div>Paper: <a href=\"/test-paper/1/1/view\">ALTERNATE INTERVIEW JAVA</a></div>\n" +
-                "\n" +
-                "    <table class=\"table table-striped\">\n" +
-                "        <thead>\n" +
-                "            <tr>\n" +
-                "                <th>Name</th>\n" +
-                "                <th>Status</th>\n" +
-                "                <th>Exam Login</th>\n" +
-                "                <th>Exam Password</th>\n" +
-                "            </tr>\n" +
-                "        </thead>\n" +
-                "        <tbody>\n" +
-                "            \n" +
-                "        </tbody>\n" +
-                "    </table>\n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "    <br>\n" +
-                "    \n" +
-                "    <br>\n" +
-                "    <a href=\"/exam/mark/1\">Mark Exam</a>\n" +
-                "</div>\n" +
-                "    \n" +
-                "    \n" +
-                "\n"));
+        assertTrue(actual.contains("Exam Date: 22/02/2017"));
+        assertTrue(actual.contains("Status: Finished"));
+        assertTrue(actual.contains("Start Time: 12:00 PM"));
+        assertTrue(actual.contains("End Time: 2:30 PM"));
+        assertTrue(actual.contains("End Time: 2:30 PM"));
+        assertTrue(actual.contains("ALTERNATE INTERVIEW JAVA"));
     }
 
     @Test
-    public void A5canCreateQuestions() throws InterruptedException {
+    public void A5canCreateQuestions() throws InterruptedException, SQLException {
         loginAs("sampleAll","pass", "Jack Brown");
         createQuestion("Java",
                 "Selenium Java Question",
@@ -222,10 +206,47 @@ public class SimpleTest {
         createQuestion("",
                 "Selenium Drawing Question",
                 "50","10","This question was designed by selenium","Sample marking guide.", "Drawing");
+
+        createQuestion("",
+                "Selenium Expression Question 1",
+                "50","10","This questions will test simple answer matching","Correct answer is Java, but C# gives one mark", "Expression");
+
+        createQuestion("",
+                "Selenium Expression Question 2",
+                "50","10","This questions will test white space collapsing","Correct answer is Hello World, but Hi Planet gives one mark", "Expression");
+
+        createQuestion("",
+                "Selenium Expression Question 3",
+                "50","10","This questions will test alternative punctuation","Correct answer is S.W.A.T, but F.E.A.R gives one mark", "Expression");
+
+        createQuestion("",
+                "Selenium Expression Question 4",
+                "50","10","This questions will test case insensitivity","Correct answer is GoOGle but TwiTtEr gives one mark", "Expression");
+
+        createQuestion("",
+                "Selenium Expression Question 5",
+                "50","10","This questions will test all options","Correct answer is F.E.A.R iS A GoOD   Game but Random gives one mark", "Expression");
+
+        createQuestion("",
+                "Selenium Expression Question 6",
+                "50","10","This questions will test custom regex","Correct answer is any valid email but cheatSheet gives one mark", "Expression");
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/testQuestionsCreated.sql'");
+            statement.execute();
+        }
     }
 
     @Test
-    public void A6canEditQuestions() {
+    public void A6canEditQuestions() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc
+                    .getDataSource()
+                    .getConnection()
+                    .prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/testQuestionsCreated.sql'");
+            statement.execute();
+        }
+
         loginAs("sampleAll","pass", "Jack Brown");
 
         openEditorForQuestion("Name","Selenium Multiple Choice Question 1");
@@ -235,6 +256,8 @@ public class SimpleTest {
         multiChoiceMark(1,1);
         multiChoiceMark(2,2);
         multiChoiceMark(4,4);
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
         waitForSuccessAlert();
 
         openEditorForQuestion("Name","Selenium Multiple Choice Question 2");
@@ -250,6 +273,8 @@ public class SimpleTest {
         multiChoiceMark(4,2);
         multiChoiceMark(4,3);
         multiChoiceMark(4,4);
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
         waitForSuccessAlert();
 
         openEditorForQuestion("Name","Selenium Multiple Choice Question 3");
@@ -266,12 +291,102 @@ public class SimpleTest {
 
         multiChoiceMark(4,2);
         multiChoiceMark(4,3);
-
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
         waitForSuccessAlert();
+
+        openEditorForQuestion("Name","Selenium Expression Question 1");
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "Java");
+        clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-2\"]"), "C#");
+        clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+        waitForSuccessAlert();
+
+        openEditorForQuestion("Name","Selenium Expression Question 2");
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "Hello World");
+        clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
+        click(By.xpath("//*[@id=\"regex-builder-option1-whiteSpace\"]"));
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-2\"]"), "Hi Planet");
+        clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
+        click(By.xpath("//*[@id=\"regex-builder-option2-whiteSpace\"]"));
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+        waitForSuccessAlert();
+
+        openEditorForQuestion("Name","Selenium Expression Question 3");
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "S.W.A.T");
+        clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
+        click(By.xpath("//*[@id=\"regex-builder-option1-alternatePunctuation\"]"));
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-2\"]"), "F.E.A.R");
+        clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
+        click(By.xpath("//*[@id=\"regex-builder-option2-alternatePunctuation\"]"));
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+        waitForSuccessAlert();
+
+        openEditorForQuestion("Name","Selenium Expression Question 4");
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "GoOGle");
+        clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
+        click(By.xpath("//*[@id=\"regex-builder-option1-caseInsensitive\"]"));
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-2\"]"), "TwiTtEr");
+        clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
+        click(By.xpath("//*[@id=\"regex-builder-option2-caseInsensitive\"]"));
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+        waitForSuccessAlert();
+
+        openEditorForQuestion("Name","Selenium Expression Question 5");
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "F.E.A.R iS A GoOD   Game");
+        clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
+        click(By.xpath("//*[@id=\"regex-builder-option1-whiteSpace\"]"));
+        click(By.xpath("//*[@id=\"regex-builder-option1-alternatePunctuation\"]"));
+        click(By.xpath("//*[@id=\"regex-builder-option1-caseInsensitive\"]"));
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[1]"));
+        clearType(By.xpath("//*[@id=\"regex-builder-answer-2\"]"), "Random");
+        clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+        waitForSuccessAlert();
+
+        openEditorForQuestion("Name","Selenium Expression Question 6");
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[2]"));
+        clearType(By.xpath("//*[@id=\"regex-for-1\"]"), "((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\]))|cheatSheet");
+        driver.findElement(By.xpath("//*[@id=\"mark-for-1\"]")).sendKeys("50");
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+        waitForSuccessAlert();
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/testQuestionsEdited.sql'");
+            statement.execute();
+        }
     }
 
     @Test
-    public void A7canCreateSection() {
+    public void A7canCreateSection() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/testQuestionsEdited.sql'");
+            statement.execute();
+        }
+
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-edit"));
         click(By.linkText("Sections"));
@@ -314,6 +429,15 @@ public class SimpleTest {
         click(By.xpath("//*[@id=\"607113527\"]/td[9]/a"));
         click(By.xpath("//*[@id=\"529745097\"]/td[9]/a"));
 
+        clearType(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input"), "Selenium Expression");
+        click(By.xpath("//*[@id=\"-280120751\"]/td[9]/a"));
+        click(By.xpath("//*[@id=\"607412721\"]/td[9]/a"));
+        click(By.xpath("//*[@id=\"1494946193\"]/td[9]/a"));
+        click(By.xpath("//*[@id=\"-1912487631\"]/td[9]/a"));
+        click(By.xpath("//*[@id=\"-1024954159\"]/td[9]/a"));
+        click(By.xpath("//*[@id=\"-137420687\"]/td[9]/a"));
+
+
         String actual = driver.findElement(By.xpath("//*[@id=\"sectionQuestions\"]/tbody")).getAttribute("innerHTML");
 
         assertTrue(actual.contains("<a href=\"/test-paper/view-question/42/1\">View</a>"));
@@ -321,6 +445,7 @@ public class SimpleTest {
         assertTrue(actual.contains("<a href=\"/test-paper/view-question/44/1\">View</a>"));
         assertTrue(actual.contains("<a href=\"/test-paper/view-question/45/1\">View</a>"));
         assertTrue(actual.contains("<a href=\"/test-paper/view-question/46/1\">View</a>"));
+        assertTrue(actual.contains("<a href=\"/test-paper/view-question/47/1\">View</a>"));
 
         clearType(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input"),"Develop IsOdd");
         click(By.xpath("//*[@id=\"-1982189055\"]/td[9]/a"));
@@ -337,37 +462,12 @@ public class SimpleTest {
         click(By.xpath("//*[@id=\"8\"]/div[3]"));
 
         String actualQuestion3 = driver.findElement(By.xpath("//*[@id=\"carousell\"]/div/div/div[5]")).getAttribute("innerHTML");
-        assertTrue(actualQuestion3.contains(
-                "    <div class=\"questionHeader\">\n" +
-                "        <p>Question 1.3</p>\n" +
-                "    </div>\n" +
-                "\n" +
-                "    <b><p>(1 minutes)</p></b>\n" +
-                "\n" +
-                "    <p id=\"question-text-for-44-1\"></p><p><em><u>This question was designed by selenium</u></em></p><p><em><u>A) This answer gives you 1 Mark</u></em></p><p><em><u>B) This answer gives you 2 Marks</u></em></p><p><em><u>C)This answer gives you 0 marksD)This answer gives you 4 marks.</u></em></p><p></p>\n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "        <th:box>\n" +
-                "           <th:box>\n" +
-                "                <div class=\"collapsible-elements\">\n" +
-                "                    \n" +
-                "                    \n" +
-                "    <div class=\"correct-answer-section collapsible-element\">\n" +
-                "        <div class=\"title collapsed\" data-toggle=\"collapse\" data-target=\"#panel-answer-section3\" aria-expanded=\"false\">\n" +
-                "            <a tabindex=\"0\">Marking Guide:</a>\n" +
-                "        </div>\n" +
-                "\n" +
-                "        <div class=\"panel-answer-section collapsible collapse\" id=\"panel-answer-section3\" aria-expanded=\"false\">\n" +
-                "            <div style=\"resize: none;\"><p>Sample marking guide.</p></div>\n" +
-                "        </div>\n" +
-                "    </div>\n" +
-                "\n" +
-                "                    \n" +
-                "                </div>\n"));
+
+        assertTrue(actualQuestion3.contains("Question 1.3"));
+        assertTrue(actualQuestion3.contains("This question was designed by selenium"));
+        assertTrue(actualQuestion3.contains("<p><em><u>This question was designed by selenium</u></em></p>"));
+        assertTrue(actualQuestion3.contains("<p><em><u>A) This answer gives you 1 Mark</u></em></p>"));
+        assertTrue(actualQuestion3.contains("<p><em><u>B) This answer gives you 2 Marks</u></em></p>"));
 
         click(By.xpath("//*[@id=\"8\"]/div[4]"));
         String actualQuestion4 = driver.findElement(By.xpath("//*[@id=\"carousell\"]/div/div/div[6]")).getAttribute("innerHTML");
@@ -432,10 +532,20 @@ public class SimpleTest {
                 "            <div style=\"resize: none;\"><p>Sample marking guide.</p></div>\n" +
                 "        </div>\n" +
                 "    </div>\n"));
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/testSectionCreated.sql'");
+            statement.execute();
+        }
     }
 
     @Test
-    public void A8canCreatePaper() {
+    public void A8canCreatePaper() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/testSectionCreated.sql'");
+            statement.execute();
+        }
+
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-edit"));
         click(By.linkText("Papers"));
@@ -459,10 +569,20 @@ public class SimpleTest {
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"paperSections\"]/tbody/tr")).contains("Selenium Section"));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"paperSections\"]/tbody/tr")).contains("6"));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"paperSections\"]/tbody/tr")).contains("60"));
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/paperCreated.sql'");
+            statement.execute();
+        }
     }
 
     @Test
-    public void A8canSetupAnExam() {
+    public void A8canSetupAnExam() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/paperCreated.sql'");
+            statement.execute();
+        }
+
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("pickPaperSelect"));
         click(By.xpath("//*[@id=\"pickPaperSelect\"]/option[4]"));
@@ -481,10 +601,20 @@ public class SimpleTest {
         wait.until(ExpectedConditions.urlMatches("https://localhost:8900/exam/review-exam/2"));
         assertTrue(driver.getCurrentUrl().equals("https://localhost:8900/exam/review-exam/2"));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"loadedContent\"]")).contains("<div>Paper: <a href=\"/test-paper/4/1/view\">Selenium Test Paper</a></div>"));
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/examSetUp.sql'");
+            statement.execute();
+        }
     }
 
     @Test
-    public void A9canStartAnExam() {
+    public void A9canStartAnExam() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/examSetUp.sql'");
+            statement.execute();
+        }
+
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
         click(By.linkText("Exams"));
@@ -494,6 +624,11 @@ public class SimpleTest {
 
         click(By.xpath("//*[@id=\"loadedContent\"]/div/form/input[1]"));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"dashboardWindow\"]")).contains("Status: Started"));
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/examStarted.sql'");
+            statement.execute();
+        }
     }
 
     private void loginToTakeExams(int userNo) {
@@ -524,7 +659,12 @@ public class SimpleTest {
     }
 
     @Test
-    public void B1canTakeExam() {
+    public void B1canTakeExam() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/examStarted.sql'");
+            statement.execute();
+        }
+
         loginToTakeExams(1);
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
@@ -579,6 +719,33 @@ public class SimpleTest {
         moveToBottomOfPage();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]")));
         click(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/div")).contains("Question 1.7"));
+
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/div/div/input"),"Java");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/div")).contains("Question 1.8"));
+
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/div/div/input"), "Hello World");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/div")).contains("Question 1.9"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/div/div/input"), "S.W.A.T");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/div")).contains("Question 1.10"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/div/div/input"), "GoOGle");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/div")).contains("Question 1.11"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/div/div/input"), "F.E.A.R iS A GoOD   Game");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/div")).contains("Question 1.12"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/div/div/input"), "danielek4567@gmail.com");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/input[5]"));
+
         click(By.xpath("//*[@id=\"submitAllBtn\"]"));
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"areyousure\"]/div/div/div[3]/button[2]")));
@@ -640,6 +807,31 @@ public class SimpleTest {
         moveToBottomOfPage();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]")));
         click(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/div")).contains("Question 1.7"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/div/div/input"),"Java");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/div")).contains("Question 1.8"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/div/div/input"), "Hello                     World");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/div")).contains("Question 1.9"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/div/div/input"), "S,W,A,T");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/div")).contains("Question 1.10"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/div/div/input"), "google");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/div")).contains("Question 1.11"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/div/div/input"), "F E A R is a good GAME");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/div")).contains("Question 1.12"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/div/div/input"), "danielek4567@gmail.com");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/input[5]"));
+
         click(By.xpath("//*[@id=\"submitAllBtn\"]"));
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"areyousure\"]/div/div/div[3]/button[2]")));
@@ -699,6 +891,31 @@ public class SimpleTest {
         moveToBottomOfPage();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]")));
         click(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/div")).contains("Question 1.7"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/div/div/input"),"C#");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/div")).contains("Question 1.8"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/div/div/input"), "Hi Planet");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/div")).contains("Question 1.9"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/div/div/input"), "F.E.A.R");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/div")).contains("Question 1.10"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/div/div/input"), "TwiTtEr");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/div")).contains("Question 1.11"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/div/div/input"), "Random");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/div")).contains("Question 1.12"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/div/div/input"), "cheatSheet");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/input[5]"));
+
         click(By.xpath("//*[@id=\"submitAllBtn\"]"));
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"areyousure\"]/div/div/div[3]/button[2]")));
@@ -757,6 +974,31 @@ public class SimpleTest {
         moveToBottomOfPage();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]")));
         click(By.xpath("//*[@id=\"carousell\"]/div/div/div[8]/form/input[6]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/div")).contains("Question 1.7"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/div/div/input"),"C#");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/div")).contains("Question 1.8"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/div/div/input"), "Hi         Planet");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/div")).contains("Question 1.9"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/div/div/input"), "F|E|A|R");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/div")).contains("Question 1.10"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/div/div/input"), "twitter");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/div")).contains("Question 1.11"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/div/div/input"), "Random");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/div")).contains("Question 1.12"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/div/div/input"), "cheatSheet");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/input[5]"));
+
         click(By.xpath("//*[@id=\"submitAllBtn\"]"));
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"areyousure\"]/div/div/div[3]/button[2]")));
@@ -764,10 +1006,63 @@ public class SimpleTest {
 
         wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/test-attempt/finish-page"));
         click(By.id("buttonID"));
+
+        loginToTakeExams(5);
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/div")).contains("Question 1.7"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/div/div/input"),"Plain Wrong answer");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[9]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/div")).contains("Question 1.8"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/div/div/input"), "  ");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[10]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/div")).contains("Question 1.9"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/div/div/input"), "dsa");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[11]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/div")).contains("Question 1.10"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/div/div/input"), "twitterr");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[12]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/div")).contains("Question 1.11"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/div/div/input"), "RAndom");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[13]/form/input[5]"));
+
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/div")).contains("Question 1.12"));
+        clearType(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/div/div/input"), "cheatSheett");
+        submitAnswer(By.xpath("//*[@id=\"carousell\"]/div/div/div[14]/form/input[5]"));
+
+        click(By.xpath("//*[@id=\"submitAllBtn\"]"));
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"areyousure\"]/div/div/div[3]/button[2]")));
+        click(By.xpath("//*[@id=\"areyousure\"]/div/div/div[3]/button[2]"));
+
+        wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/test-attempt/finish-page"));
+        click(By.id("buttonID"));
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/examTaken.sql'");
+            statement.execute();
+        }
     }
 
     @Test
-    public void B2CanFinnishExam() {
+    public void B2CanFinnishExam() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/examTaken.sql'");
+            statement.execute();
+        }
+
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
         click(By.linkText("Exams"));
@@ -775,9 +1070,199 @@ public class SimpleTest {
         findInTable("Test Paper", "Selenium Test Paper").click();
         click(By.linkText("View Selected"));
         click(By.xpath("//*[@id=\"loadedContent\"]/div/form/input[1]"));
-        wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//*[@id=\"loadedContent\"]/div/form/input[1]"))));
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"loadedContent\"]/div/a"))));
+        assertTrue(getInnerHTML(By.xpath("//*[@id=\"loadedContent\"]/div/a")).contains("Mark Exam"));
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/examFinished.sql'");
+            statement.execute();
+        }
+    }
+
+    private void markQuestion(int questionNo, int questionId, int attemptId, int mark) {
+        moveToBottomOfPage();
+        click(By.xpath("//*[@id=\"view-test-attempt-"+attemptId+"-section-1-questions-" + questionNo + "\"]"));
+        ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+        driver.switchTo().window(tabs.get(1));
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("body")));
+        moveToBottomOfPage();
+        clearType(By.xpath("//*[@id=\"panel-comment-section"+questionNo+"\"]/textarea"), "Selenium Can Make Comments");
+        click(By.xpath("//*[@id=\"form-for-attempt-"+attemptId+"-question-"+questionId+"-version-1\"]/div[2]/select"));
+        click(By.xpath("//*[@id=\"form-for-attempt-"+attemptId+"-question-"+questionId+"-version-1\"]/div[2]/select/option["+(mark + 2)+"]"));
+        click(By.xpath("//*[@id=\"submit-mark-button-for-"+attemptId+"-question-"+questionId+"-version-1\"]"));
+        wait.until(ExpectedConditions.attributeToBe(By.xpath("//*[@id=\"form-for-attempt-"+attemptId+"-question-"+questionId+"-version-1\"]"),"ismarked", "true"));
+        driver.close();
+        driver.switchTo().window(tabs.get(0));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-"+attemptId+"-section-1-questions-" + questionNo + "\"]")), mark +"");
+    }
+
+    @Test
+    public void B3CanMarkExam() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/examFinished.sql'");
+            statement.execute();
+        }
+
+        loginAs("sampleAll","pass", "Jack Brown");
+        click(By.id("nav-browse"));
+        click(By.linkText("Exams"));
+
+        findInTable("Test Paper", "Selenium Test Paper").click();
+        click(By.linkText("View Selected"));
+
         click(By.xpath("//*[@id=\"loadedContent\"]/div/a"));
         wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/exam/mark/2"));
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        markQuestion(1, 42, 1, 10);
+        markQuestion(1, 42, 2, 10);
+        markQuestion(1, 42, 3, 10);
+        markQuestion(1, 42, 4, 10);
+        markQuestion(1, 42, 5, 0);
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        markQuestion(2, 43, 1, 10);
+        markQuestion(2, 43, 2, 10);
+        markQuestion(2, 43, 3, 10);
+        markQuestion(2, 43, 4, 10);
+        markQuestion(2, 43, 5, 0);
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-3\"]")), "4");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-3\"]")), "2");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-3\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-3\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-3\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-4\"]")), "4");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-4\"]")), "3");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-4\"]")), "2");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-4\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-4\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-5\"]")), "4");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-5\"]")), "4");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-5\"]")), "2");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-5\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-5\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        markQuestion(6, 47, 1, 10);
+        markQuestion(6, 47, 2, 10);
+        markQuestion(6, 47, 3, 10);
+        markQuestion(6, 47, 4, 10);
+        markQuestion(6, 47, 5, 10);
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-7\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-7\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-7\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-7\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-7\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-8\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-8\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-8\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-8\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-8\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-9\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-9\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-9\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-9\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-9\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-10\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-10\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-10\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-10\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-10\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-11\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-11\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-11\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-11\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-11\"]")), "0");
+
+        click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
+
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-12\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-12\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-12\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-12\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-12\"]")), "0");
+
+        click(By.xpath("//*[@id=\"submitAllBtn\"]"));
+        wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/dashboard/generate-test"));
+
+        if (backupUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/examMarked.sql'");
+            statement.execute();
+        }
+    }
+
+    @Test
+    public void B4MultiChoiceWizardRegenerates() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/examMarked.sql'");
+            statement.execute();
+        }
+
+        loginAs("sampleAll","pass", "Jack Brown");
+        click(By.id("nav-browse"));
+        click(By.linkText("Questions"));
+
+        clearType(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input"), "Selenium Multiple Choice Question 3");
+        click(By.xpath("//*[@id=\"viewListTable\"]/tbody/tr/td[3]"));
+        click(By.linkText("Edit Selected"));
+
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[2]/td[2]/input[1]")).isSelected());
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[2]/td[2]/input[2]")).isSelected());
+
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[3]/td[2]/input[3]")).isSelected());
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[3]/td[2]/input[4]")).isSelected());
+
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[4]/td[2]/input[1]")).isSelected());
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[4]/td[2]/input[4]")).isSelected());
+
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[5]/td[2]/input[2]")).isSelected());
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[5]/td[2]/input[3]")).isSelected());
+    }
+
+    @Test
+    public void B5ExpressionWizardRegenerates() throws SQLException {
+        if (loadUITestStages) {
+            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/examMarked.sql'");
+            statement.execute();
+        }
+
+        loginAs("sampleAll","pass", "Jack Brown");
+        click(By.id("nav-browse"));
+        click(By.linkText("Questions"));
+
+        clearType(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input"), "Selenium Expression Question");
+        click(By.xpath("//*[@id=\"viewListTable\"]/tbody/tr/td[3]"));
+        click(By.linkText("Edit Selected"));
+
+
     }
 
     private void submitAnswer(By by) {
@@ -867,7 +1352,7 @@ public class SimpleTest {
         click(By.linkText("View Selected"));
         String questionContents = driver.findElement(By.xpath("//*[@id=\"content\"]/div/div")).getAttribute("innerHTML");
         assertTrue(questionContents.contains("<p><em><u>"+questionText+"</u></em></p>"));
-        assertTrue(questionContents.contains(markingGuide));
+        assertTrue(questionContents.replace("&nbsp;", " ").contains(markingGuide));
     }
 
     private void multiChoiceMark(int mark, int letter) {
@@ -956,4 +1441,7 @@ public class SimpleTest {
         return driver.findElement(by).getAttribute("innerHTML");
     }
 
+    private String getValue(By by) {
+        return driver.findElement(by).getAttribute("value");
+    }
 }
