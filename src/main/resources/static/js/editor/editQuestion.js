@@ -285,7 +285,7 @@ function buildMultipleChoiceQuestionWizard() {
 }
 
 function buildExpressionQuestionWizard() {
-    var getRegexBuilderRow = function(jsonRow) {
+    var getRegexBuilderRow = function(jsonRow, jsonRowNumber) {
         var getSelectForBlanks = function(id) {
             var optionTemplate = '<option value="{blankNo}" data-blank="{blankNo}" {selected}>{blankNo}</option>';
             var selectTemplate =
@@ -305,10 +305,8 @@ function buildExpressionQuestionWizard() {
                 '<span class="input-group-addon {style}" id="{describedBy}">{label}</span>' +
                 '<input {value} name="{name}" id="{id}" type="{type}" class="form-control {style}" placeholder="{label}" aria-describedby="{describedBy}">';
 
-            if (value) {
-                answerBoxTemplate.replace('{value}', 'value="' +value + '"')
-            }
             return answerBoxTemplate
+                .replace('{value}', (value ? 'value="' +value + '"' : ""))
                 .replaceAll('{describedBy}', id + '-describing')
                 .replace('{id}', id)
                 .replaceAll('{label}', label)
@@ -317,11 +315,11 @@ function buildExpressionQuestionWizard() {
                 .replaceAll('{style}', style ? style : "")
         }
         
-        function getOption(id, option, label) {
+        function getOption(id, option, label, checked) {
             var rowTemplate =
                 '<div class="checkbox">' +
                     '<label>' +
-                        '<input name="{option}" type="checkbox" id="{id}" aria-describedby="{describeBy}">{label}' +
+                        '<input name="{option}" type="checkbox" id="{id}" aria-describedby="{describeBy}" {checked}>{label}' +
                     '</label>' +
                 '</div>';
 
@@ -330,10 +328,11 @@ function buildExpressionQuestionWizard() {
                 .replace('{id}', id + '-' + option)
                 .replace('{option}', option)
                 .replace('{label}', label)
+                .replace('{checked}', (checked ? 'checked' : ''))
         }
 
         var patt = /\[\[\d]]/g;
-        var rowNo = $('div.regex-builder-row').length + 1;
+        var rowNo = jsonRowNumber ? jsonRowNumber : $('div.regex-builder-row').length + 1;
         var selectId = 'regex-builder-blank-select-' + rowNo;
         var answerId  = 'regex-builder-answer-' + rowNo;
         var optionId = 'regex-builder-option' + rowNo;
@@ -349,9 +348,9 @@ function buildExpressionQuestionWizard() {
                 '</div>' +
                 '<div class="col-md-3">' +
                     '<div class="btn-group-vertical" role="group" aria-label="Regex-options">' +
-                        getOption(optionId,'whiteSpace','White Space Collapsing') +
-                        getOption(optionId,'alternatePunctuation','Alternative Punctuation') +
-                        getOption(optionId,'caseInsensitive','Case Insensitive') +
+                        getOption(optionId,'whiteSpace','White Space Collapsing', (jsonRow ? jsonRow.options.space : false)) +
+                        getOption(optionId,'alternatePunctuation','Alternative Punctuation', (jsonRow ? jsonRow.options.punctuation : false)) +
+                        getOption(optionId,'caseInsensitive','Case Insensitive', (jsonRow ? jsonRow.options.case : false)) +
                     '</div>' +
                 '</div>' +
                 '<div class="col-md-6">' +
@@ -395,9 +394,9 @@ function buildExpressionQuestionWizard() {
         var blankNo = $(row).find('[name=blankNo]').val();
         var regex = $(row).find('[name=regex]').val();
         var mark = $(row).find('[name=mark]').val();
-        var optSpace = $(row).find('[name=whiteSpace]').attr('checked');
-        var optPunctuation = $(row).find('[name=alternatePunctuation]').attr('checked');
-        var optCase = $(row).find('[name=caseInsensitive]').attr('checked');
+        var optSpace = $(row).find('[name=whiteSpace]').prop('checked');
+        var optPunctuation = $(row).find('[name=alternatePunctuation]').prop('checked');
+        var optCase = $(row).find('[name=caseInsensitive]').prop('checked');
 
         return {"blankNo": blankNo, "answer": answer, "regex": regex, "mark": mark, "options": {"space": optSpace, "punctuation": optPunctuation, "case": optCase}}
     }
@@ -475,6 +474,13 @@ function buildExpressionQuestionWizard() {
             $(answer).keyup((function(){
                 refresh();
             }));
+
+            var blankNo = $(row).find('[name=blankNo]');
+            $(blankNo).unbind();
+            $(blankNo).change((function(){
+                refresh();
+            }));
+
 
             var mark = $(row).find('[name=mark]');
             $(mark).unbind();
@@ -560,14 +566,16 @@ function buildExpressionQuestionWizard() {
     }
 
     var current = $('#correctAnswer').val();
-    var currentJson = current.length > 0 ? JSON.parse(current) : {};
+    var currentJson = current.length > 0 ? JSON.parse(current) : [];
     var rows = '';
     if (isCorrectFormat(currentJson)) {
-        currentJson.forEach(function (val) {
-            rows += getRegexBuilderRow(val)
-        })
+        for (var i = 0; i < currentJson.length; i++) {
+            if (currentJson[i]) {
+                rows += getRegexBuilderRow(currentJson[i], i)
+            }
+        }
     }
-    rows += getRegexBuilderRow();
+    rows += getRegexBuilderRow(null, currentJson.length);
     $('.js-insert-auto-marking-wizard').html(rows);
     bindJavaScript();
 }
