@@ -25,8 +25,8 @@ public class TestDayModelMapper {
 
     public static TestDay mapTestDayModel(TestDayModel model, int testDayId) {
         return new TestDay.Builder()
-                .setEndLocalTime(model.getEndTime().toString(TIME_PATTERN))
-                .setStartTime(model.getStartTime().toString(TIME_PATTERN))
+                .setEndLocalTime(model.getEndTimeAsLocalTime().toString(TIME_PATTERN))
+                .setStartTime(model.getStartTimeAsLocalTime().toString(TIME_PATTERN))
                 .setId(testDayId)
                 .setDate(model.getDate())
                 .setLocation(model.getLocation())

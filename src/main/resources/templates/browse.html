@@ -1,0 +1,31 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+<head th:fragment="head">
+    <title>View Paper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/dashboard.css}"/>
+</head>
+<body>
+<div layout:fragment="content" class="contentWrapper container">
+    <div class="dashboardWindow" id="dashboardWindow">
+        <div id="limit">
+            <div id="loadedContent" class="minimum-height padded">
+                <h1>Browse</h1>
+                <dl class="dl-horizontal">
+                    <dt><a id="view-questions-link" href="/view-all/questions">Questions</a></dt>
+                    <dd>In the questions section you'll be able to browse user created exam questions.</dd>
+                    <dt><a id="view-sections-link" href="/view-all/sections">Sections</a></dt>
+                    <dd>Exam Questions can be arranged into sections. Candidates can be required to answer part of the questions in each section.</dd>
+                    <dt><a id="view-papers-link" href="/view-all/papers">Papers</a></dt>
+                    <dd>Sections are arranged into exam papers.</dd>
+                    <dt><a id="view-attempts-link" href="/dashboard/view-tests">Attempts</a></dt>
+                    <dd>A single attempt is a single candidate sitting a particular test paper on a given date in a given venue.</dd>
+                    <dt><a id="view-exams-link" href="/view-all/exams">Exams</a></dt>
+                    <dd>Exams are made up from multiple attempts for each student enrolled on a given module.</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<form class="submitQuestion expressionQuestion form-horizontal" role="form" method="post"
+      th:action="${submitAnswerForm.getENDPOINT()}"
+      th:object="${submitAnswerForm}" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:attr="questionIsSubmitted=${answers.isQuestionAnswered(sectionKey, questionKey)},
+      questionName=${'Question ' + sectionKey + '.' + questionKey}"
+>
+
+    <input type="hidden" name="attemptId" th:value="${attemptId}"/>
+    <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
+    <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
+    <input th:id="'answer-for-' + ${sectionKey} + '-'+ ${questionKey}" type="hidden" name="text" th:value="${answers.getNotNullAnswerText(sectionKey, questionKey)}"/>
+
+    <div class="form-group" th:each="blank : ${currentQuestion.getAnswerBlanks()}">
+        <label class="col-sm-2 control-label" th:text="'Answer: ' + ${blank}"></label>
+        <div class="col-sm-10">
+            <input class="form-control js-answer-hook" type="text" th:attr="data-blank-number=${blank},data-insert-into='answer-for-' + ${sectionKey} + '-'+ ${questionKey}"/>
+        </div>
+    </div>
+    <br/>
+    <input value="Submit Question" type="submit"/>
+</form>

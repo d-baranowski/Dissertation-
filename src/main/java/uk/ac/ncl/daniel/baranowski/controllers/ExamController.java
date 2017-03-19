@@ -2,7 +2,6 @@ package uk.ac.ncl.daniel.baranowski.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -67,5 +66,26 @@ public class ExamController {
         service.validateUser(examId, moduleLeaderSession);
         service.finnishExam(examId);
         return ControllerEndpoints.REDIRECT_PREFIX + EXAM_PREFIX + EXAM_REVIEW.replaceFirst("\\{examId}", examId + "");
+    }
+
+    @RequestMapping(MARK_EXAM)
+    @PreAuthorize("hasAnyAuthority('ModuleLeader, Marker')")
+    public ModelAndView markExam(@PathVariable int examId, HttpSession moduleLeaderSession) {
+        service.prepareExamForMarking(examId, moduleLeaderSession);
+        return service.getMarkingModelAndView(examId);
+    }
+
+    @RequestMapping(value = EXAM_UNLOCK_MARKING, method = RequestMethod.POST)
+    @PreAuthorize("hasAnyAuthority('ModuleLeader, Marker')")
+    public ResponseEntity unlockExam(@PathVariable int examId, HttpSession moduleLeaderSession) {
+        service.unlockExamFromMarker(examId, moduleLeaderSession);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = EXAM_FINNISH_MARKING, method = RequestMethod.POST)
+    @PreAuthorize("hasAnyAuthority('ModuleLeader, Marker')")
+    public ResponseEntity finnishMarkingExam(@PathVariable int examId, HttpSession moduleLeaderSession) {
+        service.finnishMarkingExam(examId, moduleLeaderSession);
+        return ResponseEntity.ok().build();
     }
 }

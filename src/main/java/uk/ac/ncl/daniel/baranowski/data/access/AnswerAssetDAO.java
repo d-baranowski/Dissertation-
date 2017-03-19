@@ -89,15 +89,13 @@ public class AnswerAssetDAO {
     }
 
     private boolean checkIfExists(AnswerAsset asset) {
-        final String sql = String.format("SELECT count(*) FROM %s t WHERE t.%s = ? AND t.%s = ? AND t.%s = ?",
+        final String sql = String.format("SELECT count(*) > 0 FROM %s t WHERE t.%s = ? AND t.%s = ? AND t.%s = ?",
                 TableNames.ANSWER_ASSET,
                 QUESTION_ID,
                 QUESTION_VERSION_NO,
                 TEST_DAY_ENTRY_ID);
 
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, asset.getQuestionId(), asset.getQuestionVersionNo(),asset.getTestDayEntryId());
-
-        return count > 0;
+        return jdbcTemplate.queryForObject(sql, Boolean.class, asset.getQuestionId(), asset.getQuestionVersionNo(),asset.getTestDayEntryId());
     }
 
     private AnswerAsset mapAnswerAsset(Map<String, Object> row, String fileType) {

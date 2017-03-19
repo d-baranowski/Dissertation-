@@ -50,6 +50,17 @@ public final class Candidate {
         return Objects.hash(getId(), getName(), getSurname(), getHasExtraTime());
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Candidate{");
+        sb.append("id=").append(id);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", surname='").append(surname).append('\'');
+        sb.append(", hasExtraTime=").append(hasExtraTime);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public static class Builder {
         private int id;
         private String name;

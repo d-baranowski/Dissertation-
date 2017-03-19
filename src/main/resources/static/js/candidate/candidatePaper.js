@@ -7,10 +7,32 @@ $(document).ready(function(){
     $(window).load(function() {
         hideLoading();
     });
+
+    var sectionNo = getUrlParameter('sectionNo');
+    var questionNo = getUrlParameter('questionNo');
+    if (sectionNo && questionNo) {
+        moveTo(sectionNo,questionNo);
+    }
 });
 
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+var carousell;
 function enableCarousel() {
-    $('.carousell').slick({
+    carousell = $('.carousell').slick({
         adaptiveHeight: true,
         draggable: false,
         infinite: false,
@@ -63,6 +85,13 @@ function linkCarouselToAccordion() {
             $( '.carousell' ).slick('slickGoTo', index);
         });
     });
+}
+
+function moveTo(sectionNo,questionNo) {
+    var slickSlide = $('[data-section-no='+parseInt(sectionNo)+']').find('[data-question-no='+parseInt(questionNo)+']').attr('slickslide');
+    if (slickSlide) {
+        $(carousell).slick('slickGoTo', slickSlide - 1)
+    }
 }
 
 /*

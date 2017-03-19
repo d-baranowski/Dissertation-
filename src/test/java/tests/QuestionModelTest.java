@@ -1,9 +1,10 @@
 package tests;
 
+import org.junit.Test;
 import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
+
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 

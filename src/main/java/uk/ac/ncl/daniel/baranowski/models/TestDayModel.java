@@ -14,24 +14,36 @@ public class TestDayModel {
     private String location;
 
     @NotNull(message = "Pick a valid start time")
-    private LocalTime startTime;
+    private String startTime;
 
-    private LocalTime endTime;
-    private LocalTime endTimeWithExtraTime;
+    private String endTime;
+    private String endTimeWithExtraTime;
 
     public int getId() {
         return id;
     }
 
-    public LocalTime getStartTime() {
+    public LocalTime getStartTimeAsLocalTime() {
+        return  startTime != null ? LocalTime.parse(startTime) : null;
+    }
+
+    public String getStartTime() {
         return startTime;
     }
 
-    public LocalTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
-    public LocalTime getEndTimeWithExtraTime() {
+
+    public String getEndTimeWithExtraTime() {
         return endTimeWithExtraTime;
+    }
+
+    public LocalTime getEndTimeAsLocalTime() {
+        return  endTime != null ? LocalTime.parse(endTime) : null;
+    }
+    public LocalTime getEndTimeWithExtraTimeAsLocalTime() {
+        return  endTimeWithExtraTime != null ?  LocalTime.parse(endTimeWithExtraTime) : null;
     }
 
     public String getDate() {
@@ -51,16 +63,31 @@ public class TestDayModel {
     }
 
     public TestDayModel setStartTime(LocalTime startTime) {
+        this.startTime = startTime.toString("HH:mm");
+        return this;
+    }
+
+    public TestDayModel setStartTime(String startTime) {
         this.startTime = startTime;
         return this;
     }
 
     public TestDayModel setEndTime(LocalTime endTime) {
+        this.endTime = endTime.toString("HH:mm");
+        return this;
+    }
+    public TestDayModel setEndTime(String endTime) {
         this.endTime = endTime;
         return this;
     }
 
+
     public TestDayModel setEndTimeWithExtraTime(LocalTime endTimeWithExtraTime) {
+        this.endTimeWithExtraTime = endTimeWithExtraTime.toString("HH:mm");
+        return this;
+    }
+
+    public TestDayModel setEndTimeWithExtraTime(String endTimeWithExtraTime) {
         this.endTimeWithExtraTime = endTimeWithExtraTime;
         return this;
     }
@@ -79,12 +106,13 @@ public class TestDayModel {
                 Objects.equals(getId(), that.getId()) &&
                 Objects.equals(getStartTime(), that.getStartTime()) &&
                 Objects.equals(getEndTime(), that.getEndTime()) &&
+                Objects.equals(getEndTimeWithExtraTime(), that.getEndTimeWithExtraTime()) &&
                 Objects.equals(getLocation(), that.getLocation());
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(getId(), getDate(), getLocation(), getStartTime(), getEndTime());
+        return Objects.hash(getId(), getDate(), getLocation(), getStartTime(), getEndTime(), getEndTimeWithExtraTime());
     }
 
     @Override

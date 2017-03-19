@@ -1,5 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import uk.ac.ncl.daniel.baranowski.common.enums.QuestionType;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.regex.Pattern;
 public final class QuestionModel extends QuestionReferenceModel {
     private static final String MULTIPLE_CHOICE_QUESTION = "Multiple Choice";
     private static final String CHOICE_PATTERN = "([A-Z])\\)";
+    private static final String EXPRESSION_QUESTION = QuestionType.EXPRESSION.toString();
+    private static final String EXPRESSION_PATTERN = "\\[\\[\\d]]";
     @NotNull(message = "Please add a question text before submitting")
     @Size(min = 5, max = 50000, message = "Question text too long or too short.")
     private String text;
@@ -68,6 +72,24 @@ public final class QuestionModel extends QuestionReferenceModel {
             return new ArrayList<>();
         }
     }
+
+    public List<String> getAnswerBlanks() {
+        if (this.getType().equals(EXPRESSION_QUESTION.toString())) {
+            List<String> allMatches = new ArrayList<>();
+            Matcher m = Pattern.compile(EXPRESSION_PATTERN).matcher(this.getText());
+            while (m.find()) {
+                allMatches.add(m.group());
+            }
+            for (int i = 0; i < allMatches.size(); i++) {
+                String s = allMatches.get(i);
+                allMatches.set(i, s);
+            }
+            return allMatches;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 
     /* Read this: http://www.artima.com/lejava/articles/equality.html Pitfall #4 */
     @Override

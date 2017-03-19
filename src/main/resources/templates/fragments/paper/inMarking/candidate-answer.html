@@ -12,7 +12,9 @@
                 <div th:replace="/fragments/paper/inMarking/essay"></div>
             </th:block>
             <th:block th:case="'Multiple Choice'">
-                <div th:replace="/fragments/paper/inMarking/multipleChoice"></div>
+                <th:block th:unless="${examMarking}">
+                    <div th:replace="/fragments/paper/inMarking/multipleChoice"></div>
+                </th:block>
             </th:block>
             <th:block th:case="'Drawing'">
                 <div th:replace="/fragments/paper/inMarking/draw"></div>

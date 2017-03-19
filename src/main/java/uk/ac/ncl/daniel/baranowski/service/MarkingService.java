@@ -6,6 +6,7 @@ import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
 import uk.ac.ncl.daniel.baranowski.data.MarksRepo;
 import uk.ac.ncl.daniel.baranowski.data.UserRepo;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
+import uk.ac.ncl.daniel.baranowski.exceptions.AttemptMissingException;
 import uk.ac.ncl.daniel.baranowski.exceptions.NotLockedForMarkingException;
 import uk.ac.ncl.daniel.baranowski.models.MarkModel;
 import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
@@ -27,13 +28,15 @@ public class MarkingService {
 	private final MarksRepo marksRepo;
     private final AttemptRepo attemptRepo;
     private final UserRepo userRepo;
+    private final AttemptService attemptService;
 	private static final Logger LOGGER = Logger.getLogger(MarkingService.class.getName());
 
 	@Autowired
-	public MarkingService(MarksRepo marksRepo, AttemptRepo attemptRepo, UserRepo userRepo) {
+	public MarkingService(MarksRepo marksRepo, AttemptRepo attemptRepo, UserRepo userRepo, AttemptService attemptService) {
         this.userRepo = userRepo;
         this.marksRepo = marksRepo;
         this.attemptRepo = attemptRepo;
+        this.attemptService = attemptService;
     }
 
 	public ModelAndView getMarkableViewForTestAttempt(int attemptId) {
@@ -61,7 +64,7 @@ public class MarkingService {
         }
     }
 
-    public void submitMark(SubmitMarkFormModel formBody, HttpSession markerSession) {
+    public int submitMark(SubmitMarkFormModel formBody, HttpSession markerSession) {
         final UserReferenceModel userRef = userRepo.getUserReference(SessionUtility.getUserId(markerSession));
 
         final MarkModel mark = new MarkModel();
@@ -80,8 +83,19 @@ public class MarkingService {
 
         try {
             attemptRepo.markAnswer(formBody.getTestAttemptId(), formBody.getQuestionId(), formBody.getQuestionVersionNo(), markId);
+            return markId;
         } catch (AccessException e) {
-            final String errorMsg = String.format("Failed to save mark: $s", mark);
+            final String errorMsg = String.format("Failed to save mark: %s", mark);
+            LOGGER.log(Level.SEVERE, errorMsg, e);
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR , errorMsg);
+        }
+    }
+
+    public MarkModel get(int markId) {
+	    try {
+	        return marksRepo.get(markId);
+        } catch (AccessException e) {
+            final String errorMsg = String.format("Failed to get mark with id %s", markId);
             LOGGER.log(Level.SEVERE, errorMsg, e);
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR , errorMsg);
         }
@@ -142,6 +156,22 @@ public class MarkingService {
             final String errorMsg = String.format("Could't get status for attempt with id %s", testAttemptId);
             LOGGER.log(Level.SEVERE, errorMsg, e);
             throw new Exception(errorMsg, e);
+        }
+    }
+
+    public void startMarking(int testAttemptId, HttpSession markerSession) {
+        if (userIsMarking(testAttemptId, SessionUtility.getUserId(markerSession))) {
+            attemptService.validateStatus(testAttemptId, ExamStatus.MARKING_ONGOING);
+        } else try {
+            if(isInMarking(testAttemptId)) {
+                throw new NotLockedForMarkingException("This attempt is currently being marked by a different user.", testAttemptId, null);
+            } else {
+                attemptService.validateStatus(testAttemptId, ExamStatus.FINISHED);
+                startMarkingAttempt(testAttemptId,markerSession);
+            }
+        } catch (Exception e) {
+            String msg = String.format("Attempt with id: %s does not exist", testAttemptId);
+            throw new AttemptMissingException(msg,e);
         }
     }
 }

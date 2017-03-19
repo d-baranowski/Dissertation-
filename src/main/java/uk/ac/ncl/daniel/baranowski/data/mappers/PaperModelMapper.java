@@ -28,7 +28,7 @@ public class PaperModelMapper {
         result.setId(p.getId());
         result.setVersionNo(pv.getVersionNo());
         result.setReferenceName(p.getName());
-        result.setInstructionsText(pv.getInstructionsText());
+        result.setInstructionsText(pv.getInstructionsText() != null ? pv.getInstructionsText(): "");
         result.setSections(sections);
         result.setTimeAllowed(p.getTimeAllowed());
 

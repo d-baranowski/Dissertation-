@@ -1,16 +1,15 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
-import javafx.scene.control.Tab;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Exam;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static uk.ac.ncl.daniel.baranowski.data.access.ExamDAO.ColumnNames.*;
@@ -56,7 +55,7 @@ public class ExamDAO {
 
     private Exam mapExam(Map<String, Object> row) {
         return new Exam.Builder()
-                .setModuleId((int) row.get("moduleId"))
+                .setModuleId((Integer) (row.get("moduleId") != null ? row.get("moduleId") : -1))
                 .setId((int) row.get("_id"))
                 .setTestDayId((int) row.get("testDayId"))
                 .setPaperVersionNo((int) row.get("testPaperVersionNo"))
@@ -81,28 +80,72 @@ public class ExamDAO {
     }
 
     public void setStartTime(int examId, String s) {
-        String sql =
-                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.startTime = ? WHERE e.`_id` = ?";
+        final String findIdSql = "SELECT e.testDayId FROM Exam e WHERE e._id = ?";
+        int testDayId = jdbcTemplate.queryForObject(findIdSql, Integer.class ,examId);
 
-        jdbcTemplate.update(sql, s, examId);
+        String sql =
+                "UPDATE TestDay td SET td.startTime = ? WHERE td.`_id` = ?";
+
+        jdbcTemplate.update(sql, s, testDayId);
     }
 
     public void setEndTimeExtra(int examId, String s) {
-        String sql =
-                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.endTimeWithExtraTime = ? WHERE e.`_id` = ?";
+        final String findIdSql = "SELECT e.testDayId FROM Exam e WHERE e._id = ?";
+        int testDayId = jdbcTemplate.queryForObject(findIdSql, Integer.class ,examId);
 
-        jdbcTemplate.update(sql, s, examId);
+        String sql =
+                "UPDATE TestDay td SET td.endTimeWithExtraTime = ? WHERE td.`_id` = ?";
+
+        jdbcTemplate.update(sql, s, testDayId);
     }
 
     public void setEndTime(int examId, String endTime) {
+        final String findIdSql = "SELECT e.testDayId FROM Exam e WHERE e._id = ?";
+        int testDayId = jdbcTemplate.queryForObject(findIdSql, Integer.class ,examId);
         String sql =
-                "UPDATE TestDay td INNER JOIN Exam e ON e.testDayId = td.`_id` SET td.endTime = ? WHERE e.`_id` = ?";
+                "UPDATE TestDay td SET td.endTime = ? WHERE td.`_id` = ?";
 
-        jdbcTemplate.update(sql, endTime, examId);
+        jdbcTemplate.update(sql, endTime, testDayId);
+    }
+
+    public boolean isMarking(int examId, String userId) {
+        String sql = "SELECT CASE WHEN markingLock = ? THEN 1 ELSE 0 END FROM Exam WHERE `_id` = ?";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, userId, examId);
+    }
+
+    public void lockForMarking(int examId, String userId) {
+        String sql =
+                "UPDATE " + TableNames.EXAM + " e " +
+                        "SET " + STATUS + "= ? " +
+                        ", " + MARKING_LOCK + "=? " +
+                        "WHERE e." + ID + " = ?";
+
+        jdbcTemplate.update(sql, ExamStatus.MARKING_ONGOING.toString(), userId, examId);
+    }
+
+    public void unlockFromMarker(int examId) {
+        String sql =
+                "UPDATE " + TableNames.EXAM + " e " +
+                        "SET " + STATUS + "= ? " +
+                        ", " + MARKING_LOCK + "=NULL " +
+                        "WHERE e." + ID + " = ?";
+
+        jdbcTemplate.update(sql, ExamStatus.FINISHED.toString(), examId);
+    }
+
+    public List<Exam> readAll() {
+        final String sql = "SELECT * FROM " + TableNames.EXAM;
+        List<Exam> result = new ArrayList<>();
+
+        jdbcTemplate.queryForList(sql).forEach(row -> result.add(mapExam(row)));
+
+        return  result;
     }
 
     public enum ColumnNames {
         ID("_id"),
+        MARKING_LOCK("markingLock"),
         TEST_PAPER_VERSION_NO("testPaperVersionNo"),
         TEST_PAPER_ID("testPaperId"),
         TEST_DAY_ID("testDayId"),

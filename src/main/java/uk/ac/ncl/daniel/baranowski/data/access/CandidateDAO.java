@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static uk.ac.ncl.daniel.baranowski.data.access.CandidateDAO.ColumnNames.*;
+
 @DataAccessObject
 public class CandidateDAO {
     private JdbcTemplate jdbcTemplate;
@@ -22,19 +24,19 @@ public class CandidateDAO {
     }
 
     public void create(Candidate obj) {
-        jdbcTemplate.update(String.format("INSERT INTO %s (name,surname) VALUES (?, ?)", TableNames.CANDIDATE), obj.getName(), obj.getSurname());
+        jdbcTemplate.update(String.format("INSERT INTO %s (%s,%s,%s) VALUES (?, ?, ?)", TableNames.CANDIDATE,NAME, SURNAME, HAS_EXTRA_TIME), obj.getName(), obj.getSurname(), obj.getHasExtraTime());
     }
 
     public Candidate createAndGet(Candidate obj) {
         Map<String, String> args = new HashMap<>();
-        args.put(ColumnNames.NAME.toString(), obj.getName());
-        args.put(ColumnNames.SURNAME.toString(), obj.getSurname());
+        args.put(NAME.toString(), obj.getName());
+        args.put(SURNAME.toString(), obj.getSurname());
 
         Number key = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TableNames.CANDIDATE.toString())
                 .usingColumns(
-                        ColumnNames.NAME.toString(),
-                        ColumnNames.SURNAME.toString())
+                        NAME.toString(),
+                        SURNAME.toString())
                 .usingGeneratedKeyColumns("_id")
                 .executeAndReturnKey(args);
 
@@ -47,8 +49,8 @@ public class CandidateDAO {
     }
 
     public void update(Candidate obj) {
-        final String sql = String.format("UPDATE %s SET name=?,surname=? WHERE _id=?;", TableNames.CANDIDATE);
-        jdbcTemplate.update(sql, obj.getName(), obj.getSurname(), obj.getId());
+        final String sql = String.format("UPDATE %s SET name=?,surname=?,hasExtraTime = ? WHERE _id=?;", TableNames.CANDIDATE);
+        jdbcTemplate.update(sql, obj.getName(), obj.getSurname(),obj.getHasExtraTime() , obj.getId());
     }
 
     public int getCount() {
@@ -71,7 +73,7 @@ public class CandidateDAO {
     }
 
 
-    private enum ColumnNames {
+    public enum ColumnNames {
         ID("_id"),
         NAME("name"),
         SURNAME("surname"),

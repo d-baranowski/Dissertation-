@@ -28,7 +28,8 @@
 
         <div>
             <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Date: </label><br/>
-            <input type="text" id="datepicker" format="dd/mm/yyyy" class="form-control formItem" th:field="${formBody.day.date}"/>
+            <input type="text" id="datepicker" format="dd/mm/yyyy" class="form-control formItem"
+                   th:field="${formBody.day.date}"/>
             <p th:if="${daydateError != null}" th:class="text-error" th:text="${daydateError}"></p>
         </div>
 
@@ -48,10 +49,9 @@
         <input id="timeAllowedSelect" class="form-control formItem" type="number" th:field="${formBody.timeAllowed}"
                min="10" max="1000" step="10"/>
         <br/>
-        <div>
-            <button th:classappend="${disableNotAdmin}? disabled : btn" type="submit" class="btn btn-success formItem">
-                CREATE TEST
-            </button>
-        </div>
+
+        <input id="create-exam-btn" th:classappend="${disableNotAdmin}? disabled : btn" type="submit"
+               class="btn btn-success formItem" value="CREATE TEST" />
+
     </form>
 </div>

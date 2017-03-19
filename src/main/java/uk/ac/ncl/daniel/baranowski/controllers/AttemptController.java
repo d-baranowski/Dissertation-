@@ -1,8 +1,15 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.InvalidIsolationLevelException;
 import org.springframework.validation.BindingResult;
@@ -17,11 +24,14 @@ import uk.ac.ncl.daniel.baranowski.exceptions.*;
 import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
+import uk.ac.ncl.daniel.baranowski.models.websocket.MarkMessage;
 import uk.ac.ncl.daniel.baranowski.service.AttemptService;
 import uk.ac.ncl.daniel.baranowski.service.ExamService;
 import uk.ac.ncl.daniel.baranowski.service.MarkingService;
 import uk.ac.ncl.daniel.baranowski.service.PaperService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -46,6 +56,7 @@ public class AttemptController {
     private final ExamService examService;
     private static final Logger LOGGER = Logger.getLogger(AttemptController.class.getName());
     private static final double GRACE_PERIOD = -0.3;
+    private final SimpMessagingTemplate simpMessager;
 
     /**
      * Please do not use this constructor. Spring automatically initializes all classes annotated with @Controller.
@@ -55,11 +66,12 @@ public class AttemptController {
      * @param markingService NOSONAR
      */
     @Autowired
-    public AttemptController(AttemptService attemptService, MarkingService markingService, PaperService paperService, ExamService examService) {
+    public AttemptController(AttemptService attemptService, MarkingService markingService, PaperService paperService, ExamService examService, SimpMessagingTemplate simpMessager) {
         this.attemptService = attemptService;
         this.markingService = markingService;
         this.paperService = paperService;
         this.examService = examService;
+        this.simpMessager = simpMessager;
     }
 
     /**
@@ -138,25 +150,15 @@ public class AttemptController {
      */
     @RequestMapping(ControllerEndpoints.ATTEMPT_MARK)
     @PreAuthorize("hasAnyAuthority('Marker')")
-    public ModelAndView mark(@PathVariable int testAttemptId, HttpSession markerSession) {
-        if (markingService.userIsMarking(testAttemptId, SessionUtility.getUserId(markerSession))) {
-            attemptService.validateStatus(testAttemptId, ExamStatus.MARKING_ONGOING);
-        } else try {
-            if(markingService.isInMarking(testAttemptId)) {
-                throw new NotLockedForMarkingException("This attempt is currently being marked by a different user.", testAttemptId, null);
-            } else {
-                attemptService.validateStatus(testAttemptId, ExamStatus.FINISHED);
-                markingService.startMarkingAttempt(testAttemptId,markerSession);
-            }
-        } catch (Exception e) {
-            String msg = String.format("Attempt with id: %s does not exist", testAttemptId);
-            throw new AttemptMissingException(msg,e);
-        }
+    public ModelAndView mark(@PathVariable int testAttemptId,
+                             @RequestParam(required = false, defaultValue = "-1") int sectionNo,
+                             @RequestParam(required = false, defaultValue = "-1") int questionNo,
+                             HttpSession markerSession) {
+        markingService.startMarking(testAttemptId, markerSession);
         return markingService.getMarkableViewForTestAttempt(testAttemptId);
     }
 
     @RequestMapping(ATTEMPT_LOGIN)
-    @PreAuthorize("isAnonymous()")
     public ModelAndView loginToAttempt(@PathVariable int examId) {
         ModelAndView mav = new ModelAndView(Constants.TEMPLATE_LOGIN);
         mav.addObject("ENDPOINT", ATTEMPT_PREFIX + ATTEMPT_CREATE_SESSION.replaceFirst("\\{examId}", examId + ""));
@@ -265,7 +267,8 @@ public class AttemptController {
         if (!bindingResult.hasErrors()) {
             if (markingService.userIsMarking(formBody.getTestAttemptId(), SessionUtility.getUserId(markerSession))) {
                 attemptService.validateStatus(formBody.getTestAttemptId(), ExamStatus.MARKING_ONGOING);
-                markingService.submitMark(formBody, markerSession);
+                int markId = markingService.submitMark(formBody, markerSession);
+                sendMarkMessage(markId, formBody);
                 return "ok";
             } else {
                 throw new InvalidIsolationLevelException("This test attempt is currently blocked by another Marker");
@@ -273,6 +276,14 @@ public class AttemptController {
         } else {
             return bindingResult.getFieldErrors();
         }
+    }
+
+    private void sendMarkMessage(int markId, SubmitMarkFormModel formBody) {
+        simpMessager.convertAndSend("/marking/mark-updated",  new MarkMessage()
+                .setMark(markingService.get(markId))
+                .setQuestionId(formBody.getQuestionId())
+                .setQuestionVersionNo(formBody.getQuestionVersionNo())
+                .setTestAttemptId(formBody.getTestAttemptId()));
     }
 
     /**

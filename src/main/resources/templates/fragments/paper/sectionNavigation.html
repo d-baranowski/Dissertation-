@@ -10,7 +10,7 @@
             </div>
         </div>
         <div th:each="sectionKey : ${paper.sections.keySet()}">
-            <div class="panel panel-default slickControl">
+            <div th:attr="data-questions-in-section=${paper.sections.get(sectionKey).getQuestions().keySet().size()}, data-section-no=${sectionKey}" class="panel panel-default slickControl">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse"
@@ -28,7 +28,7 @@
                 >
                     <th:block th:each="questionKey : ${paper.sections.get(sectionKey).questions.keySet()}">
                         <div class="collapse-decorator-holder">
-                            <a th:id="${sectionKey}">
+                            <a th:attr="data-question-no=${questionKey}" th:id="${sectionKey}">
                                 <div class="panel-body"
                                      th:text="'Question ' + ${sectionKey} + '.' + ${questionKey}">
                                 </div>
@@ -40,10 +40,16 @@
             </div>
         </div>
         <th:block th:if="${answerable or inMarking}">
-            <div id="submitAllBtn" class="submit-all-btn"><p>Submit &amp; Complete</p></div>
-        </th:block>
-        <th:block th:if="${inMarking}">
-            <div id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+            <th:block th:unless="${examMarking}">
+                <div id="submitAllBtn" class="submit-all-btn"><p>Submit &amp; Complete</p></div>
+                <th:block th:if="${inMarking}">
+                    <div id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+                </th:block>
+            </th:block>
+            <th:block th:if="${examMarking}">
+                <div th:attr="data-exam-id=${examId}" id="submitAllBtn" class="submit-all-btn"><p>Finnish Marking</p></div>
+                <div th:attr="data-exam-id=${examId}" id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+            </th:block>
         </th:block>
     </div>
 </div>

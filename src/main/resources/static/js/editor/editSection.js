@@ -144,9 +144,9 @@ function handleAddingQuestions(table) {
     table.rows().every(function () {
         $('.js-add-question-handle', this.node()).each(function () {
             current = $(this);
-            var sectionId = current.data('sectionId');
-            var sectionVersion = current.data('sectionVer');
-            var paperId = current.data('paperId');
+            var questionId = current.data('questionId');
+            var questionVer = current.data('questionVer');
+            var sectionId = $('#id').val();
             var url = current.attr('href');
             var parent = table.row("#" + current.data('parentId'));
 
@@ -154,10 +154,10 @@ function handleAddingQuestions(table) {
                 e.preventDefault();
 
                 var jsonData = JSON.stringify({
-                    "questionId": sectionId,
-                    "questionVersion": sectionVersion,
-                    "paperId": sectionId,
-                    "paperVersion": $('#versionNo').val()
+                    "questionId": questionId,
+                    "questionVersion": questionVer,
+                    "sectionId": sectionId,
+                    "sectionVersion": $('#versionNumber').val()
                 });
 
                 $.ajax({
@@ -171,7 +171,12 @@ function handleAddingQuestions(table) {
                             .add($(getSectionQuestionFromRow(parent, data))).draw();
                     },
                     error: function (data) {
-                        var msg = "Failed to add question. " + data.responseJSON.message ? data.responseJSON.message : "";
+                        var msg = "Failed to add question. " + (data.responseJSON.message ? data.responseJSON.message : "");
+                        if (data.responseJSON.constructor === Array) {
+                            data.responseJSON.forEach(function (element) {
+                                msg += (element.defaultMessage ? element.defaultMessage + ", " : "")
+                            });
+                        }
                         buildWarningAlert(msg)
                     }
                 });
@@ -184,6 +189,12 @@ function handleAddingQuestions(table) {
 function beginUpdating(questionId, questionVersionNo) {
     $('.js-hide-when-updating').hide();
     $('.js-show-when-updating').hide();
+
+    /*$('.js-create-new-version').removeClass('hidden');
+    $('.js-create-new-version').click(function () {
+        var version = $('#versionNumber').val();
+        $('#versionNumber').val(parseInt(version)+1);
+    });*/
 
     if (questionId && questionVersionNo) {
         $('#id').val(questionId);
@@ -207,7 +218,18 @@ function beginUpdating(questionId, questionVersionNo) {
     $('.js-unhide-me').removeClass('hidden');
     handleAddingQuestions(availableQuestionsDataTable);
 
+    $('.js-save').click(function () {
+        ajaxUpdate();
+    });
+    updatePreviewButton();
+
     setInterval(ajaxUpdate, 10 * 1000);
+}
+
+function updatePreviewButton() {
+    var newHref = '/test-paper/view-section/{sectionId}/{sectionVer}'.replace('{sectionId}',$('#id').val());
+    newHref = newHref.replace('{sectionVer}',$('#versionNumber').val());
+    $('.js-preview').attr('href',newHref);
 }
 
 
@@ -223,10 +245,12 @@ function ajaxUpdate() {
             url: url,
             data: formData, // serializes the form's elements.
             success: function (data) {
-                hideErrorMessages();
                 $('#versionNumber').val(data);
                 buildSuccessAlert("Successfully Saved");
                 oldFormData = formData;
+                if ($('#versionNumber').val() != data) {
+                    window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + $('#id').val() + "&sectionVersion=" + parseInt(data);
+                }
             },
             error: function (data) {
                 displayErrorMessages(data.responseJSON);
@@ -249,9 +273,9 @@ function bindCreationForm() {
             url: url,
             data: formData, // serializes the form's elements.
             success: function (data) {
-                hideErrorMessages();
                 beginUpdating(data, 1); // show response from the php script.
                 oldFormData = formData;
+                window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + data + "&sectionVersion=1";
             },
             error: function (data) {
                 displayErrorMessages(data.responseJSON);
@@ -268,9 +292,10 @@ function enableFroalaEditor() {
             'prettyprint lang-sql': 'SQL',
             'prettyprint': 'Code'
         },
+        fontSizeDefaultSelection: '18',
         htmlRemoveTags: ['script', 'video', 'source', 'input', 'form', 'picture'],
         htmlAllowedTags: ["a", "abbr", "address", "area", "article", "aside", "b", "base", "bdi", "bdo", "blockquote", "br", "button", "caption", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "i", "img", "ins", "kbd", "keygen", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem", "meter", "nav", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "queue", "rp", "rt", "ruby", "s", "samp", "style", "section", "select", "small", "source", "span", "strike", "strong", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "wbr"],
-        toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
+        toolbarButtons: ['bold', 'italic', 'underline','specialCharacters','strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
         pluginsEnabled: null
     });
 

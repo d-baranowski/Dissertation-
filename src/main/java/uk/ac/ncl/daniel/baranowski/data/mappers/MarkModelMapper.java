@@ -21,7 +21,7 @@ public class MarkModelMapper {
     public static Mark mapMarkFrom(MarkModel model) {
         return new Mark.Builder()
                 .setActualMark(model.getMark())
-                .setMarkerId(model.getMarker().getId())
+                .setMarkerId(model.getMarker() != null ? model.getMarker().getId() : null)
                 .setComment(model.getComment())
                 .setId(model.getId()).build();
     }

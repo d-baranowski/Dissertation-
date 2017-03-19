@@ -87,11 +87,16 @@
     </th:block>
 
     <th:block th:if="${inMarking}">
+        <script th:src="@{/webjars/sockjs-client/1.0.2/sockjs.min.js}"></script>
+        <script th:src="@{/webjars/stomp-websocket/2.3.3/stomp.min.js}"></script>
         <script th:src="@{~/js/marker/markerPaper.js}"/>
     </th:block>
     <th:block th:unless="${answerable}">
         <script th:src="@{~/js/question-page.js}"/>
         <script th:src="@{~/js/candidate/print.js}"/>
+    </th:block>
+    <th:block th:if="${examMarking}">
+        <script th:src="@{~/js/marker/examMarking.js}"></script>
     </th:block>
 </th:block>
 </body>

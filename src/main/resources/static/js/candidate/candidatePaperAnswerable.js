@@ -5,6 +5,7 @@ $(document).ready(function(){
     linkMultipleChoiceWellToCheckBox();
     loadAccordionSubmittedQuestions();
     assignShowSubmitDialogToButton();
+    handleExpressionQuestion();
 });
 
 function linkMultipleChoiceWellToCheckBox() {
@@ -250,5 +251,19 @@ function finishTestAttempt(){
             buildDangerAlert(error);
             hideLoading();
         }
+    });
+}
+
+function handleExpressionQuestion() {
+    $('.js-answer-hook').change(function () {
+        var answerInput = $('#' + $(this).data('insertInto'));
+        var blank = $(this).data('blankNumber');
+        var json;
+        try {
+            json = JSON.parse($(answerInput).val());
+        } catch(e) {}
+        var currentObject = json ? json : {};
+        currentObject[blank] = $(this).val();
+        answerInput.val(JSON.stringify(currentObject));
     });
 }

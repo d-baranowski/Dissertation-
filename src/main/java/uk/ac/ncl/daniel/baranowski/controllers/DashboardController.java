@@ -27,7 +27,7 @@ import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_V
  * This controller provides endpoints for Generate a Test and View Tests functionality of the application.
  */
 @Controller
-@PreAuthorize("hasAnyAuthority('Marker', 'Admin', 'Author')")
+@PreAuthorize("hasAnyAuthority('Marker', 'Admin', 'Author','ModuleLeader')")
 @RequestMapping(DASHBOARD_PREFIX)
 public class DashboardController {
 
@@ -99,5 +99,19 @@ public class DashboardController {
     @RequestMapping(DASHBOARD_MARKING_ONGOING)
     public ModelAndView ongoingMarkingFragment() {
         return dashboardService.getOngoingMarkingFragment();
+    }
+
+    @RequestMapping("/browse")
+    public ModelAndView browse() {
+        ModelAndView mav = new ModelAndView("browse");
+        mav.addObject("dashboardContent","browse");
+        return mav;
+    }
+
+    @RequestMapping("/create")
+    public ModelAndView create() {
+        ModelAndView mav = new ModelAndView("create");
+        mav.addObject("dashboardContent","edit");
+        return mav;
     }
 }

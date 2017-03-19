@@ -44,6 +44,25 @@ public class AnswersMapModel {
     }
 
     //This method is used inside answerable template fragments
+    public String getNotNullAnswerTextShort(int sectionNo, int questionNo) {
+        final Map<Integer, AnswerModel> first = map.get(sectionNo);
+        if (first != null) {
+            final AnswerModel second = first.get(questionNo);
+            if (second != null) {
+                if (second.getText() != null) {
+                    if (second.getText().length() > 25) {
+                        return second.getText().substring(0, 25) + "...";
+                    }
+                    return second.getText();
+                }
+                return "";
+            }
+        }
+
+        return "";
+    }
+
+    //This method is used inside answerable template fragments
     public boolean isChecked(int sectionNo, int questionNo, char letter) {
         final String answerText = getNotNullAnswerText(sectionNo, questionNo);
         for (char c : answerText.toCharArray()) {

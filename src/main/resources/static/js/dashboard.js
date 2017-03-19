@@ -22,6 +22,20 @@ function bindLinksToMethods() {
         })
 }
 
+function simulateExam(element) {
+    var examId = $(element).data('examId');
+    $(element).html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...');
+    $.ajax({
+        url: "/simulate/exam/"+examId,
+        success: function(data) {
+            location.reload();
+        },
+        error: function(xhr, textStatus, errorThrown){
+            buildWarningAlert("Failed to simulate exam");
+        }
+    });
+}
+
 function refreshElementOnScreen(data, callWhenDataOnScreen) {
     $("#testsTableContent").html("");
     $("#testsTableContent").html(data);

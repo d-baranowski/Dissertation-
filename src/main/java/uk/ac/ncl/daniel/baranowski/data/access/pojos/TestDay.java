@@ -42,10 +42,14 @@ public final class TestDay {
         return endTime;
     }
 
+    public String getEndTimeWithExtraTime() {
+        return endTimeWithExtraTime;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, date, location, startTime,
-                endTime);
+                endTime, endTimeWithExtraTime);
     }
 
     @Override
@@ -60,14 +64,11 @@ public final class TestDay {
                     Objects.equals(location, that.getLocation()) &&
                     Objects.equals(startTime, that.getStartTime()) &&
                     Objects.equals(endTime, that.getEndTime()) &&
+                    Objects.equals(endTimeWithExtraTime, that.getEndTimeWithExtraTime()) &&
                     Objects.equals(id, that.getId());
         }
 
         return false;
-    }
-
-    public String getEndTimeWithExtraTime() {
-        return endTimeWithExtraTime;
     }
 
     public static class Builder {

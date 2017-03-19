@@ -11,16 +11,10 @@ import java.util.List;
 public class ModuleModelMapper {
 
     public static ModuleModel mapModuleModel(Module module, List<UserReferenceModel> moduleLeaders, List<CandidateModel> candidateModelList) {
-        ModuleModel result = new ModuleModel();
-        result.setModule(module);
-        result.setModuleLeaders(moduleLeaders);
-        result.setStudents(candidateModelList);
-        return result;
+        return new ModuleModel(module,moduleLeaders,candidateModelList);
     }
 
     public static ModuleReferenceModel mapModuleReferenceModel(Module module) {
-        ModuleReferenceModel result = new ModuleReferenceModel();
-        result.setModule(module);
-        return result;
+        return new ModuleReferenceModel(module);
     }
 }

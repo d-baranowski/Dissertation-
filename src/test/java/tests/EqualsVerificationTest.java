@@ -1,10 +1,10 @@
 package tests;
 
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
-import uk.ac.ncl.daniel.baranowski.models.*;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
+import uk.ac.ncl.daniel.baranowski.models.*;
 
 public class EqualsVerificationTest {
     @Test
@@ -66,6 +66,7 @@ public class EqualsVerificationTest {
     @Test
     public void equalsContractForModels() {
         EqualsVerifier.forClass(ModuleModel.class)
+                .withRedefinedSuperclass()
                 .verify();
 
         EqualsVerifier.forClass(AnswerModel.class)

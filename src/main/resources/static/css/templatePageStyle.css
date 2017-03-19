@@ -12,6 +12,14 @@
     font-style: normal;
 }
 
+i.fa {
+    font-size: 20px;
+}
+
+.margin-bottom {
+    margin-bottom: 10px;
+}
+
 body, html {
     font-family: 'garrison_sansregular';
     background-color: #EEEEEE;

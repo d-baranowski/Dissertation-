@@ -157,7 +157,7 @@ public class AttemptRepo {
         final List<AttemptReferenceModel> result = new ArrayList<>();
 
         try {
-            final List<TestDayEntry> attempts = attemptDao.getByEntryStatus(status.name());
+            final List<TestDayEntry> attempts = attemptDao.getByEntryStatus(status.toString());
 
             for (TestDayEntry attempt : attempts) {
                 final Exam exam = examDAO.read(attempt.getExamId());
@@ -345,7 +345,7 @@ public class AttemptRepo {
 
     public void setAttemptStatus(ExamStatus status, int id) throws AccessException {
         try {
-            attemptDao.updateStatus(status.name(), id);
+            attemptDao.updateStatus(status.toString(), id);
         } catch (DataAccessException e) {
             final String errorMsg = String.format("Failed to set attempt with id %s to status %s", id, status);
             LOGGER.log(Level.WARNING, errorMsg, e);

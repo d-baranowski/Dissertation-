@@ -1,0 +1,52 @@
+<!--<div th:each="attempt : ${examAttempts}" xmlns:th="http://www.thymeleaf.org">
+    <div th:with="answers=${attempt.answerMap},attemptId=${attempt.id}">
+        <th:block th:unless="${currentQuestion.type} == 'Multiple Choice' or ${currentQuestion.type} == 'Expression'">
+            &lt;!&ndash;<div th:replace="/fragments/paper/inMarking/candidate-answer"/>
+            <div th:replace="/fragments/paper/inMarking/markSubmissionForm"/>&ndash;&gt;
+        </th:block>
+    </div>
+</div>-->
+<!--th:if="${currentQuestion.type} == 'Multiple Choice' or ${currentQuestion.type} == 'Expression'"-->
+<th:block  xmlns:th="http://www.thymeleaf.org">
+    <div th:each="attempt : ${examAttempts}">
+        <th:block th:with="answers=${attempt.answerMap}">
+            <form th:id="${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" class="submitMark codeQuestion" role="form" method="post"
+                  th:action="${submitMarkForm.getENDPOINT()}"
+                  th:object="${submitMarkForm}"
+                  th:attr="questionName=${currentQuestion.referenceName},
+                           isMarked=${answers.isQuestionMarked(sectionKey, questionKey)}">
+                <input type="hidden" name="testAttemptId" th:value="${attempt.getId()}"/>
+                <input type="hidden" name="questionId" th:value="${currentQuestion.id}"/>
+                <input type="hidden" name="questionVersionNo" th:value="${currentQuestion.versionNo}"/>
+            </form>
+        </th:block>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Attempt Id</td>
+                <td>Answer</td>
+                <td>Mark</td>
+                <td>View Full</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="attempt : ${examAttempts}">
+                <th:block th:with="answers=${attempt.answerMap}">
+                    <td th:text="${attempt.getId()}"></td>
+                    <td th:text="${answers.getNotNullAnswerTextShort(sectionKey, questionKey)}"></td>
+                    <td>
+                        <select th:id="${'select-mark-for-test-attempt-' + attempt.getId() + '-section-' + sectionKey + '-questions-' + questionKey}" class="form-control js-submit-on-change" th:attr="form=${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" name="mark">
+                        <option th:text="${'Not Marked'}" th:value="${-1}" th:attr="selected=${-1 == answers.getNonNullMark(sectionKey, questionKey)}"></option>
+                        <option th:each="i : ${#numbers.sequence( 0, currentQuestion.getDifficulty())}"
+                                th:value="${i}"
+                                th:attr="selected=${i == answers.getNonNullMark(sectionKey, questionKey)}"
+                                th:text="${i}"></option>
+                        </select>
+                    </td>
+                    <td><a th:id="${'view-test-attempt-' + attempt.getId() + '-section-' + sectionKey + '-questions-' + questionKey}" target="_blank" th:href="${'/test-attempt/' + attempt.getId() + '/mark?sectionNo=' + sectionKey + '&amp;questionNo=' + questionKey}">View Full Answer</a></td>
+                </th:block>
+            </tr>
+        </tbody>
+    </table>
+</th:block>

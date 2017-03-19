@@ -1,14 +1,5 @@
 package tests;
 
-import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
-import uk.ac.ncl.daniel.baranowski.data.PaperRepo;
-import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
-import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
-import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
-import uk.ac.ncl.daniel.baranowski.service.AttemptService;
-import java.util.Arrays;
-import java.util.Collections;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -22,20 +13,17 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
+import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
+import uk.ac.ncl.daniel.baranowski.data.PaperRepo;
+import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
+import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
+import uk.ac.ncl.daniel.baranowski.service.AttemptService;
 
-import static uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus.CREATED;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.mockito.Mockito.when;
-import static tests.TestResources.CANDIDATE_MODEL_ID_1;
-import static tests.TestResources.PAPER_REFERENCE_MODEL_ID_1;
-import static tests.TestResources.PAPER_REFERENCE_MODEL_ID_2;
-import static tests.TestResources.SAMPLE_DAY;
-import static tests.TestResources.TEST_ATTEMPT_REFERENCE_MODEL_ID_2;
+import static tests.TestResources.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AttemptSetupUnitTest {
