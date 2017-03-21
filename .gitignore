@@ -10,7 +10,6 @@
 classes/*
 build/*
 jQueryPlugins/
-.gradle/
 bin/*
 src/test/selenium/report/*
 
