@@ -1,3 +1,7 @@
+DROP DATABASE dissertationdb;
+CREATE DATABASE dissertationdb;
+USE dissertationdb;
+
 CREATE TABLE `User` (
   `_id` varchar(36) NOT NULL,
   `name` varchar(50) NOT NULL,
