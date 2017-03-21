@@ -12,6 +12,9 @@
                     <li id="nav-edit" th:classappend="${dashboardContent} == 'edit' ? active : ''">
                         <a href="/dashboard/create"><span class="tabText">Create</span></a>
                     </li>
+                    <li id="nav-help" th:classappend="${dashboardContent} == 'help' ? active : ''">
+                        <a href="/dashboard/help"><span class="tabText">Help</span></a>
+                    </li>
                     <li id="nav-settings" th:classappend="${dashboardContent} == 'settings' ? active : ''">
                         <a href="/dashboard/settings"><span class="tabText">Settings</span></a>
                     </li>

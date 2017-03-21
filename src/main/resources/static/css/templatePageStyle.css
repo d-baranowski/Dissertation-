@@ -20,6 +20,10 @@ i.fa {
     margin-bottom: 10px;
 }
 
+a[href="https://froala.com/wysiwyg-editor"] {
+    display: none; !important;
+}
+
 body, html {
     font-family: 'garrison_sansregular';
     background-color: #EEEEEE;

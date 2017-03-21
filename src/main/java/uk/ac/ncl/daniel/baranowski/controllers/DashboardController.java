@@ -114,4 +114,11 @@ public class DashboardController {
         mav.addObject("dashboardContent","edit");
         return mav;
     }
+
+    @RequestMapping("/help")
+    public ModelAndView help() {
+        ModelAndView mav = new ModelAndView("help");
+        mav.addObject("dashboardContent","help");
+        return mav;
+    }
 }
