@@ -3,11 +3,11 @@ package uk.ac.ncl.daniel.baranowski.data.mappers;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Candidate;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Paper;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDay;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDayEntry;
 import uk.ac.ncl.daniel.baranowski.models.AnswersMapModel;
 import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
 import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDayEntry;
 
 public class AttemptModelMapper {
     private AttemptModelMapper() {

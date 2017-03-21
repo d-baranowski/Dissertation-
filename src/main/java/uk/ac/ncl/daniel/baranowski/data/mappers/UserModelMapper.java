@@ -2,8 +2,8 @@ package uk.ac.ncl.daniel.baranowski.data.mappers;
 
 import uk.ac.ncl.daniel.baranowski.common.enums.Roles;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.User;
-import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.UserModel;
+import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
 
 import java.util.List;
 

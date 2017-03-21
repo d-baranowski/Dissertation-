@@ -1,37 +1,25 @@
 package uk.ac.ncl.daniel.baranowski.data;
 
-import uk.ac.ncl.daniel.baranowski.data.access.PaperDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.PaperVersionDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.QuestionDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.QuestionVersionAssetDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.QuestionVersionDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.SectionDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.SectionVersionDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.TermsAndConditionsDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
+import uk.ac.ncl.daniel.baranowski.data.access.*;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
+import uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper;
 import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddQuestionToSectionException;
 import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddSectionToPaperException;
-import uk.ac.ncl.daniel.baranowski.models.AssetModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionReferenceModel;
+import uk.ac.ncl.daniel.baranowski.models.*;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.GetAllMethod;
+import uk.ac.ncl.daniel.baranowski.tables.annotations.TableRepo;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
-import uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper;
-import uk.ac.ncl.daniel.baranowski.tables.annotations.GetAllMethod;
-import uk.ac.ncl.daniel.baranowski.tables.annotations.TableRepo;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapAssetModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.AssetModelMapper.mapQuestionVersionAssetFrom;

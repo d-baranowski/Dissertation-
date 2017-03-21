@@ -10,9 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_PREFIX;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_SECTION_EDITOR;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_VIEW_SECTION;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.*;
 
 public class SectionReferenceModel {
     private int id;

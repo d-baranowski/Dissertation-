@@ -1,11 +1,12 @@
 package uk.ac.ncl.daniel.baranowski.views;
 
 
+import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
 import uk.ac.ncl.daniel.baranowski.models.SignedAttemptReferenceModel;
+
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.web.servlet.ModelAndView;
 
 
 public class OngoingMarkingTableViewModel {

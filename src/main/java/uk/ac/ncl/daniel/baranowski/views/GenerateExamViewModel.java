@@ -1,14 +1,14 @@
 package uk.ac.ncl.daniel.baranowski.views;
 
+import org.springframework.validation.FieldError;
+import org.springframework.web.servlet.ModelAndView;
+import uk.ac.ncl.daniel.baranowski.common.Constants;
 import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
 import uk.ac.ncl.daniel.baranowski.models.ModuleReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
-import uk.ac.ncl.daniel.baranowski.common.Constants;
 
 import java.util.List;
-import org.springframework.validation.FieldError;
-import org.springframework.web.servlet.ModelAndView;
 
 public class GenerateExamViewModel {
     private final ModelAndView mav = new ModelAndView(Constants.TEMPLATE_DASHBOARD);

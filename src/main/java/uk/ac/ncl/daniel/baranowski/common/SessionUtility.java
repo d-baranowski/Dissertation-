@@ -1,21 +1,16 @@
 package uk.ac.ncl.daniel.baranowski.common;
 
-import uk.ac.ncl.daniel.baranowski.exceptions.SessionAttributeMissingException;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import uk.ac.ncl.daniel.baranowski.exceptions.SessionAttributeMissingException;
 
-import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_ATTEMPT_ID;
-import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_BEGUN_TEST_ATTEMPT;
-import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_ROLES;
-import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_START_TIME;
-import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_SURNAME;
-import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_USERNAME;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+
+import static uk.ac.ncl.daniel.baranowski.common.Constants.*;
 
 /**
  * A collection of helpers to handle user sessions.

@@ -1,10 +1,10 @@
 package uk.ac.ncl.daniel.baranowski.views;
 
+import org.springframework.web.servlet.ModelAndView;
+import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
-import org.springframework.web.servlet.ModelAndView;
-import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 
 public class TestAttemptViewModel {
 	private final AttemptModel testAttemptModel;

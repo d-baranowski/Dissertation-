@@ -1,10 +1,11 @@
 package uk.ac.ncl.daniel.baranowski.configuration;
 
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 public class ExternalTemplateConfiguration {

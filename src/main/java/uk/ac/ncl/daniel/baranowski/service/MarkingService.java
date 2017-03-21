@@ -1,5 +1,10 @@
 package uk.ac.ncl.daniel.baranowski.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
 import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
@@ -8,20 +13,15 @@ import uk.ac.ncl.daniel.baranowski.data.UserRepo;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
 import uk.ac.ncl.daniel.baranowski.exceptions.AttemptMissingException;
 import uk.ac.ncl.daniel.baranowski.exceptions.NotLockedForMarkingException;
+import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
 import uk.ac.ncl.daniel.baranowski.models.MarkModel;
 import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
 import uk.ac.ncl.daniel.baranowski.views.TestAttemptViewModel;
-import uk.ac.ncl.daniel.baranowski.models.AttemptModel;
 
+import javax.servlet.http.HttpSession;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class MarkingService {

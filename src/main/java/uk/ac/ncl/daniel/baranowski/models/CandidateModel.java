@@ -1,7 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
-import java.util.Objects;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 public class CandidateModel {
     private int id;

@@ -1,16 +1,17 @@
 package uk.ac.ncl.daniel.baranowski.data;
 
-import uk.ac.ncl.daniel.baranowski.models.MarkModel;
-import uk.ac.ncl.daniel.baranowski.data.access.MarkDAO;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Mark;
-import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
-import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
+import uk.ac.ncl.daniel.baranowski.data.access.MarkDAO;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.Mark;
+import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
+import uk.ac.ncl.daniel.baranowski.models.MarkModel;
+import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.MarkModelMapper.mapMarkFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.MarkModelMapper.mapMarkModelFrom;

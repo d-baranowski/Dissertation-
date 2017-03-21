@@ -4,20 +4,17 @@ import nl.jqno.equalsverifier.internal.lib.bytebuddy.utility.RandomString;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.TestDayEntry;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import static uk.ac.ncl.daniel.baranowski.common.DateUtils.DATE_TIME_FORMATTER;
 import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.TEST_DAY_ENTRY;

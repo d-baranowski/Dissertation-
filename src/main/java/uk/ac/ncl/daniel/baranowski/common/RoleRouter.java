@@ -1,15 +1,12 @@
 package uk.ac.ncl.daniel.baranowski.common;
 
-import java.util.List;
-import javax.servlet.http.HttpSession;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.servlet.http.HttpSession;
+import java.util.List;
+
 import static uk.ac.ncl.daniel.baranowski.common.Constants.ROLE_CANDIDATE;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.ATTEMPT_ONGOING;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.ATTEMPT_PREFIX;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_GENERATE_TESTS;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_PREFIX;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.LOGIN_LOGIN;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.*;
 
 /**
  * This class is a tool that will be used by the CustomAccessDeniedHandler,

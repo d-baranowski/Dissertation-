@@ -1,17 +1,15 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
-import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.Mark;
-
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.Mark;
+import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
-import static uk.ac.ncl.daniel.baranowski.data.access.MarkDAO.ColumnNames.ACTUAL_MARK;
-import static uk.ac.ncl.daniel.baranowski.data.access.MarkDAO.ColumnNames.COMMENT;
-import static uk.ac.ncl.daniel.baranowski.data.access.MarkDAO.ColumnNames.MARKER_ID;
+import java.util.HashMap;
+import java.util.Map;
+
+import static uk.ac.ncl.daniel.baranowski.data.access.MarkDAO.ColumnNames.*;
 
 @DataAccessObject
 public class MarkDAO {

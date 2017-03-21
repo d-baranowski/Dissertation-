@@ -1,14 +1,14 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Answer;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @DataAccessObject
 public class AnswerDAO {

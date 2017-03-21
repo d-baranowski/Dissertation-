@@ -3,8 +3,8 @@ package uk.ac.ncl.daniel.baranowski.data.mappers;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Paper;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.PaperVersion;
 import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionModel;
 import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
+import uk.ac.ncl.daniel.baranowski.models.SectionModel;
 
 import java.util.Map;
 

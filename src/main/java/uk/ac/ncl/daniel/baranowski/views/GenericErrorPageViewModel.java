@@ -1,8 +1,8 @@
 package uk.ac.ncl.daniel.baranowski.views;
 
 
-import uk.ac.ncl.daniel.baranowski.common.Constants;
 import org.springframework.web.servlet.ModelAndView;
+import uk.ac.ncl.daniel.baranowski.common.Constants;
 
 public class GenericErrorPageViewModel {
     private final String errorMsg;

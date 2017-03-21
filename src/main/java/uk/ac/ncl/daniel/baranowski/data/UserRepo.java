@@ -3,18 +3,19 @@
  */
 package uk.ac.ncl.daniel.baranowski.data;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
 import uk.ac.ncl.daniel.baranowski.common.enums.Roles;
 import uk.ac.ncl.daniel.baranowski.data.access.UserDAO;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.User;
 import uk.ac.ncl.daniel.baranowski.models.UserModel;
 import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
 
 import static uk.ac.ncl.daniel.baranowski.data.mappers.UserModelMapper.mapUserModelFrom;
 import static uk.ac.ncl.daniel.baranowski.data.mappers.UserModelMapper.mapUserReferenceModelFrom;

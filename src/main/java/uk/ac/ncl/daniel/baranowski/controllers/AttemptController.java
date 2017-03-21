@@ -1,15 +1,9 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
-import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.InvalidIsolationLevelException;
 import org.springframework.validation.BindingResult;
@@ -20,7 +14,9 @@ import uk.ac.ncl.daniel.baranowski.common.Constants;
 import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
 import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
 import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
-import uk.ac.ncl.daniel.baranowski.exceptions.*;
+import uk.ac.ncl.daniel.baranowski.exceptions.InvalidAttemptStatusException;
+import uk.ac.ncl.daniel.baranowski.exceptions.InvalidUserStateException;
+import uk.ac.ncl.daniel.baranowski.exceptions.SessionAttributeMissingException;
 import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
@@ -30,8 +26,6 @@ import uk.ac.ncl.daniel.baranowski.service.ExamService;
 import uk.ac.ncl.daniel.baranowski.service.MarkingService;
 import uk.ac.ncl.daniel.baranowski.service.PaperService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;

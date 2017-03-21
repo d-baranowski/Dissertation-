@@ -1,18 +1,15 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
-import ch.qos.logback.classic.db.names.TableName;
-import org.springframework.dao.DataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersion;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.QuestionVersionEntry;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
-import java.util.*;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-
+import java.util.*;
 
 import static uk.ac.ncl.daniel.baranowski.data.access.QuestionVersionDAO.ColumnNames.*;
 import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.QUESTION_VERSION;

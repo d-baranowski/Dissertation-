@@ -1,17 +1,19 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Section;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
+
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import static uk.ac.ncl.daniel.baranowski.data.access.SectionDAO.ColumnNames.*;
+import static uk.ac.ncl.daniel.baranowski.data.access.SectionDAO.ColumnNames.ID;
+import static uk.ac.ncl.daniel.baranowski.data.access.SectionDAO.ColumnNames.REFERENCE_NAME;
 
 @DataAccessObject
 public class SectionDAO {

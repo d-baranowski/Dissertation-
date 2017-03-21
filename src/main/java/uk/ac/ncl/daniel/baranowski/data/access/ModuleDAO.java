@@ -5,7 +5,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Module;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
-import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;

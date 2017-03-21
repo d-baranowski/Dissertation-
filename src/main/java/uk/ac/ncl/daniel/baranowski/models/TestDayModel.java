@@ -2,9 +2,9 @@ package uk.ac.ncl.daniel.baranowski.models;
 
 import org.joda.time.LocalTime;
 
-import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 public class TestDayModel {
     private int id;

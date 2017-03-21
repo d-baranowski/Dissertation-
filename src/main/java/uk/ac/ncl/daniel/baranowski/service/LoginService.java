@@ -3,20 +3,21 @@ package uk.ac.ncl.daniel.baranowski.service;
  * Service to handle user logins.
  */
 
-import uk.ac.ncl.daniel.baranowski.common.enums.Roles;
-import uk.ac.ncl.daniel.baranowski.data.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 import uk.ac.ncl.daniel.baranowski.common.Constants;
 import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
+import uk.ac.ncl.daniel.baranowski.common.enums.Roles;
+import uk.ac.ncl.daniel.baranowski.data.UserRepo;
 import uk.ac.ncl.daniel.baranowski.models.UserModel;
+
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Service;
 
 import static uk.ac.ncl.daniel.baranowski.common.Constants.SESSION_LOGGED_IN;
 

@@ -1,12 +1,5 @@
 package uk.ac.ncl.daniel.baranowski.controllers.configuration;
 
-import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
-import uk.ac.ncl.daniel.baranowski.exceptions.*;
-import uk.ac.ncl.daniel.baranowski.views.GenericErrorPageViewModel;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.ui.Model;
@@ -17,10 +10,16 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
+import uk.ac.ncl.daniel.baranowski.exceptions.*;
+import uk.ac.ncl.daniel.baranowski.views.GenericErrorPageViewModel;
 
-import static uk.ac.ncl.daniel.baranowski.common.Constants.ROLE_ADMIN;
-import static uk.ac.ncl.daniel.baranowski.common.Constants.ROLE_AUTHOR;
-import static uk.ac.ncl.daniel.baranowski.common.Constants.ROLE_MARKER;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+
+import static uk.ac.ncl.daniel.baranowski.common.Constants.*;
 
 /**
  * This class is used to apply common settings across all of the controllers.

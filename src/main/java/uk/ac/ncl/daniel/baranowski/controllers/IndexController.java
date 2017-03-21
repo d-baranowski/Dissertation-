@@ -1,9 +1,9 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
-import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
 
 /**
  * IndexController

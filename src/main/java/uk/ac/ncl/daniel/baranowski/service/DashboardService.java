@@ -1,5 +1,13 @@
 package uk.ac.ncl.daniel.baranowski.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.FieldError;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.servlet.ModelAndView;
+import uk.ac.ncl.daniel.baranowski.common.Constants;
 import uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus;
 import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
 import uk.ac.ncl.daniel.baranowski.data.ModuleRepo;
@@ -11,25 +19,13 @@ import uk.ac.ncl.daniel.baranowski.models.AttemptReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.SignedAttemptReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
 import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
-import uk.ac.ncl.daniel.baranowski.common.Constants;
-import uk.ac.ncl.daniel.baranowski.views.FinishedTestTableViewModel;
-import uk.ac.ncl.daniel.baranowski.views.GenerateExamViewModel;
-import uk.ac.ncl.daniel.baranowski.views.MarkedTestTableViewModel;
-import uk.ac.ncl.daniel.baranowski.views.OngoingMarkingTableViewModel;
-import uk.ac.ncl.daniel.baranowski.views.OngoingTestTableViewModel;
+import uk.ac.ncl.daniel.baranowski.views.*;
+
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.FieldError;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpSession;
 
 import static uk.ac.ncl.daniel.baranowski.common.SessionUtility.getUserId;
 

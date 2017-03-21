@@ -1,10 +1,10 @@
 package uk.ac.ncl.daniel.baranowski.data.mappers;
 
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Section;
-import uk.ac.ncl.daniel.baranowski.models.SectionReferenceModel;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersion;
 import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
 import uk.ac.ncl.daniel.baranowski.models.SectionModel;
+import uk.ac.ncl.daniel.baranowski.models.SectionReferenceModel;
 
 import java.util.Map;
 

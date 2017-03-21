@@ -10,7 +10,9 @@ import uk.ac.ncl.daniel.baranowski.models.MarkModel;
 import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Marker
 public class ExpressionMarker implements AutoMarker {

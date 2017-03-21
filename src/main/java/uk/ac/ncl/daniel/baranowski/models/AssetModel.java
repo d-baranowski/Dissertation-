@@ -1,8 +1,9 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import org.apache.tomcat.util.codec.binary.Base64;
+
 import java.util.Arrays;
 import java.util.Objects;
-import org.apache.tomcat.util.codec.binary.Base64;
 
 public class AssetModel {
     private int id;

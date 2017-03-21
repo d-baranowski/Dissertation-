@@ -1,15 +1,18 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersion;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.SectionVersionEntry;
 import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
-import java.util.*;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static uk.ac.ncl.daniel.baranowski.data.access.SectionVersionDAO.ColumnNames.*;
 import static uk.ac.ncl.daniel.baranowski.data.access.TableNames.TEST_PAPER_SECTION_VERSION;

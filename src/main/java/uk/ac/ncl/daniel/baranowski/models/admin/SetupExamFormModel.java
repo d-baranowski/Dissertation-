@@ -8,8 +8,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.EXAM_SETUP_COMPLETE;
 import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.EXAM_PREFIX;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.EXAM_SETUP_COMPLETE;
 
 public final class SetupExamFormModel {
     private static final String ENDPOINT = EXAM_PREFIX + EXAM_SETUP_COMPLETE;

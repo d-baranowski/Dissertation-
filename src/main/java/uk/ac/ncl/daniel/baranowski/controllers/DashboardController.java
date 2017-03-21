@@ -1,9 +1,5 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
-import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
-import uk.ac.ncl.daniel.baranowski.service.DashboardService;
-import java.util.ArrayList;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -11,17 +7,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
+import uk.ac.ncl.daniel.baranowski.service.DashboardService;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.logging.Logger;
 
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_CURRENT_TESTS;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_GENERATE_TESTS;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_MARKED_TESTS;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_MARKING_ONGOING;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_PREFIX;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_SETTINGS;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_UNMARKED_TESTS;
-import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.DASHBOARD_VIEW_TESTS;
+import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.*;
 
 /**
  * This controller provides endpoints for Generate a Test and View Tests functionality of the application.

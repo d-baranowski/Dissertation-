@@ -1,7 +1,7 @@
 package uk.ac.ncl.daniel.baranowski.data.mappers;
 
-import uk.ac.ncl.daniel.baranowski.models.MarkModel;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.Mark;
+import uk.ac.ncl.daniel.baranowski.models.MarkModel;
 import uk.ac.ncl.daniel.baranowski.models.UserReferenceModel;
 
 public class MarkModelMapper {

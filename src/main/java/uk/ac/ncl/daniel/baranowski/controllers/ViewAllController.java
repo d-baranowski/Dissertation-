@@ -1,6 +1,5 @@
 package uk.ac.ncl.daniel.baranowski.controllers;
 
-import javafx.application.Application;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

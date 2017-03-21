@@ -1,16 +1,13 @@
 package uk.ac.ncl.daniel.baranowski.data.access;
 
-import uk.ac.ncl.daniel.baranowski.data.access.pojos.AnswerAsset;
-import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import uk.ac.ncl.daniel.baranowski.data.access.pojos.AnswerAsset;
+import uk.ac.ncl.daniel.baranowski.data.annotations.DataAccessObject;
 
-import static uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO.ColumnNames.BLOB;
-import static uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO.ColumnNames.QUESTION_ID;
-import static uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO.ColumnNames.QUESTION_VERSION_NO;
-import static uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO.ColumnNames.REFERENCE_NAME;
-import static uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO.ColumnNames.TEST_DAY_ENTRY_ID;
+import java.util.Map;
+
+import static uk.ac.ncl.daniel.baranowski.data.access.AnswerAssetDAO.ColumnNames.*;
 
 @DataAccessObject
 public class AnswerAssetDAO {

@@ -14,17 +14,10 @@ import tests.TestResources;
 import uk.ac.ncl.daniel.baranowski.DissertationApplication;
 import uk.ac.ncl.daniel.baranowski.data.AttemptRepo;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
-import uk.ac.ncl.daniel.baranowski.models.*;
+import uk.ac.ncl.daniel.baranowski.models.CandidateModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static tests.TestResources.TEST_ATTEMPT_MODEL_ID_1;
 import static tests.TestResources.USER_ALL;
-import static uk.ac.ncl.daniel.baranowski.common.enums.ExamStatus.FINISHED;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = DissertationApplication.class)

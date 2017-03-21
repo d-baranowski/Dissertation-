@@ -2,9 +2,9 @@ package uk.ac.ncl.daniel.baranowski.models.testattempt;
 
 import uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints;
 
-import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 public class SubmitAnswerFormModel {
     private static final String ENDPOINT = ControllerEndpoints.ATTEMPT_PREFIX + ControllerEndpoints.ATTEMPT_QUESTION_SUBMIT;
