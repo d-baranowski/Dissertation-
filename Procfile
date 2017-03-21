@@ -1,1 +1,1 @@
-web (ls build/distributions; unzip build/distributions/Dissertation-.zip; java -Dspring.profiles.active=heroku build/distributions/tinkerbell-0.0.1-SNAPSHOT.jar)
+web (ls build/distributions; unzip build/distributions/*.zip; ls build/distributions; java -Dspring.profiles.active=heroku build/distributions/tinkerbell-0.0.1-SNAPSHOT.jar)
