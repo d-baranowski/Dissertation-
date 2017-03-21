@@ -2,7 +2,6 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -10,7 +9,6 @@
 classes/*
 build/*
 jQueryPlugins/
-.gradle/
 bin/*
 src/test/selenium/report/*
 

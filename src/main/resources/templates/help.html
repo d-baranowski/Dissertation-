@@ -1,0 +1,83 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="/layouts/layout">
+<head th:fragment="head">
+    <title>Help</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/dashboard.css}"/>
+</head>
+<body>
+<div layout:fragment="content" class="contentWrapper container">
+    <div class="dashboardWindow" id="dashboardWindow">
+        <div id="limit">
+            <div id="loadedContent" class="minimum-height padded">
+                <h1>Setup Exam</h1>
+                <dl class="dl-horizontal">
+                    <dt><b>Exam Paper:</b><a class="anchorjs-link " href="#setup-exam-exam-paper" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The latest version of one of the existing exam papers.</dd>
+                    <dt><b>For Module:</b><a class="anchorjs-link " href="#setup-exam-for-module" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>A module of which your are a module leader. All students in this module will have to take this exam</dd>
+                    <dt><b>Date:</b><a class="anchorjs-link " href="#setup-exam-date" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Date on which the exam is supposed to take place.</dd>
+                    <dt><b>Start Time:</b><a class="anchorjs-link " href="#setup-start-time" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Start time of the exam. Exam will not start automatically. Privileged user will need to press start.</dd>
+                    <dt><b>Location:</b><a class="anchorjs-link " href="#setup-location" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Venue in which the exam will take place.</dd>
+                    <dt><b>Time allowed:</b><a class="anchorjs-link " href="#setup-time-allowed" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Amount of time the candidates will have to complete exam. 50% extra time will automatically be granted to candidates who require it. </dd>
+                </dl>
+                <h1>Create Question</h1>
+                <dl class="dl-horizontal">
+                    <dt><b>Language:</b><a class="anchorjs-link " href="#create-question-language" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>If a question is related to any programming language, this field should be populated.</dd>
+                    <dt><b>Reference Name:</b><a class="anchorjs-link " href="#create-question-reference-name" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The name of the question that will be visible when browsing content. It won't be presented to candidates taking the exam.</dd>
+                    <dt><b>Max Mark:</b><a class="anchorjs-link " href="#create-question-max-mark" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Maximum mark that can be awarded for answering this question correctly.</dd>
+                    <dt><b>Proposed Time Scale:</b><a class="anchorjs-link " href="#create-question-proposed-time-scale" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Time scale in minutes which will be used to calculate proposed time scale of a test paper.</dd>
+                    <dt><b>Type:</b><a class="anchorjs-link " href="#create-question-question-type" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Type of question:
+                        <ul>
+                            <li>Code: Gives the candidate a text area with simple code highlighting support. Does not support auto marking.</li>
+                            <li>Essay: Gives the candidate a text area to support long answers. Does not support auto marking.</li>
+                            <li>Multiple Choice: Gives a candidate a choice of possible answers. Auto marking wizard will look at max mark and match an upper case letter followed by ')' in question text. You can use the update button to refresh the wizard if either has changed. </li>
+                            <li>Drawing: Gives a candidate a simple computer graphics app. Does not support auto marking.</li>
+                            <li>Expression: Asks the candidate to fill in up to 9 text boxes. Auto marking wizard match a digit from 1 to 9 surrounded by '[[' ']]'. Then you'll be able to add any number of possible answers for each of the blanks. The wizard check boxes are used to generate regex. White Space Collapsing: Multiple white spaces are treated as single. Alternative Punctuation: punctuation in the answer can be treated as any other punctuation mark or single white space.
+                                Case Insensitive: answer will be case insensitive. Alternatively you can write your own regex by pressing customise regex button. </li>
+                        </ul>
+                    </dd>
+                    <dt><b>Question Text:</b><a class="anchorjs-link " href="#create-question-text" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The question text that will be displayed to the candidate. It uses a WYSWIG editor which supports styling. In order to enable code highlighting select a paragraph of text, press "Paragraph Format" and select code. Then press "Paragraph Style" and select code or sql. </dd>
+                    <dt><b>Marking Guide:</b><a class="anchorjs-link " href="#create-question-text" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The marking guide will be displayed to the marker to help them pick the correct mark. It uses a WYSWIG editor which supports styling. In order to enable code highlighting select a paragraph of text, press "Paragraph Format" and select code. Then press "Paragraph Style" and select code or sql. </dd>
+                </dl>
+                <h1>Create Section</h1>
+                <dl class="dl-horizontal">
+                    <dt><b>Reference Name:</b><a class="anchorjs-link " href="#create-section-reference-name" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The name of the question that will be visible when browsing content. It will also be presented to candidates taking the exam.</dd>
+                    <dt><b>Number of Questions to Answer:</b><a class="anchorjs-link " href="#create-section-number-of-questions" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Sometimes candidates won't be required to answer all questions presented in a section. Pick a number equal to number of questions candidates are required to answer in this section.</dd>
+                    <dt><b>Proposed Time to Complete:</b><a class="anchorjs-link " href="#create-section-proposed-time-scale" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Time scale in minutes which will be used to calculate proposed time scale of a test paper.</dd>
+                    <dt><b>Instructions Text:</b><a class="anchorjs-link " href="#create-section-instructions-text" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The section instructions text will be presented to candidates at the beginning of the section. It uses a WYSWIG editor which supports styling. In order to enable code highlighting select a paragraph of text, press "Paragraph Format" and select code. Then press "Paragraph Style" and select code or sql. </dd>
+                    <dt><b>Section Questions:</b><a class="anchorjs-link " href="#create-section-questions" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Questions in this section. Questions can be added to a section once it has been created. Questions can be reordered by dragging their number up or down.</dd>
+                </dl>
+                <h1>Create Paper</h1>
+                <dl class="dl-horizontal">
+                    <dt><b>Reference Name:</b><a class="anchorjs-link " href="#create-paper-reference-name" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The name of the paper that will be visible when browsing content. It will also be presented to candidates taking the exam.</dd>
+                    <dt><b>Proposed Time to Complete:</b><a class="anchorjs-link " href="#create-paper-proposed-time-scale" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Time scale in minutes which will be used to propose the time scale of the exam. The paper proposed time to complete can be overridden for each exam.</dd>
+                    <dt><b>Instructions Text:</b><a class="anchorjs-link " href="#create-paper-instructions-text" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>The section instructions text will be presented to candidates at the beginning of the section. It uses a WYSWIG editor which supports styling. In order to enable code highlighting select a paragraph of text, press "Paragraph Format" and select code. Then press "Paragraph Style" and select code or sql. </dd>
+                    <dt><b>Section Questions:</b><a class="anchorjs-link " href="#create-paper-sections" style="font-family: anchorjs-icons; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: normal; line-height: inherit; position: absolute; margin-left: -1em; padding-right: 0.5em;"></a></dt>
+                    <dd>Sections in this paper. Sections can be added to a paper once it has been created. Sections can be reordered by dragging their number up or down.</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

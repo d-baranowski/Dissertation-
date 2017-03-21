@@ -87,7 +87,7 @@ public class LoginService {
 
 
     private String validateFields(String usernameField, String passwordField) {
-        String invalidCharacters = "#£%$&{}/*<>$'\":@|=`\\!+ ";
+        String invalidCharacters = "#£%$&{}/*<>$'\":|=`\\!+ ";
 
         if ("".equals(usernameField) || "".equals(passwordField)) {
             return Constants.ERROR_EMPTY_FIELDS;

@@ -18,7 +18,7 @@ public class Constants {
     public static final String ERROR_LOGIN_INVALID_CHARS = "Your username or password contained invalid characters";
     public static final String ERROR_EMPTY_FIELDS = "Username or password field empty.";
 
-    public static final int MAX_USERNAME_LENGTH = 30;
+    public static final int MAX_USERNAME_LENGTH = 150;
 
     // Session Attribute Constants
     public static final String SESSION_USERNAME = "username";
