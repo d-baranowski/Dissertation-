@@ -50,8 +50,9 @@ public class TestDayModel {
         return date;
     }
 
-    public void setDate(String date) {
+    public TestDayModel setDate(String date) {
         this.date = date;
+        return this;
     }
 
     public String getLocation() {

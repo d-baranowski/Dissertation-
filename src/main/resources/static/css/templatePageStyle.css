@@ -29,6 +29,10 @@ body, html {
     background-color: #EEEEEE;
 }
 
+.center-text {
+    text-align: center;
+}
+
 /** Header Style **/
 .banner {
     position:relative;
@@ -214,4 +218,22 @@ a.disabled {
     padding: 25px;
     border-top: 5px solid #0069A0;
     border-bottom: 5px solid #0069A0;
+}
+
+.fa-my-brackets {
+    background-image: url("/images/brackets.svg");
+    height: 14px;
+    width: 14px;
+    background-size:100% 100%;
+    -o-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+
+.fa-my-letters {
+    background-image: url("/images/letters.svg");
+    height: 14px;
+    width: 14px;
+    background-size:100% 100%;
+    -o-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
 }

@@ -5,11 +5,23 @@
 var table = $('#viewListTable');
 var viewListDataTable;
 $(document).ready(function () {
-    viewListDataTable = table.DataTable( {
-        dom: 'Bfrtip',
-        select: true,
-        buttons: getButtons()
-    } );
+
+    colNo = table[0].rows[0].cells.length;
+    viewListDataTable = table.DataTable({
+        "columnDefs": [
+            {"orderable": false, "targets": colNo - 2},
+            {"orderable": false, "targets": colNo - 1},
+            {"searchable": false, "targets": colNo - 2},
+            {"searchable": false, "targets": colNo - 1}
+        ]
+    });
+
+    $(table).on('click', 'tr', function(event) {
+       var data = $(this).data('viewLink');
+       if (data) {
+           window.location.href = data;
+       }
+    });
 });
 
 function getButtons() {

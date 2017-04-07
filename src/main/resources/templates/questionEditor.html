@@ -27,8 +27,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/image_manager.min.css"/>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/line_breaker.min.css"/>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/quick_insert.min.css"/>
+
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/table.min.css"/>
@@ -111,13 +110,6 @@
                 <div class="js-hook-error-msg" id="error-type" ></div>
             </div>
 
-            <div id="form-group-correctAnswer" class="form-group hidden js-hook-form-status-correctAnswer js-answer-builder">
-                <label class="form-control-label" for="correctAnswer">Auto Marking Wizard</label>
-                <input class="form-control" type="hidden" th:field="*{correctAnswer}" th:value="*{correctAnswer}"/>
-                <div class="js-insert-auto-marking-wizard"></div>
-                <div class="js-hook-error-msg"  id="error-correctAnswer" ></div>
-            </div>
-
             <div id="form-group-text" class="form-group js-hook-form-status-text">
                 <label class="form-control-label" for="froala-for-question-text">Question Text</label>
                 <textarea id="froala-for-question-text" class="js-hook-froala" data-paste-to="js-hook-update-text"></textarea><br/>
@@ -130,6 +122,14 @@
                 <textarea id="froala-for-marking-guide" class="js-hook-froala" data-paste-to="js-hook-update-marking-guide"></textarea><br/>
                 <div class="js-hook-error-msg" id="error-markingGuide" ></div>
             </div>
+
+            <div id="form-group-correctAnswer" class="form-group hidden js-hook-form-status-correctAnswer js-answer-builder">
+                <label class="form-control-label" for="correctAnswer">Auto Marking Wizard</label>
+                <input class="form-control" type="hidden" th:field="*{correctAnswer}" th:value="*{correctAnswer}"/>
+                <div class="js-insert-auto-marking-wizard"></div>
+                <div class="js-hook-error-msg"  id="error-correctAnswer" ></div>
+            </div>
+
             <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Question'"/>
         </form>
         <button class="btn btn-success hidden js-create-new-version">Create new version</button>
@@ -182,8 +182,6 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/paragraph_format.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/paragraph_style.min.js"></script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/quick_insert.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/plugins/quote.min.js"></script>
     <script type="text/javascript"

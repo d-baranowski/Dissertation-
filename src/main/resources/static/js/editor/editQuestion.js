@@ -115,30 +115,11 @@ function bindCreationForm() {
     })
 }
 
+
 function enableFroalaEditor() {
     var editors = $('.js-hook-froala');
-    editors.froalaEditor({
-        paragraphStyles: {
-            'prettyprint lang-sql': 'SQL',
-            'prettyprint': 'Code'
-        },
-        fontSizeDefaultSelection: '18',
-        htmlRemoveTags: ['script','video','source','input','form','picture'],
-        htmlAllowedTags: ["a", "abbr", "address", "area", "article", "aside", "b", "base", "bdi", "bdo", "blockquote", "br", "button", "caption", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "i", "img", "ins", "kbd", "keygen", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem", "meter", "nav", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "queue", "rp", "rt", "ruby", "s", "samp", "style", "section", "select", "small", "source", "span", "strike", "strong", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "wbr"],
-        toolbarButtons: ['bold', 'italic', 'underline', 'specialCharacters', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
-        pluginsEnabled: null
-    });
-
-    editors.on('froalaEditor.commands.after', function (e, editor, cmd, param1, param2) {
-        if (param1 == 'prettyprint') {
-            PR.prettyPrint();
-        }
-    });
-
-    editors.on('froalaEditor.contentChanged', function (e, editor) {
-        var html = editor.html.get();
-        $('.'+$(this).data('paste-to')).val(html);
-    });
+    enableFroalaOnTarget($(editors[0]), ['|' ,'add-blank', 'add-letter']);
+    enableFroalaOnTarget($(editors[1]));
 
     $('#froala-for-question-text').froalaEditor('html.set', $('#text').val());
     $('#froala-for-marking-guide').froalaEditor('html.set', $('#markingGuide').val());
@@ -191,12 +172,6 @@ function handleAnswerBuilder() {
     });
 }
 
-function getPatternFromText(pattern) {
-    var questionText = $('#text').val();
-    var result = questionText.match(pattern);
-    return result ? result : [];
-}
-
 function getCurrentJson() {
     var current = $('#correctAnswer').val();
     if (current.length > 0) {
@@ -224,7 +199,9 @@ function buildMultipleChoiceQuestionWizard() {
     for (i = 0; i < maxScore; i++) {
         tableBody +="<tr><td>"+i+"</td><td>";
         var patt = /[A-Z]\)/g;
-        getPatternFromText(patt).forEach(function (val) {
+
+        var listOfLetters = getPatternFromText(patt);
+        listOfLetters.forEach(function (val) {
             function getChecked() {
                 var current = $('#correctAnswer').val();
                 if (current.length > 0) {
@@ -240,8 +217,7 @@ function buildMultipleChoiceQuestionWizard() {
             tableBody += " <b>" + val + "</b> <input class='js-build-score' data-score='" + i + "' data-letter-required='" + val + "' type='checkbox' " + getChecked() + ">"
         });
 
-
-        tableBody += "</td></tr>";
+        tableBody += (listOfLetters.length == 0 ? 'Please press "Add multiple-choice option" on question text editor toolbar.' : '') + "</td></tr>";
     }
 
     var wizardHtmlTemplate =
@@ -250,10 +226,10 @@ function buildMultipleChoiceQuestionWizard() {
         "       <tr><td>Score</td><td>Answers</td></tr>   " +
         "   </thead>" +
         "   <tbody>" +
-        tableBody +
+        tableBody + (maxScore > 0 ? '' : "Max mark is equal to 0. Increase the mark to enable the wizard. Press 'Refresh Wizard' when ready. ") +
         "   </tbody>" +
         "</table>" +
-        "<button id='js-rebuild-wizard' class='btn btn-primary'>Update</button>";
+        "<button id='js-rebuild-wizard' class='btn btn-primary'>Refresh Wizard</button>";
 
     $('.js-insert-auto-marking-wizard').html(wizardHtmlTemplate);
 
@@ -282,6 +258,12 @@ function buildMultipleChoiceQuestionWizard() {
         $('.js-insert-auto-marking-wizard').html('');
         buildMultipleChoiceQuestionWizard();
     });
+
+    $('#add-letter-1').unbind();
+    $('#add-letter-1').click(function () {
+        $('.js-insert-auto-marking-wizard').html('');
+        buildMultipleChoiceQuestionWizard();
+    })
 }
 
 function buildExpressionQuestionWizard() {
@@ -359,8 +341,8 @@ function buildExpressionQuestionWizard() {
                         '<button class="btn btn-primary js-click-to-customize">Customize Regex</button>' +
                     '</div>' +
                     '<div class="btn-group-vertical" role="group" aria-label="Regex-controls">' +
-                        '<button class="btn btn-warning js-click-to-update">Update</button>' +
-                        '<button class="btn btn-danger js-click-to-remove">Remove</button>' +
+                        '<button class="btn btn-warning js-click-to-update">Update Blanks</button>' +
+                        '<button class="btn btn-danger js-click-to-remove">Remove Answer</button>' +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -520,28 +502,58 @@ function buildExpressionQuestionWizard() {
 
             var customizeRegex = $(row).find('.js-click-to-customize');
             $(customizeRegex).unbind();
-            $(customizeRegex).click(function (e) {
+
+            var initialFunction = function (e) {
+                var state = {};
                 e.preventDefault();
                 $(row).find('.js-enable-regex').removeClass('hidden');
-                $(answer).prop('checked', false);
+                state['answer'] = $(answer).val();
                 $(answer).attr("disabled", true);
                 $(answer).addClass('disabled');
+                state['whiteSpace'] = $(whiteSpace).prop('checked');
                 $(whiteSpace).prop('checked', false);
                 $(whiteSpace).attr("disabled", true);
                 $(whiteSpace).addClass('disabled');
+                state['caseInsensitive'] = $(caseInsensitive).prop('checked');
                 $(caseInsensitive).prop('checked', false);
                 $(caseInsensitive).attr("disabled", true);
                 $(caseInsensitive).addClass('disabled');
+                state['punctuation'] = $(punctuation).prop('checked');
                 $(punctuation).prop('checked', false);
                 $(punctuation).attr("disabled", true);
                 $(punctuation).addClass('disabled');
                 appendToCorrectAnswer(row);
                 var regex = $(row).find('[name=regex]');
+                state['regex'] = $(regex).val();
                 $(regex).unbind();
                 $(regex).keyup(function () {
                     appendToCorrectAnswer(row);
-                })
-            });
+                });
+                $(customizeRegex).text('Restore Wizard');
+                $(customizeRegex).unbind();
+                $(customizeRegex).click(function (e) {
+                    e.preventDefault();
+                    $(row).find('.js-enable-regex').addClass('hidden');
+                    $(answer).val(state['answer']);
+                    $(answer).attr("disabled", false);
+                    $(answer).removeClass('disabled');
+                    $(whiteSpace).prop('checked', state['whiteSpace']);
+                    $(whiteSpace).attr("disabled", false);
+                    $(whiteSpace).removeClass('disabled');
+                    $(caseInsensitive).prop('checked', state['caseInsensitive']);
+                    $(caseInsensitive).attr("disabled", false);
+                    $(caseInsensitive).removeClass('disabled');
+                    $(punctuation).prop('checked', state['punctuation']);
+                    $(punctuation).attr("disabled", false);
+                    $(punctuation).removeClass('disabled');
+                    $(regex).val(state['regex']);
+                    $(customizeRegex).text('Customize Regex');
+                    $(customizeRegex).unbind();
+                    $(customizeRegex).click(initialFunction);
+                });
+            };
+
+            $(customizeRegex).click(initialFunction);
 
             var removeBtn = $(row).find('.js-click-to-remove');
             $(removeBtn).unbind();
@@ -549,6 +561,10 @@ function buildExpressionQuestionWizard() {
                 e.preventDefault();
                 removeRowFromAnswer(row);
                 $(row).remove();
+                if ($('.js-click-to-remove').size() == 0) {
+                    $('.js-insert-auto-marking-wizard').append(getRegexBuilderRow());
+                    bindJavaScript();
+                }
             });
 
             var updateBtn = $(row).find('.js-click-to-update');
@@ -562,6 +578,10 @@ function buildExpressionQuestionWizard() {
                 $(currentBlanks).replaceWith(getRegexBuilderRow.getSelectForBlanks(blanksId))
             });
 
+
+            $('#add-blank-1').click(function () {
+                $(updateBtn).click()
+            });
         });
     }
 

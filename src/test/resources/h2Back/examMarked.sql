@@ -1,19 +1,19 @@
 ;             
-CREATE USER IF NOT EXISTS SA SALT 'b026851f7ff6bcde' HASH '7abd67706796de48805e35332eafb05e88dc0cbe76b4bede74db3ea79bb7d264' ADMIN;           
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_8A7F51B7_86E5_4239_92CD_3ED538FECAA5 START WITH 11 BELONGS_TO_TABLE;   
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_5939AFC6_FE14_4215_A418_43D62A5BD6AA START WITH 54 BELONGS_TO_TABLE;   
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_12D9E87E_6CB3_49FC_A1BB_63D4D3E9397D START WITH 3 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_8410E7A3_4DA9_4276_B30A_37A167416CE9 START WITH 5 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_B9997E3B_2F38_4037_A27A_15103515F46C START WITH 9 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_255E1EEF_BA7F_4835_BEBD_E4411D7E3F1C START WITH 6 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_63187D30_3EEA_4863_AD3A_BC4A26F14926 START WITH 51 BELONGS_TO_TABLE;   
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_FD646D0B_DF8F_45A4_8192_8E9B814E7A7B START WITH 3 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_5A9465A6_AECC_448C_979E_28F4F2AF1D6A START WITH 6 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_7E3D0B59_A19D_49F1_8700_62D97C7D9670 START WITH 61 BELONGS_TO_TABLE;   
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_011C9FD1_8469_4657_B043_00F9E16BCFF5 START WITH 6 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_22F42A3E_4B3F_4BA1_B0B0_1A104D8BF0E1 START WITH 2 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_40A87901_DB18_4131_BF2A_32A1999C9428 START WITH 6 BELONGS_TO_TABLE;    
-CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_672F85EF_F02B_4CA9_B292_692F091F5AFD START WITH 1 BELONGS_TO_TABLE;    
+CREATE USER IF NOT EXISTS SA SALT 'd5774b022969f2a4' HASH 'b19f7dc001afc32d8afa7ef7920c212a024f42e1b3664d4f0a084cb68dbfee8d' ADMIN;           
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_0B7763E7_FAB6_4F2B_B684_8D30B69F6A53 START WITH 5 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_C5444238_E7F2_4E52_BF48_74AD35E942C6 START WITH 6 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_64A7C6C2_F539_48EA_A7AE_B3F6744EEA06 START WITH 61 BELONGS_TO_TABLE;   
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_8ED8FF53_65EF_4388_B431_AB0008B08121 START WITH 6 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_24771E43_9666_4415_AD83_0A84B12DBB9F START WITH 9 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_166FBC84_4B9D_4EF4_A7BD_E24DFD844CBF START WITH 6 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_2C4905F2_79EA_4276_BE79_68218C5A1309 START WITH 6 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_32C924FD_AB78_4E56_907B_8AA95696C06E START WITH 51 BELONGS_TO_TABLE;   
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_E7FFE720_142F_4C46_A68A_E466FC8F5AC7 START WITH 3 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_022F9411_88DF_44F9_BAA7_BFC7F3743837 START WITH 1 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_AA0DB760_AB04_47B0_B951_E35D2D95C960 START WITH 11 BELONGS_TO_TABLE;   
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_4BFAC72F_0719_4D2B_999A_8899DD707485 START WITH 54 BELONGS_TO_TABLE;   
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_BB74F513_C26F_4A59_932C_10AA7622CE1D START WITH 3 BELONGS_TO_TABLE;    
+CREATE SEQUENCE PUBLIC.SYSTEM_SEQUENCE_A0CC8B8D_A971_4430_BB10_7292BE11C7A9 START WITH 2 BELONGS_TO_TABLE;    
 CREATE MEMORY TABLE PUBLIC.USER(
     _ID VARCHAR(36) NOT NULL,
     NAME VARCHAR(50) NOT NULL,
@@ -69,7 +69,7 @@ INSERT INTO PUBLIC.USERROLE(USERID, ROLEID) VALUES
 ('045d785e-cc44-4e7e-89b8-2df505c0b72a', 'Author'),
 ('045d785e-cc44-4e7e-89b8-2df505c0b72a', 'ModuleLeader'); 
 CREATE MEMORY TABLE PUBLIC.MODULE(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_8A7F51B7_86E5_4239_92CD_3ED538FECAA5) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_8A7F51B7_86E5_4239_92CD_3ED538FECAA5,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_AA0DB760_AB04_47B0_B951_E35D2D95C960) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_AA0DB760_AB04_47B0_B951_E35D2D95C960,
     MODULECODE VARCHAR(6) NOT NULL,
     REFERENCENAME VARCHAR(50) NOT NULL
 );          
@@ -87,7 +87,7 @@ INSERT INTO PUBLIC.MODULE(_ID, MODULECODE, REFERENCENAME) VALUES
 (9, 'CSC009', 'Sample Module 9'),
 (10, 'CSC010', 'Sample Module 10');              
 CREATE MEMORY TABLE PUBLIC.MODULELEADER(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_011C9FD1_8469_4657_B043_00F9E16BCFF5) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_011C9FD1_8469_4657_B043_00F9E16BCFF5,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_8ED8FF53_65EF_4388_B431_AB0008B08121) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_8ED8FF53_65EF_4388_B431_AB0008B08121,
     USERID VARCHAR(36) NOT NULL,
     MODULEID INT NOT NULL
 );    
@@ -100,7 +100,7 @@ INSERT INTO PUBLIC.MODULELEADER(_ID, USERID, MODULEID) VALUES
 (4, '1be448ff-1a2e-456f-9594-4042e7ef6ab2', 4),
 (5, '045d785e-cc44-4e7e-89b8-2df505c0b72a', 5);            
 CREATE MEMORY TABLE PUBLIC.TESTDAY(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_12D9E87E_6CB3_49FC_A1BB_63D4D3E9397D) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_12D9E87E_6CB3_49FC_A1BB_63D4D3E9397D,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_E7FFE720_142F_4C46_A68A_E466FC8F5AC7) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_E7FFE720_142F_4C46_A68A_E466FC8F5AC7,
     DATE VARCHAR(50) NOT NULL,
     STARTTIME VARCHAR(5),
     ENDTIME VARCHAR(5),
@@ -111,9 +111,9 @@ ALTER TABLE PUBLIC.TESTDAY ADD CONSTRAINT PUBLIC.CONSTRAINT_D PRIMARY KEY(_ID);
 -- 2 +/- SELECT COUNT(*) FROM PUBLIC.TESTDAY; 
 INSERT INTO PUBLIC.TESTDAY(_ID, DATE, STARTTIME, ENDTIME, ENDTIMEWITHEXTRATIME, LOCATION) VALUES
 (1, '22/02/2017', '12:00', '14:30', '16:00', 'Leeds Office'),
-(2, '17/03/2017', '19:07', '19:08', '19:08', 'Sample Location');             
+(2, '05/04/2017', '17:08', '17:09', '17:09', 'Sample Location');             
 CREATE MEMORY TABLE PUBLIC.CANDIDATE(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_5A9465A6_AECC_448C_979E_28F4F2AF1D6A) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_5A9465A6_AECC_448C_979E_28F4F2AF1D6A,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_166FBC84_4B9D_4EF4_A7BD_E24DFD844CBF) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_166FBC84_4B9D_4EF4_A7BD_E24DFD844CBF,
     NAME VARCHAR(50) NOT NULL,
     SURNAME VARCHAR(50) NOT NULL,
     HASEXTRATIME BOOL NOT NULL
@@ -127,7 +127,7 @@ INSERT INTO PUBLIC.CANDIDATE(_ID, NAME, SURNAME, HASEXTRATIME) VALUES
 (4, 'Vance', 'Bernie', FALSE),
 (5, 'Franciszek', 'Geglula', FALSE);      
 CREATE MEMORY TABLE PUBLIC.TESTPAPER(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_8410E7A3_4DA9_4276_B30A_37A167416CE9) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_8410E7A3_4DA9_4276_B30A_37A167416CE9,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_0B7763E7_FAB6_4F2B_B684_8D30B69F6A53) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_0B7763E7_FAB6_4F2B_B684_8D30B69F6A53,
     REFERENCENAME VARCHAR(150) NOT NULL,
     TIMEALLOWED INT
 );     
@@ -152,7 +152,7 @@ INSERT INTO PUBLIC.TESTPAPERVERSION(AUTHORID, TESTPAPERID, INSTRUCTIONSTEXT, VER
 ('fba6a561-8999-4b19-9c57-232895d024c6', 3, 'Sample multiple choice', 1),
 ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 4, '<p>This test paper has been generated by selenium</p>', 1);      
 CREATE MEMORY TABLE PUBLIC.TESTPAPERSECTION(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_B9997E3B_2F38_4037_A27A_15103515F46C) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_B9997E3B_2F38_4037_A27A_15103515F46C,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_24771E43_9666_4415_AD83_0A84B12DBB9F) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_24771E43_9666_4415_AD83_0A84B12DBB9F,
     REFERENCENAME VARCHAR(150)
 );             
 ALTER TABLE PUBLIC.TESTPAPERSECTION ADD CONSTRAINT PUBLIC.CONSTRAINT_23 PRIMARY KEY(_ID);     
@@ -214,7 +214,7 @@ INSERT INTO PUBLIC.QUESTIONTYPE(REFERENCENAME) VALUES
 ('Drawing'),
 ('Expression');             
 CREATE MEMORY TABLE PUBLIC.QUESTION(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_5939AFC6_FE14_4215_A418_43D62A5BD6AA) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_5939AFC6_FE14_4215_A418_43D62A5BD6AA,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_4BFAC72F_0719_4D2B_999A_8899DD707485) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_4BFAC72F_0719_4D2B_999A_8899DD707485,
     LANGUAGE VARCHAR(150),
     DIFFICULTY INT NOT NULL,
     REFERENCENAME VARCHAR(150),
@@ -322,18 +322,18 @@ INSERT INTO PUBLIC.QUESTIONVERSION(VERSIONNUMBER, QUESTIONID, TEXT, CORRECTANSWE
 (1, 42, '<p><em><u>This question was designed by selenium</u></em></p>', '', '<p>Sample marking guide.</p>', 15),
 (1, 43, '<p><em><u>This question was designed by selenium</u></em></p>', '', '<p>Sample marking guide.</p>', 25),
 (1, 47, '<p><em><u>This question was designed by selenium</u></em></p>', '', '<p>Sample marking guide.</p>', 10),
-(1, 44, '<p><em><u>This question was designed by selenium</u></em></p><p><em><u>A) This answer gives you 1 Mark</u></em></p><p><em><u>B) This answer gives you 2 Marks</u></em></p><p><em><u>C)This answer gives you 0 marksD)This answer gives you 4 marks.</u></em></p>', '{"0":"\\b([C])\\b","1":"\\b([A])\\b","2":"\\b([B])\\b","4":"\\b([D])\\b"}', '<p>Sample marking guide.</p>', 1),
-(1, 45, STRINGDECODE('<p><em><u>This question was designed by selenium</u></em></p><p><em><u>A)\u00a0</u></em></p><p><em><u>B)</u></em></p><p><em><u>C) D) Each answer gives you one mark.</u></em></p>'), '{"1":"\\b([A])\\b","2":"\\b([A,B]),(?!\\1)([A,B])\\b","3":"\\b([A,B,C]),(?!\\1)([A,B,C]),(?!\\1)([A,B,C])\\b","4":"\\b([A,B,C,D]),(?!\\1)([A,B,C,D]),(?!\\1)([A,B,C,D]),(?!\\1)([A,B,C,D])\\b"}', '<p>Sample marking guide.</p>', 1),
-(1, 46, STRINGDECODE('<p><em><u>This question was designed by selenium</u></em></p><p><em><u>A)\u00a0</u></em></p><p><em><u>B) a and b gives you 1 Mark\u00a0</u></em></p><p><em><u>C) D) c and d give you 2 marks, a and d give you 3 marks, b and c give you 4 marks\u00a0</u></em></p>'), '{"1":"\\b([A,B]),(?!\\1)([A,B])\\b","2":"\\b([C,D]),(?!\\1)([C,D])\\b","3":"\\b([A,D]),(?!\\1)([A,D])\\b","4":"\\b([B,C]),(?!\\1)([B,C])\\b"}', '<p>Sample marking guide.</p>', 1),
-(1, 48, '<p><em><u>This questions will test simple answer matching[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"Java","regex":"Java","mark":"50","options":{}},{"blankNo":"[[1]]","answer":"C#","regex":"C#","mark":"1","options":{}}]', '<p>Correct answer is Java, but C# gives one mark</p>', 10),
-(1, 49, '<p><em><u>This questions will test white space collapsing[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"Hello World","regex":"Hello\\s+World","mark":"50","options":{}},{"blankNo":"[[1]]","answer":"Hi Planet","regex":"Hi\\s+Planet","mark":"1","options":{}}]', '<p>Correct answer is Hello World, but Hi Planet gives one mark</p>', 10),
-(1, 50, '<p><em><u>This questions will test alternative punctuation[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"S.W.A.T","regex":"S[,.:;''|\\s]{1}W[,.:;''|\\s]{1}A[,.:;''|\\s]{1}T","mark":"50","options":{}},{"blankNo":"[[1]]","answer":"F.E.A.R","regex":"F[,.:;''|\\s]{1}E[,.:;''|\\s]{1}A[,.:;''|\\s]{1}R","mark":"1","options":{}}]', '<p>Correct answer is S.W.A.T, but F.E.A.R gives one mark</p>', 10),
-(1, 51, '<p><em><u>This questions will test case insensitivity[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"GoOGle","regex":"(?i)(GoOGle)","mark":"50","options":{}},{"blankNo":"[[1]]","answer":"TwiTtEr","regex":"(?i)(TwiTtEr)","mark":"1","options":{}}]', '<p>Correct answer is GoOGle but TwiTtEr gives one mark</p>', 10);           
+(1, 44, '<p><em><u>This question was designed by selenium</u></em><br /><em><u>A) This answer gives you 1 Mark</u></em><br /><em><u>B) This answer gives you 2 Marks</u></em><br /><em><u>C)This answer gives you 0 marksD)This answer gives you 4 marks.</u></em></p>', '{"0":"\\b([C])\\b","1":"\\b([A])\\b","2":"\\b([B])\\b","4":"\\b([D])\\b"}', '<p>Sample marking guide.</p>', 1),
+(1, 45, STRINGDECODE('<p><em><u>This question was designed by selenium</u></em><br /><em><u>A)\u00a0</u></em><br /><em><u>B)</u></em><br /><em><u>C) D) Each answer gives you one mark.</u></em></p>'), '{"1":"\\b([A])\\b","2":"\\b([A,B]),(?!\\1)([A,B])\\b","3":"\\b([A,B,C]),(?!\\1)([A,B,C]),(?!\\1)([A,B,C])\\b","4":"\\b([A,B,C,D]),(?!\\1)([A,B,C,D]),(?!\\1)([A,B,C,D]),(?!\\1)([A,B,C,D])\\b"}', '<p>Sample marking guide.</p>', 1),
+(1, 46, STRINGDECODE('<p><em><u>This question was designed by selenium</u></em><br /><em><u>A)\u00a0</u></em><br /><em><u>B) a and b gives you 1 Mark\u00a0</u></em><br /><em><u>C) D) c and d give you 2 marks, a and d give you 3 marks, b and c give you 4 marks\u00a0</u></em></p>'), '{"1":"\\b([A,B]),(?!\\1)([A,B])\\b","2":"\\b([C,D]),(?!\\1)([C,D])\\b","3":"\\b([A,D]),(?!\\1)([A,D])\\b","4":"\\b([B,C]),(?!\\1)([B,C])\\b"}', '<p>Sample marking guide.</p>', 1),
+(1, 48, '<p><em><u>This questions will test simple answer matching[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"Java","regex":"Java","mark":"50","options":{"space":false,"punctuation":false,"case":false}},{"blankNo":"[[1]]","answer":"C#","regex":"C#","mark":"1","options":{"space":false,"punctuation":false,"case":false}}]', '<p>Correct answer is Java, but C# gives one mark</p>', 10),
+(1, 49, '<p><em><u>This questions will test white space collapsing[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"Hello World","regex":"Hello\\s+World","mark":"50","options":{"space":true,"punctuation":false,"case":false}},{"blankNo":"[[1]]","answer":"Hi Planet","regex":"Hi\\s+Planet","mark":"1","options":{"space":true,"punctuation":false,"case":false}}]', '<p>Correct answer is Hello World, but Hi Planet gives one mark</p>', 10),
+(1, 50, '<p><em><u>This questions will test alternative punctuation[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"S.W.A.T","regex":"S[,.:;''|\\s]{1}W[,.:;''|\\s]{1}A[,.:;''|\\s]{1}T","mark":"50","options":{"space":false,"punctuation":true,"case":false}},{"blankNo":"[[1]]","answer":"F.E.A.R","regex":"F[,.:;''|\\s]{1}E[,.:;''|\\s]{1}A[,.:;''|\\s]{1}R","mark":"1","options":{"space":false,"punctuation":true,"case":false}}]', '<p>Correct answer is S.W.A.T, but F.E.A.R gives one mark</p>', 10);  
 INSERT INTO PUBLIC.QUESTIONVERSION(VERSIONNUMBER, QUESTIONID, TEXT, CORRECTANSWER, MARKINGGUIDE, TIMESCALE) VALUES
-(1, 52, '<p><em><u>This questions will test all options[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"F.E.A.R iS A GoOD   Game","regex":"(?i)(F[,.:;''|\\s]{1}E[,.:;''|\\s]{1}A[,.:;''|\\s]{1}R\\s+iS\\s+A\\s+GoOD\\s+Game)","mark":"50","options":{}},{"blankNo":"[[1]]","answer":"Random","regex":"Random","mark":"1","options":{}}]', STRINGDECODE('<p>Correct answer is F.E.A.R iS A GoOD \u00a0 Game but Random gives one mark</p>'), 10),
-(1, 53, '<p><em><u>This questions will test custom regex[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"","regex":"((?:[a-z0-9!#$%&''*+/=?^_`{|}-]+(?:\\.[a-z0-9!#$%&''*+/=?^_`{|}-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\]))|cheatSheet","mark":"50","options":{}}]', '<p>Correct answer is any valid email but cheatSheet gives one mark</p>', 10);   
+(1, 51, '<p><em><u>This questions will test case insensitivity[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"GoOGle","regex":"(?i)(GoOGle)","mark":"50","options":{"space":false,"punctuation":false,"case":true}},{"blankNo":"[[1]]","answer":"TwiTtEr","regex":"(?i)(TwiTtEr)","mark":"1","options":{"space":false,"punctuation":false,"case":true}}]', '<p>Correct answer is GoOGle but TwiTtEr gives one mark</p>', 10),
+(1, 52, '<p><em><u>This questions will test all options[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"F.E.A.R iS A GoOD   Game","regex":"(?i)(F[,.:;''|\\s]{1}E[,.:;''|\\s]{1}A[,.:;''|\\s]{1}R\\s+iS\\s+A\\s+GoOD\\s+Game)","mark":"50","options":{"space":true,"punctuation":true,"case":true}},{"blankNo":"[[1]]","answer":"Random","regex":"Random","mark":"1","options":{"space":false,"punctuation":false,"case":false}}]', STRINGDECODE('<p>Correct answer is F.E.A.R iS A GoOD \u00a0 Game but Random gives one mark</p>'), 10),
+(1, 53, '<p><em><u>This questions will test custom regex[[1]]</u></em></p>', '[null,{"blankNo":"[[1]]","answer":"","regex":"((?:[a-z0-9!#$%&''*+/=?^_`{|}-]+(?:\\.[a-z0-9!#$%&''*+/=?^_`{|}-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\]))|cheatSheet","mark":"50","options":{"space":false,"punctuation":false,"case":false}}]', '<p>Correct answer is any valid email but cheatSheet gives one mark</p>', 10);    
 CREATE MEMORY TABLE PUBLIC.QUESTIONVERSIONASSET(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_672F85EF_F02B_4CA9_B292_692F091F5AFD) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_672F85EF_F02B_4CA9_B292_692F091F5AFD,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_022F9411_88DF_44F9_BAA7_BFC7F3743837) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_022F9411_88DF_44F9_BAA7_BFC7F3743837,
     QUESTIONVERSIONNUMBER INT NOT NULL,
     QUESTIONID INT NOT NULL,
     REFERENCENAME VARCHAR(104),
@@ -393,7 +393,7 @@ INSERT INTO PUBLIC.QUESTIONVERSIONENTRY(TESTPAPERSECTIONVERSIONNO, TESTPAPERSECT
 (1, 8, 1, 52, 11),
 (1, 8, 1, 53, 12);  
 CREATE MEMORY TABLE PUBLIC.TERMSANDCONDITIONS(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_22F42A3E_4B3F_4BA1_B0B0_1A104D8BF0E1) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_22F42A3E_4B3F_4BA1_B0B0_1A104D8BF0E1,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_A0CC8B8D_A971_4430_BB10_7292BE11C7A9) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_A0CC8B8D_A971_4430_BB10_7292BE11C7A9,
     TERMSANDCONDITIONS VARCHAR(10000)
 );    
 ALTER TABLE PUBLIC.TERMSANDCONDITIONS ADD CONSTRAINT PUBLIC.CONSTRAINT_19 PRIMARY KEY(_ID);   
@@ -401,7 +401,7 @@ ALTER TABLE PUBLIC.TERMSANDCONDITIONS ADD CONSTRAINT PUBLIC.CONSTRAINT_19 PRIMAR
 INSERT INTO PUBLIC.TERMSANDCONDITIONS(_ID, TERMSANDCONDITIONS) VALUES
 (1, 'Terms sample');   
 CREATE MEMORY TABLE PUBLIC.EXAM(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_FD646D0B_DF8F_45A4_8192_8E9B814E7A7B) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_FD646D0B_DF8F_45A4_8192_8E9B814E7A7B,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_BB74F513_C26F_4A59_932C_10AA7622CE1D) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_BB74F513_C26F_4A59_932C_10AA7622CE1D,
     TESTPAPERVERSIONNO INT,
     TESTPAPERID INT,
     STATUS VARCHAR(20),
@@ -416,7 +416,7 @@ INSERT INTO PUBLIC.EXAM(_ID, TESTPAPERVERSIONNO, TESTPAPERID, STATUS, MARKINGLOC
 (1, 1, 1, 'Finished', NULL, 1, 1, 1),
 (2, 1, 4, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 1, 2, 1);            
 CREATE MEMORY TABLE PUBLIC.TESTDAYENTRY(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_255E1EEF_BA7F_4835_BEBD_E4411D7E3F1C) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_255E1EEF_BA7F_4835_BEBD_E4411D7E3F1C,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_2C4905F2_79EA_4276_BE79_68218C5A1309) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_2C4905F2_79EA_4276_BE79_68218C5A1309,
     CANDIDATEID INT NOT NULL,
     TESTDAYENTRYSTATUS VARCHAR(36),
     MARKINGLOCK VARCHAR(36),
@@ -428,13 +428,13 @@ CREATE MEMORY TABLE PUBLIC.TESTDAYENTRY(
 ALTER TABLE PUBLIC.TESTDAYENTRY ADD CONSTRAINT PUBLIC.CONSTRAINT_2447E PRIMARY KEY(_ID);      
 -- 5 +/- SELECT COUNT(*) FROM PUBLIC.TESTDAYENTRY;            
 INSERT INTO PUBLIC.TESTDAYENTRY(_ID, CANDIDATEID, TESTDAYENTRYSTATUS, MARKINGLOCK, FINALMARK, EXAMID, LOGIN, PASSWORD) VALUES
-(1, 1, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 342, 2, 'NnUyZ', 'uIIxG'),
-(2, 2, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 339, 2, 'AAYyd', 'fwkXt'),
-(3, 3, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 90, 2, 'rlRMx', '6qOcP'),
-(4, 4, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 87, 2, '6j7u6', '2I2Pf'),
-(5, 5, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 10, 2, 'X16nS', 'nUFqY');           
+(1, 1, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 342, 2, 'XSRIN', '5cBf3'),
+(2, 2, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 339, 2, 'fVy9D', 'JtXbO'),
+(3, 3, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 90, 2, 'nwP6Q', 'Bp7aU'),
+(4, 4, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 87, 2, 'tmBFd', 'FRWuD'),
+(5, 5, 'Marked', '9f4db0ac-b18a-4777-8b04-b72a0eeccf5d', 10, 2, 'ydurv', 'lxEIm');           
 CREATE MEMORY TABLE PUBLIC.CANDIDATEMODULE(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_63187D30_3EEA_4863_AD3A_BC4A26F14926) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_63187D30_3EEA_4863_AD3A_BC4A26F14926,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_32C924FD_AB78_4E56_907B_8AA95696C06E) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_32C924FD_AB78_4E56_907B_8AA95696C06E,
     MODULEID INT,
     CANDIDATEID INT
 );      
@@ -492,7 +492,7 @@ INSERT INTO PUBLIC.CANDIDATEMODULE(_ID, MODULEID, CANDIDATEID) VALUES
 (49, 9, 5),
 (50, 10, 5);   
 CREATE MEMORY TABLE PUBLIC.MARK(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_7E3D0B59_A19D_49F1_8700_62D97C7D9670) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_7E3D0B59_A19D_49F1_8700_62D97C7D9670,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_64A7C6C2_F539_48EA_A7AE_B3F6744EEA06) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_64A7C6C2_F539_48EA_A7AE_B3F6744EEA06,
     MARKERID VARCHAR(36),
     COMMENT VARCHAR(5000),
     ACTUALMARK INT
@@ -631,7 +631,7 @@ INSERT INTO PUBLIC.ANSWER(QUESTIONID, QUESTIONVERSIONNUMBER, TESTDAYENTRYID, TEX
 (47, 1, 4, 'ImValid', 59),
 (47, 1, 5, 'ImValid', 60); 
 CREATE MEMORY TABLE PUBLIC.ANSWERASSET(
-    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_40A87901_DB18_4131_BF2A_32A1999C9428) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_40A87901_DB18_4131_BF2A_32A1999C9428,
+    _ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_C5444238_E7F2_4E52_BF48_74AD35E942C6) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_C5444238_E7F2_4E52_BF48_74AD35E942C6,
     QUESTIONID INT NOT NULL,
     QUESTIONVERSIONNUMBER INT NOT NULL,
     TESTDAYENTRYID INT NOT NULL,
