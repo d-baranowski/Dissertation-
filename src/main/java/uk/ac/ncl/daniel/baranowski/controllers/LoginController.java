@@ -75,19 +75,7 @@ public class LoginController {
 
         if ("success".equals(response[0])) {
             session.setMaxInactiveInterval(60 * 60 * 2);
-            String mainAuthority = loginService.getMainAuthority(session);
-
-           switch (mainAuthority) {
-               case "Admin": {
-                   return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.DASHBOARD_PREFIX + ControllerEndpoints.DASHBOARD_GENERATE_TESTS;
-               }
-               case "Marker": {
-                   return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.DASHBOARD_PREFIX + ControllerEndpoints.DASHBOARD_VIEW_TESTS;
-               }
-               default: { //NOSONAR I want this to be explicit
-                   return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.DASHBOARD_PREFIX + ControllerEndpoints.DASHBOARD_GENERATE_TESTS;
-               }
-            }
+            return ControllerEndpoints.REDIRECT_PREFIX + ControllerEndpoints.DASHBOARD_PREFIX + "/create";
         }
 
         session.invalidate();

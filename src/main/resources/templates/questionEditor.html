@@ -32,7 +32,8 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/table.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/video.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
 
 
     <!-- Include Code Mirror CSS. -->
@@ -66,74 +67,102 @@
             <input class="form-control" type="hidden" th:field="*{versionNo}"/>
             <input class="js-hook-update-marking-guide" type="hidden" th:field="*{markingGuide}"/>
 
-            <div id="form-group-id" class="form-group js-hook-form-status-id">
+            <div id="form-group-id" class="form-group js-hook-form-status-id hidden">
                 <label class="form-control-label" for="id">Id:</label>
                 <input class="form-control" type="text" readonly="false" th:field="*{id}"/>
-                <div class="js-hook-error-msg" id="error-id"></div>
+                <div class="js-hook-error-msg text-danger" id="error-id"></div>
             </div>
 
             <div id="form-group-language" class="form-group js-hook-form-status">
-                <label class="form-control-label" for="language">Language:</label>
+                <label class="form-control-label" for="language">Programming Language: <span
+                        data-help="CREATE_QUESTION_LANGUAGE"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <input class="form-control" type="text" th:field="*{language}" th:value="*{language}"/>
-                <div class="js-hook-error-msg" id="error-language"></div>
+                <div class="js-hook-error-msg text-danger" id="error-language"></div>
             </div>
 
             <div id="form-group-referenceName" class="form-group js-hook-form-status-referenceName">
-                <label class="form-control-label" for="referenceName">Reference Name: </label>
+                <label class="form-control-label" for="referenceName">Reference Name: <span
+                        data-help="CREATE_QUESTION_REFERENCE_NAME"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <input class="form-control" type="text" th:field="*{referenceName}" th:value="*{referenceName}"/>
-                <div class="js-hook-error-msg" id="error-referenceName"></div>
+                <div class="js-hook-error-msg text-danger" id="error-referenceName"></div>
             </div>
 
             <div id="form-group-difficulty" class="form-group js-hook-form-status-difficulty">
-                <label class="form-control-label" for="difficulty">Max Mark: </label>
-                <input class="form-control" min="0" max="100" type="number" th:field="*{difficulty}" th:value="*{difficulty}"/>
-                <div class="js-hook-error-msg" id="error-difficulty"></div>
+                <label class="form-control-label" for="difficulty">Max Mark: <span data-help="CREATE_QUESTION_MAX_MARK"
+                                                                                   class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
+                <input class="form-control" min="0" max="100" type="number" th:field="*{difficulty}"
+                       th:value="*{difficulty}"/>
+                <div class="js-hook-error-msg text-danger" id="error-difficulty"></div>
             </div>
 
             <div id="form-group-timeScale" class="form-group js-hook-form-status-timeScale">
-                <label class="form-control-label" for="timeScale">Proposed Time Scale: </label>
+                <label class="form-control-label" for="timeScale">Proposed Time Scale (In Minutes): <span
+                        data-help="CREATE_QUESTION_PROPOSED_TIME_SCALE"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <input class="form-control" min="0" type="number" th:field="*{timeScale}" th:value="*{timeScale}"/>
-                <div class="js-hook-error-msg" id="error-timeScale"></div>
+                <div class="js-hook-error-msg text-danger" id="error-timeScale"></div>
             </div>
 
             <div id="form-group-type" class="form-group js-hook-form-status-type">
-                <label class="form-control-label" for="type">Type</label>
-                <p>Type:
-                    <select class="form-control formItem js-change-type-hook">
-                        <option th:attr="selected=*{type == 'Code'}" th:value="Code" th:text="Code"></option>
-                        <option th:attr="selected=*{type == 'Essay'}" th:value="Essay" th:text="Essay"></option>
-                        <option th:attr="selected=*{type == 'Multiple Choice'}" th:value="'Multiple Choice'" th:text="'Multiple Choice'"></option>
-                        <option th:attr="selected=*{type == 'Drawing'}" th:value="Drawing" th:text="Drawing"></option>
-                        <option th:attr="selected=*{type == 'Expression'}" th:value="Expression" th:text="Expression"></option>
-                    </select></p><br/>
-                <input th:field="*{type}" type="hidden" />
-                <div class="js-hook-error-msg" id="error-type" ></div>
+                <label class="form-control-label" for="type">Question Type: <span id="help-for-question-type" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
+
+                <div class="form-inline">
+                    <select id="question-type-select" data-help-holder="help-for-question-type"
+                            class="form-control formItem js-change-type-hook">
+                        <option data-help="CREATE_QUESTION_TYPE_CODE" th:attr="selected=*{type == 'Code'}" th:value="Code"
+                                th:text="Code"></option>
+                        <option data-help="CREATE_QUESTION_TYPE_ESSAY" th:attr="selected=*{type == 'Essay'}"
+                                th:value="Essay" th:text="Essay"></option>
+                        <option data-help="CREATE_QUESTION_MULTIPLE_CHOICE" th:attr="selected=*{type == 'Multiple Choice'}"
+                                th:value="'Multiple Choice'" th:text="'Multiple Choice'"></option>
+                        <option data-help="CREATE_QUESTION_DRAWING" th:attr="selected=*{type == 'Drawing'}"
+                                th:value="Drawing" th:text="Drawing"></option>
+                        <option data-help="CREATE_QUESTION_EXPRESISON" th:attr="selected=*{type == 'Expression'}"
+                                th:value="Expression" th:text="Expression"></option>
+                    </select>
+                    &nbsp;&nbsp;&nbsp;<button id="show-example-btn" style="diplay: inline" class="btn btn-warning form-control">Put Example In Question Text</button>
+                </div>
+                <br/>
+                <input th:field="*{type}" type="hidden"/>
+                <div class="js-hook-error-msg text-danger" id="error-type"></div>
             </div>
 
             <div id="form-group-text" class="form-group js-hook-form-status-text">
-                <label class="form-control-label" for="froala-for-question-text">Question Text</label>
-                <textarea id="froala-for-question-text" class="js-hook-froala" data-paste-to="js-hook-update-text"></textarea><br/>
-                <div class="js-hook-error-msg" id="error-text"></div>
+                <label class="form-control-label" for="froala-for-question-text">Question Text: <span
+                        data-help="CREATE_QUESTION_QUESTION_TEXT"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
+                <textarea id="froala-for-question-text" class="js-hook-froala"
+                          data-paste-to="js-hook-update-text"></textarea><br/>
+                <div class="js-hook-error-msg text-danger" id="error-text"></div>
             </div>
 
             <div id="form-group-markingGuide" class="form-group js-hook-form-status-markingGuide">
-                <label class="form-control-label" for="froala-for-marking-guide">Marking Guide</label>
+                <label class="form-control-label" for="froala-for-marking-guide">Marking Guide: <span
+                        data-help="CREATE_QUESTION_MARKING_GUIDE"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <br/>
-                <textarea id="froala-for-marking-guide" class="js-hook-froala" data-paste-to="js-hook-update-marking-guide"></textarea><br/>
-                <div class="js-hook-error-msg" id="error-markingGuide" ></div>
+                <textarea id="froala-for-marking-guide" class="js-hook-froala"
+                          data-paste-to="js-hook-update-marking-guide"></textarea><br/>
+                <div class="js-hook-error-msg text-danger" id="error-markingGuide"></div>
             </div>
 
-            <div id="form-group-correctAnswer" class="form-group hidden js-hook-form-status-correctAnswer js-answer-builder">
-                <label class="form-control-label" for="correctAnswer">Auto Marking Wizard</label>
+            <div id="form-group-correctAnswer"
+                 class="form-group hidden js-hook-form-status-correctAnswer js-answer-builder">
+                <label class="form-control-label" for="correctAnswer">Auto Marking Wizard <span
+                        id="marking-wizard-label"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <input class="form-control" type="hidden" th:field="*{correctAnswer}" th:value="*{correctAnswer}"/>
                 <div class="js-insert-auto-marking-wizard"></div>
-                <div class="js-hook-error-msg"  id="error-correctAnswer" ></div>
+                <div class="js-hook-error-msg text-danger" id="error-correctAnswer"></div>
             </div>
 
             <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Question'"/>
         </form>
         <button class="btn btn-success hidden js-create-new-version">Create new version</button>
-        <a target="_blank" class="btn btn-primary hidden js-show-when-updating js-preview" href="/test-paper/view-question/{questionId}/{questionVer}">View</a>
+        <a target="_blank" class="btn btn-primary hidden js-show-when-updating js-preview"
+           href="/test-paper/view-question/{questionId}/{questionVer}">View</a>
         <button class="btn  js-show-when-updating  btn-success hidden js-save">Save Progress</button>
     </div>
 </div>

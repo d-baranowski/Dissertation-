@@ -5,9 +5,11 @@
           th:object="${formBody}"
     >
         <div>
-            <label class="formLabel" th:for="${#ids.next('formBody.paperId')}">Exam Paper:</label><br/>
+            <label class="formLabel" th:for="${#ids.next('formBody.paperId')}">Paper:
+                <span data-help="SETUP_EXAM_PAPER"
+                      class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
             <select onchange="updateTimeAllowed(getSelectedPaperTimeAllowed())" id="pickPaperSelect"
-                    class="form-control formItem" th:field="${formBody.paperId}">
+                    class="form-control formItem js-search-select" th:field="${formBody.paperId}">
                 <option th:each="paperRef : ${paperReferences}"
                         th:value="${paperRef.id}"
                         th:text="${paperRef.referenceName}"
@@ -17,8 +19,9 @@
         </div>
 
         <div>
-            <label class="formLabel" th:for="${#ids.next('formBody.paperId')}">For Module:</label><br/>
-            <select class="form-control formItem" th:field="${formBody.moduleId}">
+            <label class="formLabel" th:for="${#ids.next('formBody.paperId')}">Module: <span
+                    data-help="SETUP_EXAM_MODULE" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
+            <select class="form-control formItem js-search-select" th:field="${formBody.moduleId}">
                 <option th:each="module : ${modules}"
                         th:value="${module.getId()}"
                         th:text="${module.getReferenceName()}">
@@ -27,25 +30,29 @@
         </div>
 
         <div>
-            <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Date: </label><br/>
+            <label  class="formLabel" th:for="${#ids.next('formBody.day.date')}">Date: <span
+                    data-help="SETUP_EXAM_DATE" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
             <input type="text" id="datepicker" format="dd/mm/yyyy" class="form-control formItem"
                    th:field="${formBody.day.date}"/>
             <p th:if="${daydateError != null}" th:class="text-error" th:text="${daydateError}"></p>
         </div>
 
         <div>
-            <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Start Time: </label><br/>
+            <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Start Time: <span
+                    data-help="SETUP_EXAM_START_TIME"  class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
             <input type="time" class="form-control formItem" th:field="${formBody.day.startTime}"/>
             <p th:if="${daydateError != null}" th:class="text-error" th:text="${daydateError}"></p>
         </div>
 
         <div>
-            <label class="formLabel" th:for="${#ids.next('formBody.day.location')}">Location: </label><br/>
+            <label  class="formLabel" th:for="${#ids.next('formBody.day.location')}">Location: <span
+                    data-help="SETUP_EXAM_LOCATION" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
             <input type="text" class="form-control formItem" th:field="${formBody.day.location}"/>
             <p th:if="${daylocationError != null}" th:class="text-error" th:text="${daylocationError}"></p>
         </div>
 
-        <label class="formLabel" th:for="${#ids.next('formBody.timeAllowed')}">Time Allowed:</label><br/>
+        <label class="formLabel" th:for="${#ids.next('formBody.timeAllowed')}">Time Allowed (Minutes): <span
+                data-help="SETUP_EXAM_TIME_ALLOWED" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
         <input id="timeAllowedSelect" class="form-control formItem" type="number" th:field="${formBody.timeAllowed}"
                min="10" max="1000" step="10"/>
         <br/>

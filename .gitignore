@@ -11,6 +11,7 @@ build/*
 jQueryPlugins/
 bin/*
 src/test/selenium/report/*
+.gradle
 
 # Eclipse #
 .classpath

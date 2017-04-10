@@ -50,6 +50,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-devtools')
 
     compile('org.springframework.session:spring-session:1.2.0.RC1')
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
     runtime("mysql:mysql-connector-java")
     compile('nl.jqno.equalsverifier:equalsverifier:2.0.2')
     // https://mvnrepository.com/artifact/joda-time/joda-time

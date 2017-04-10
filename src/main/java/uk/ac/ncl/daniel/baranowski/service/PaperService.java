@@ -1,5 +1,6 @@
 package uk.ac.ncl.daniel.baranowski.service;
 
+import org.joda.time.DateTime;
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ncl.daniel.baranowski.data.PaperRepo;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
 import uk.ac.ncl.daniel.baranowski.exceptions.*;
-import uk.ac.ncl.daniel.baranowski.models.PaperModel;
-import uk.ac.ncl.daniel.baranowski.models.PaperReferenceModel;
-import uk.ac.ncl.daniel.baranowski.models.QuestionModel;
-import uk.ac.ncl.daniel.baranowski.models.SectionModel;
+import uk.ac.ncl.daniel.baranowski.models.*;
 import uk.ac.ncl.daniel.baranowski.models.api.*;
+import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
+import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
 import uk.ac.ncl.daniel.baranowski.views.TestLibraryViewModel;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -67,13 +68,35 @@ public class PaperService {
         }
     }
 
-    public ModelAndView getViewQuestion(int questionId, int questionVersion) {
+    public ModelAndView getViewQuestion(int questionId, int questionVersion, String type) {
         ModelAndView mav = new ModelAndView("viewQuestion");
         try {
             QuestionModel model =repo.getQuestionById(questionId, questionVersion);
             mav.addObject("currentQuestion",model);
             mav.addObject("sectionKey", model.getReferenceName());
-            mav.addObject("questionKey", "Version: " + model.getVersionNo());
+            mav.addObject("questionKey", model.getVersionNo());
+
+            mav.addObject("sectionKey", 1);
+            mav.addObject("answers", new AnswersMapModel());
+
+            if (type.equals("InMarking")) {
+                mav.addObject("previewMessage", "This is how the question looks like when marker sees it.");
+                mav.addObject("buttonAddress", "/test-paper/view-question/" + questionId + "/" + questionVersion);
+                mav.addObject("buttonText", "View as Candidate");
+
+                mav.addObject("inMarking", true);
+                mav.addObject("paper", new PaperReferenceModel().setReferenceName("Sample Paper Reference Name"));
+                mav.addObject("submitMarkForm", new SubmitMarkFormModel());
+                mav.addObject("candidateName", "Sample Candidate Name");
+                mav.addObject("takenOnDate", new DateTime().toString("dd/MM/yy"));
+            } else {
+                mav.addObject("answerable", true);
+
+                mav.addObject("submitAnswerForm", new SubmitAnswerFormModel());
+                mav.addObject("previewMessage", "This is how the question looks like when candidates see it when taking the exam.");
+                mav.addObject("buttonText", "View as Marker");
+                mav.addObject("buttonAddress", "/test-paper/view-question/" + questionId + "/" + questionVersion + "?type=InMarking");
+            }
 
         } catch (AccessException e) {
             final String errorMsg = "Failed to get question with id " + questionId + " and version " + questionVersion;

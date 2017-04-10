@@ -1,0 +1,40 @@
+<th:block th:fragment="style">
+    <style>
+        .thumbnailLink .caption {
+            text-align: center;
+        }
+
+        .thumbnailLink .thumbnail:hover {
+            -webkit-box-shadow: 0px 0px 5px 2px rgba(0,105,160,0.8);
+            -moz-box-shadow: 0px 0px 5px 2px rgba(0,105,160,0.8);
+            box-shadow: 0px 0px 5px 2px rgba(0,105,160,0.8);
+
+            cursor: pointer;
+        }
+
+        .thumbnailLink .caption span.glyphicon {
+            font-size: x-large;
+        }
+    </style>
+</th:block>
+
+<th:block th:fragment="content (image, label, description, link)">
+    <div class="col-sm-6 col-md-4 thumbnailLink">
+        <div class="thumbnail" th:attr="data-link=${link}">
+            <img th:src="${image}"/>
+            <div class="caption">
+                <h3 th:text="${label}"></h3>
+                <p th:text="${description}"></p>
+                <span class="glyphicon glyphicon-hand-up"></span>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="script">
+    <script>
+        $('.thumbnailLink .thumbnail').click(function () {
+            window.location.href = $(this).data('link')
+        });
+    </script>
+</th:block>

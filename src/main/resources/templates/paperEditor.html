@@ -33,12 +33,14 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/table.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/video.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
 
     <!-- Include Code Mirror CSS. -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css"/>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.css"/>
 
     <link th:href="@{/css/editor/editor.css}" rel="stylesheet"/>
 </head>
@@ -59,7 +61,7 @@
 <div layout:fragment="content" id="content" class="contentWrapper container">
     <div class="col-md-12 style-main-content">
 
-        <form class="js-ajax-form" role="form" method="post"
+        <form id="create-paper-form" class="js-ajax-form" role="form" method="post"
               th:action="${ENDPOINT}"
               th:object="${formObject}"
               th:attr="data-update-endpoint=${UPDATE_ENDPOINT}">
@@ -67,37 +69,43 @@
             <input class="js-hook-update-instructionsText" type="hidden" th:field="*{instructionsText}"/>
             <input class="form-control" type="hidden" th:field="*{versionNo}"/>
 
-            <div id="form-group-id" class="form-group js-hook-form-id">
+            <div id="form-group-id" class="form-group js-hook-form-id hidden">
                 <label class="form-control-label" for="id">Id: </label>
                 <input type="number" class="form-control" readonly="false" th:field="*{id}" th:value="*{id}"/>
             </div>
 
-            <div id="form-group-language" class="form-group js-hook-form-referenceName">
-                <label class="form-control-label" for="referenceName">Reference Name:</label>
+            <div id="form-group-referenceName" class="form-group js-hook-form-referenceName">
+                <label class="form-control-label" for="referenceName">Reference
+                    Name: <span
+                            data-help="CREATE_PAPER_REFERENCE_NAME"
+                            class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <input class="form-control" type="text" th:field="*{referenceName}"/>
-                <div class="js-hook-error-msg" id="error-language"></div>
+                <div class="js-hook-error-msg text-danger" id="error-referenceName"></div>
             </div>
 
             <div id="form-group-difficulty" class="form-group js-hook-form-timeAllowed">
-                <label class="form-control-label" for="timeAllowed">Proposed Time to Complete: </label>
+                <label  class="form-control-label" for="timeAllowed">Proposed
+                    Time to Complete: <span
+                            data-help="CREATE_PAPER_TIME_TO_COMPLETE"
+                            class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <input class="form-control" min="1" max="99" type="number" th:field="*{timeAllowed}"/>
-                <div class="js-hook-error-msg" id="error-difficulty"></div>
+                <div class="js-hook-error-msg text-danger" id="error-difficulty"></div>
             </div>
 
-            <div id="form-group-text" class="form-group js-hook-form-status-text">
-                <label class="form-control-label" for="froala-for-question-text">Instructions Text</label>
-                <textarea id="froala-for-instructions-text" class="js-hook-froala" data-paste-to="js-hook-update-instructionsText"></textarea><br/>
-                <div class="js-hook-error-msg" id="error-text"></div>
+            <div id="form-group-instructionsText" class="form-group js-hook-form-status-text">
+                <label  class="form-control-label"
+                       for="froala-for-question-text">Instructions Text: <span
+                        data-help="CREATE_PAPER_INSTRUCTIONS_TEXT"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
+                <textarea id="froala-for-instructions-text" class="js-hook-froala"
+                          data-paste-to="js-hook-update-instructionsText"></textarea><br/>
+                <div class="js-hook-error-msg text-danger" id="error-instructionsText"></div>
             </div>
-
-            <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Paper'"/>
         </form>
 
-        <button class="btn btn-success hidden js-create-new-version">Create new version</button>
-        <a target="_blank" class="btn btn-primary hidden js-show-when-updating js-preview" href="/test-paper/view-section/{sectionId}/{sectionVer}">View</a>
-        <button class="btn  js-show-when-updating  btn-success hidden js-save">Save Progress</button>
-
-        <h4 class="hidden js-unhide-me">Available Sections</h4>
+        <h4  class="hidden js-unhide-me">Available Sections: <span
+                data-help="CREATE_PAPER_AVAILABLE_SECTIONS"
+                class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></h4>
         <table id="availableSections" style="width: 100%" class="hidden hover stripe">
             <thead>
             <tr>
@@ -117,7 +125,8 @@
                 <td th:text="${section.getReferenceName()}"></td>
                 <td th:text="${section.getNoOfQuestionsToAnswer()}"></td>
                 <td th:text="${section.getTimeScale()}"></td>
-                <td><a th:href="${'/test-paper/view-section/' + section.getId() + '/' + section.getVersionNumber()}">View</a></td>
+                <td><a target="_blank" th:href="${'/test-paper/view-section/' + section.getId() + '/' + section.getVersionNumber()}">View</a>
+                </td>
                 <td><a class="js-add-section-handle"
                        th:attr="data-paper-id=${formObject.getId()},
                            data-section-id=${section.getId()},
@@ -128,7 +137,9 @@
             </tbody>
         </table>
 
-        <h4>Paper Sections</h4>
+        <h4 >Paper Sections: <span
+                data-help="CREATE_PAPER_SECTION_QUESTIONS"
+                class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></h4>
         <table id="paperSections" style="width: 100%" class="hover stripe">
             <thead>
             <tr>
@@ -143,19 +154,28 @@
             </tr>
             </thead>
             <tbody th:with="paperSectionsTableList=${formObject.sections}">
-                <tr th:each="sectionNumber : ${paperSectionsTableList.keySet()}" xmlns:th="http://www.thymeleaf.org">
-                    <td class="move-me" th:text="${sectionNumber}"></td>
-                    <td th:text="${paperSectionsTableList.get(sectionNumber).getId()}"></td>
-                    <td th:text="${paperSectionsTableList.get(sectionNumber).getVersionNumber()}"></td>
-                    <td th:text="${paperSectionsTableList.get(sectionNumber).getReferenceName()}"></td>
-                    <td th:text="${paperSectionsTableList.get(sectionNumber).getNoOfQuestionsToAnswer()}"></td>
-                    <td th:text="${paperSectionsTableList.get(sectionNumber).getTimeScale()}"></td>
-                    <td><a target="_blank"
-                           th:href="${'/test-paper/view-section/' +  paperSectionsTableList.get(sectionNumber).getId() + '/' + paperSectionsTableList.get(sectionNumber).getVersionNumber()}">View</a></td>
-                    <td><a class="js-remove-section-handle" th:href="${REMOVE_ENDPOINT}">Remove</a></td>
-                </tr>
+            <tr th:each="sectionNumber : ${paperSectionsTableList.keySet()}" xmlns:th="http://www.thymeleaf.org">
+                <td class="move-me"><th:block th:text="${sectionNumber}"></th:block><span
+                        data-help="CREATE_PAPER_PAPER_SECTION_ORDER"
+                        class="glyphicon glyphicon-align-right glyphicon-resize-vertical"></span></td>
+                <td th:text="${paperSectionsTableList.get(sectionNumber).getId()}"></td>
+                <td th:text="${paperSectionsTableList.get(sectionNumber).getVersionNumber()}"></td>
+                <td th:text="${paperSectionsTableList.get(sectionNumber).getReferenceName()}"></td>
+                <td th:text="${paperSectionsTableList.get(sectionNumber).getNoOfQuestionsToAnswer()}"></td>
+                <td th:text="${paperSectionsTableList.get(sectionNumber).getTimeScale()}"></td>
+                <td><a target="_blank"
+                       th:href="${'/test-paper/view-section/' +  paperSectionsTableList.get(sectionNumber).getId() + '/' + paperSectionsTableList.get(sectionNumber).getVersionNumber()}">View</a>
+                </td>
+                <td><a class="js-remove-section-handle" th:href="${REMOVE_ENDPOINT}">Remove</a></td>
+            </tr>
             </tbody>
         </table>
+
+        <button class="btn btn-success hidden js-create-new-version">Create new version</button>
+        <a target="_blank" class="btn btn-primary hidden js-show-when-updating js-preview"
+           href="/test-paper/view-section/{sectionId}/{sectionVer}">View</a>
+        <button class="btn  js-show-when-updating  btn-success hidden js-save">Save Progress</button>
+        <input th:form="create-paper-form" type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Paper'"/>
     </div>
 </div>
 <th:block layout:fragment="script">
@@ -221,7 +241,8 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
 
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.js"></script>
     <script th:src="@{~/js/editor/editPaper.js}"></script>
 </th:block>
 </body>

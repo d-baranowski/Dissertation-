@@ -24,7 +24,7 @@ public class RoleRouter {
         if (roles.size() == 1 && roles.get(0).getAuthority().equals(ROLE_CANDIDATE)) {
             return ATTEMPT_PREFIX + ATTEMPT_ONGOING;
         } else if (!roles.isEmpty()) {
-            return DASHBOARD_PREFIX + DASHBOARD_GENERATE_TESTS;
+            return DASHBOARD_PREFIX + "/create";
         } else {
             session.invalidate();
             return LOGIN_LOGIN;

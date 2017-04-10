@@ -52,8 +52,9 @@ public class PaperReferenceModel {
         return referenceName;
     }
 
-    public void setReferenceName(String referenceName) {
+    public PaperReferenceModel setReferenceName(String referenceName) {
         this.referenceName = referenceName;
+        return  this;
     }
 
     @ColumnGetter(name = "Time Allowed", order = 3)

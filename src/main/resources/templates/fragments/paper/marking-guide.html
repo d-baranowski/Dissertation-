@@ -2,6 +2,8 @@
     <div class="correct-answer-section collapsible-element" xmlns:th="http://www.w3.org/1999/xhtml">
         <div class="title collapsed" data-toggle="collapse" th:attr="data-target=${'#' + #ids.next('panel-answer-section')}">
             <a>Marking Guide:</a>
+            <span class="glyphicon glyphicon-align-right glyphicon-triangle-bottom"></span>
+            <span class="glyphicon glyphicon-align-right glyphicon-triangle-top"></span>
         </div>
 
         <div class="panel-answer-section collapsible collapse" th:id="${#ids.seq('panel-answer-section')}">

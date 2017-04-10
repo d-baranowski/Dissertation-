@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="/layouts/layout">
 <head lang="en">
-    <title>Start Exam</title>
+    <title>Start Attempt</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="startPageStyle.css" th:href="@{~/css/startPageStyle.css}"/>
 </head>
@@ -31,10 +31,9 @@
                       th:object="${model}">
 
                     <input type="hidden" th:field="${model.id}" th:value="${model.id}"/>
-                    <button type="submit" id="buttonID" class="btn btn-primary">Start Test</button>
+                    <button type="submit" id="buttonID" class="btn btn-primary">Start Attempt</button>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
