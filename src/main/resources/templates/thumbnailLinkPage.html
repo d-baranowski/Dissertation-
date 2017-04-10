@@ -13,7 +13,7 @@
             <div id="loadedContent" class="minimum-height padded">
                 <h1 th:text="${title}"></h1>
                 <th:block th:each="columns : ${thumbnailLinkRows}">
-                    <th:block th:replace="/fragments/components/thumbnailLinkRow::content(${columns})" />
+                    <th:block th:replace="/fragments/components/thumbnailLinkRow::content(${columns}, ${title})" />
                 </th:block>
             </div>
         </div>

@@ -71,7 +71,7 @@ public class SimpleTest {
     public void A1viewingQuestionsWorksCorrectly() throws Exception {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-questions-link"));
+        click(By.id("BrowseQuestions"));
 
         findInTable("Id", "1").click();
 
@@ -90,7 +90,7 @@ public class SimpleTest {
     public void A2viewingSectionsWorksCorrectly() throws Exception {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-sections-link"));
+        click(By.id("BrowseSections"));
 
         findInTable("Id", "2").click();
 
@@ -115,7 +115,7 @@ public class SimpleTest {
     public void A3viewingPapersWorksCorrectly() {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-papers-link"));
+        click(By.id("BrowsePapers"));
 
         findInTable("Id", "2").click();
 
@@ -166,7 +166,7 @@ public class SimpleTest {
     public void A4viewingExamsWorksCorrectly() {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-exams-link"));
+        click(By.id("BrowseExams"));
 
         findInTable("id", "1").click();
 
@@ -1259,7 +1259,7 @@ public class SimpleTest {
 
     private void createQuestion(String language, String referenceName, String difficulty, String timeScale, String questionText, String markingGuide, String questionType) {
         click(By.id("nav-edit"));
-        click(By.linkText("Questions"));
+        click(By.id("CreateQuestions"));
         driver.findElement(By.id("language")).sendKeys(language);
         driver.findElement(By.id("referenceName")).sendKeys(referenceName);
         clearType(By.id("difficulty"), difficulty);

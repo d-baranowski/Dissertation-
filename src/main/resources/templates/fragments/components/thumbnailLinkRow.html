@@ -36,14 +36,15 @@
     <th:block th:replace="/fragments/components/thumbnailLink::style" />
 </th:block>
 
-<div th:fragment="content (row)">
+<div th:fragment="content (row, idPrefix)">
     <div class="row equal-height">
         <th:block th:each="col : ${row.columns}">
             <th:block th:replace="/fragments/components/thumbnailLink::content(
                     ${col.image},
                     ${col.label},
                     ${col.description},
-                    ${col.link})"
+                    ${col.link},
+                    ${idPrefix + col.label})"
             />
         </th:block>
     </div>

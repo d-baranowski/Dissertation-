@@ -106,7 +106,7 @@ public class DashboardController {
         mav.addObject("dashboardContent","browse");
         mav.addObject("title", "Browse");
 
-        mav.addObject("thumbnailLinkRows", Arrays.asList(
+        mav.addObject("thumbnailLinkRows", Collections.singletonList(
                 new ThumbnailLinkRow()
                     .add(new ThumbnailLink(
                             "/images/createQuestionsThumbnail.png",
@@ -126,20 +126,18 @@ public class DashboardController {
                             "Sections are arranged into exam papers. You can browse them here.",
                             "/view-all/papers")
                     )
-                ,
-                new ThumbnailLinkRow()
-                        .add(new ThumbnailLink(
-                                "/images/browseAttempts.png",
-                                "Attempts",
-                                "A single attempt is a single candidate sitting a particular paper on a given date in a given venue. You can browse and mark existing attempts here.",
-                                "/dashboard/view-tests")
-                        )
-                        .add(new ThumbnailLink(
-                                "/images/browseExams.png",
-                                "Exams",
-                                "Exams are made up from multiple attempts for each student enrolled on a given module. If you prefer marking in large chunks rather than one student at once use this section. Also it lets you access details of ongoing exams.",
-                                "/view-all/exams")
-                        )
+                    .add(new ThumbnailLink(
+                            "/images/browseAttempts.png",
+                            "Attempts",
+                            "A single attempt is a single candidate sitting a particular paper on a given date in a given venue. You can browse and mark existing attempts here.",
+                            "/dashboard/view-tests")
+                    )
+                    .add(new ThumbnailLink(
+                            "/images/browseExams.png",
+                            "Exams",
+                            "Exams are made up from multiple attempts for each student enrolled on a given module. If you prefer marking in large chunks rather than one student at once use this section. Also it lets you access details of ongoing exams.",
+                            "/view-all/exams")
+                    )
         ));
 
         return mav;

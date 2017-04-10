@@ -18,8 +18,8 @@
     </style>
 </th:block>
 
-<th:block th:fragment="content (image, label, description, link)">
-    <div class="col-sm-6 col-md-4 thumbnailLink">
+<th:block th:fragment="content (image, label, description, link, id)">
+    <div th:id="${id}" class="col-sm-6 col-md-4 thumbnailLink">
         <div class="thumbnail" th:attr="data-link=${link}">
             <img th:src="${image}"/>
             <div class="caption">
