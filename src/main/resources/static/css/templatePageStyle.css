@@ -29,6 +29,10 @@ body, html {
     background-color: #EEEEEE;
 }
 
+.center-text {
+    text-align: center;
+}
+
 /** Header Style **/
 .banner {
     position:relative;
@@ -149,6 +153,7 @@ p.text-error {
     right: 0;
     top: 0;
     margin: 10px;
+    font-size: large;
     display:none;
 }
 
@@ -179,25 +184,37 @@ a.disabled {
 }
 
 #loading {
+    display: none;
     width: 100%;
     height: 100%;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
+    background-color: #ED6738;
+    z-index: 9999;
+    font-size: 400%;
+    color: white;
     position: fixed;
-    display: block;
-    background-color: #fff;
-    z-index: 99;
-    text-align: center;
-    visibility: hidden;
 }
 
-#loading-image {
-    display: block;
-    margin-top: 10%;
-    margin-left: auto;
-    margin-right: auto;
-    z-index: 100;
-    visibility: hidden;
+#loading span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin 2s infinite linear;
+    -webkit-animation: spin2 2s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
 }
 
 .move-me {
@@ -214,4 +231,41 @@ a.disabled {
     padding: 25px;
     border-top: 5px solid #0069A0;
     border-bottom: 5px solid #0069A0;
+}
+
+div.fr-modal-body div.fr-image-list div.fr-image-container .fr-delete-img {
+    display: none !important;
+}
+
+div.fr-modal-body div.fr-image-list div.fr-image-container .fr-insert-img {
+    -webkit-transform: translateY(-50%) translateX(-50%) !important;
+    -moz-transform: translateY(-50%) translateX(-50%) !important;
+    -ms-transform: translateY(-50%) translateX(-50%) !important;
+    -o-transform: translateY(-50%) translateX(-50%) !important;
+}
+
+.fa-my-brackets {
+    background-image: url("/images/brackets.svg");
+    height: 14px;
+    width: 14px;
+    background-size:100% 100%;
+    -o-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+
+.fa-my-letters {
+    background-image: url("/images/letters.svg");
+    height: 14px;
+    width: 14px;
+    background-size:100% 100%;
+    -o-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+
+#footer-msg {
+    padding: 1rem;
+    text-align: center;
+    font-size: 16px;
+    z-index: 1031;
+    padding-bottom: 30px;
 }

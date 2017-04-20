@@ -33,12 +33,14 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/table.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/video.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/css/plugins/special_characters.min.css"/>
 
     <!-- Include Code Mirror CSS. -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css"/>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.css"/>
 
     <link th:href="@{/css/editor/editor.css}" rel="stylesheet"/>
 </head>
@@ -58,7 +60,7 @@
 
 <div layout:fragment="content" id="content" class="contentWrapper container">
     <div class="col-md-12 style-main-content">
-        <form class="js-ajax-form" role="form" method="post"
+        <form id="create-section-form" class="js-ajax-form" role="form" method="post"
               th:action="${ENDPOINT}"
               th:object="${formObject}"
               th:attr="data-update-endpoint=${UPDATE_ENDPOINT}">
@@ -66,78 +68,89 @@
             <input class="js-hook-update-instructionsText" type="hidden" th:field="*{instructionsText}"/>
             <input class="form-control" type="hidden" th:field="*{versionNumber}"/>
 
-            <div id="form-group-id" class="form-group js-hook-form-id">
+            <div id="form-group-id" class="form-group js-hook-form-id hidden">
                 <label class="form-control-label" for="id">Id: </label>
                 <input type="text" readonly="false" class="form-control" th:field="*{id}" th:value="*{id}"/>
             </div>
 
-            <div id="form-group-language" class="form-group js-hook-form-status-referenceName">
-                <label class="form-control-label" for="referenceName">Reference Name:</label>
+            <div id="form-group-referenceName" class="form-group js-hook-form-status-referenceName">
+                <label class="form-control-label" for="referenceName">Reference Name: <span
+                        data-help="CREATE_SECTION_REFERENCE_NAME"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
                 <input class="form-control" type="text" th:field="*{referenceName}"/>
-                <div class="js-hook-error-msg" id="error-language"></div>
+                <div class="js-hook-error-msg text-danger" id="error-referenceName"></div>
             </div>
 
-            <div id="form-group-referenceName" class="form-group js-hook-form-status-noOfQuestionsToAnswer">
-                <label class="form-control-label" for="noOfQuestionsToAnswer">Number of Questions to Answer: </label>
-                <input class="form-control" min="1" max="99" type="number" th:field="*{noOfQuestionsToAnswer}"/>
-                <div class="js-hook-error-msg" id="error-referenceName"></div>
+            <div id="form-group-noOfQuestionsToAnswer" class="form-group js-hook-form-status-noOfQuestionsToAnswer">
+                <label class="form-control-label" for="noOfQuestionsToAnswer">No. of Questions to Answer: <span
+                        data-help="CREATE_SECTION_NO_OF_QUESTIONS"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
+                <input class="form-control" type="number" th:field="*{noOfQuestionsToAnswer}"/>
+                <div class="js-hook-error-msg text-danger" id="error-noOfQuestionsToAnswer"></div>
             </div>
 
-            <div id="form-group-difficulty" class="form-group js-hook-form-status-timeScale">
-                <label class="form-control-label" for="timeScale">Proposed Time to Complete: </label>
-                <input class="form-control" min="1" max="99" type="number" th:field="*{timeScale}"/>
-                <div class="js-hook-error-msg" id="error-difficulty"></div>
+            <div id="form-group-timeScale" class="form-group js-hook-form-status-timeScale">
+                <label class="form-control-label" for="timeScale">Proposed Time to Complete (In minutes): <span
+                        data-help="CREATE_SECTION_TIME_TO_COMPLETE"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
+                <input class="form-control" type="number" th:field="*{timeScale}"/>
+                <div class="js-hook-error-msg text-danger" id="error-timeScale"></div>
             </div>
 
-            <div id="form-group-text" class="form-group js-hook-form-status-text">
-                <label class="form-control-label" for="froala-for-question-text">Instructions Text</label>
-                <textarea id="froala-for-instructions-text" class="js-hook-froala" data-paste-to="js-hook-update-instructionsText"></textarea><br/>
-                <div class="js-hook-error-msg" id="error-text"></div>
+            <div id="form-group-instructionsText" class="form-group js-hook-form-status-instructionsText">
+                <label class="form-control-label" for="froala-for-question-text">Instructions Text: <span
+                        data-help="CREATE_SECTION_INSTRUCTIONS_TEXT"
+                        class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
+                <textarea id="froala-for-instructions-text" class="js-hook-froala"
+                          data-paste-to="js-hook-update-instructionsText"></textarea><br/>
+                <div class="js-hook-error-msg text-danger" id="error-instructionsText"></div>
             </div>
-
-            <input type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Section'"/>
         </form>
 
         <button class="btn btn-success hidden js-create-new-version">Create new version</button>
-        <a target="_blank" class="btn btn-primary hidden js-unhide-me js-preview" href="/test-paper/view-section/{sectionId}/{sectionVer}">View</a>
-        <button class="btn  js-unhide-me  btn-success hidden js-save">Save Progress</button>
 
-        <h4 class="hidden js-unhide-me">Available Questions</h4>
+        <h4 class="hidden js-unhide-me">Available Questions <span
+                data-help="CREATE_SECTION_AVAILABLE_QUESTIONS"
+                class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></h4>
         <table id="availableQuestions" style="width: 100%" class="hidden hover stripe">
             <thead>
-                <tr>
-                    <th>Id</th>
-                    <td>Version No</td>
-                    <th>Reference Name</th>
-                    <th>Language</th>
-                    <th>Difficulty</th>
-                    <th>Time Scale</th>
-                    <th>Type</th>
-                    <th>View</th>
-                    <th>Add</th>
-                </tr>
+            <tr>
+                <th>Id</th>
+                <td>Version No</td>
+                <th>Reference Name</th>
+                <th>Programming Language</th>
+                <th>Difficulty</th>
+                <th>Time Scale</th>
+                <th>Type</th>
+                <th>View</th>
+                <th>Add</th>
+            </tr>
             </thead>
             <tbody>
-                <tr th:id="${question.hashCode()}" th:each="question : ${questions}">
-                    <td th:text="${question.getId()}"></td>
-                    <td th:text="${question.getVersionNo()}"></td>
-                    <td th:text="${question.getReferenceName()}"></td>
-                    <td th:text="${question.getLanguage()}"></td>
-                    <td th:text="${question.getDifficulty()}"></td>
-                    <td th:text="${question.getTimeScale()}"></td>
-                    <td th:text="${question.getType()}"></td>
-                    <td><a th:href="${'/test-paper/view-question/' + question.getId() + '/' + question.getVersionNo()}">View</a></td>
-                    <td><a class="js-add-question-handle"
-                           th:attr="data-section-id=${formObject.getId()},
+            <tr th:id="${question.hashCode()}" th:each="question : ${questions}">
+                <td th:text="${question.getId()}"></td>
+                <td th:text="${question.getVersionNo()}"></td>
+                <td th:text="${question.getReferenceName()}"></td>
+                <td th:text="${question.getLanguage()}"></td>
+                <td th:text="${question.getDifficulty()}"></td>
+                <td th:text="${question.getTimeScale()}"></td>
+                <td th:text="${question.getType()}"></td>
+                <td>
+                    <a target="_blank" th:href="${'/test-paper/view-question/' + question.getId() + '/' + question.getVersionNo()}">View</a>
+                </td>
+                <td><a class="js-add-question-handle"
+                       th:attr="data-section-id=${formObject.getId()},
                            data-question-id=${question.getId()},
                            data-question-ver=${question.getVersionNo()},
                            data-parent-id=${question.hashCode()}"
-                           th:href="${ADD_QUESTION_ENDPOINT}">Add</a></td>
-                </tr>
+                       th:href="${ADD_QUESTION_ENDPOINT}">Add</a></td>
+            </tr>
             </tbody>
         </table>
 
-        <h4>Section Questions</h4>
+        <h4>Section Questions <span
+                data-help="CREATE_SECTION_SECTION_QUESTIONS"
+                class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></h4>
         <table id="sectionQuestions" style="width: 100%" class="hover stripe">
             <thead>
             <tr>
@@ -145,7 +158,7 @@
                 <th>Id</th>
                 <td>Version No</td>
                 <th>Reference Name</th>
-                <th>Language</th>
+                <th>Programming Language</th>
                 <th>Difficulty</th>
                 <th>Time Scale</th>
                 <th>Type</th>
@@ -159,6 +172,11 @@
             </th:block>
             </tbody>
         </table>
+
+        <a target="_blank" class="btn btn-primary hidden js-unhide-me js-preview"
+           href="/test-paper/view-section/{sectionId}/{sectionVer}">View</a>
+        <button class="btn  js-unhide-me  btn-success hidden js-save">Save Progress</button>
+        <input th:form="create-section-form" type="submit" class="btn btn-success js-hide-when-updating" th:value="'Create Section'"/>
     </div>
 </div>
 
@@ -226,7 +244,8 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
 
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.js"></script>
     <script th:src="@{~/js/editor/editSection.js}"></script>
 </th:block>
 </body>

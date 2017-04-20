@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import uk.ac.ncl.daniel.baranowski.common.HelpConstants;
 import uk.ac.ncl.daniel.baranowski.common.SessionUtility;
 import uk.ac.ncl.daniel.baranowski.exceptions.*;
 import uk.ac.ncl.daniel.baranowski.views.GenericErrorPageViewModel;
@@ -17,7 +18,9 @@ import uk.ac.ncl.daniel.baranowski.views.GenericErrorPageViewModel;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static uk.ac.ncl.daniel.baranowski.common.Constants.*;
 
@@ -43,6 +46,7 @@ public class GlobalControllerConfiguration {
         model.addAttribute("versionString", versionString);
         addModelAttributesBasedOnRoles(model);
         addModelAttributesBasedOnUser(model);
+        model.addAttribute("helpJson", HelpConstants.getHelpFields());
     }
 
     /**

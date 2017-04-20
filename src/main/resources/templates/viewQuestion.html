@@ -6,6 +6,15 @@
     <link rel="stylesheet" type="text/css" href="questionPageStyle.css"
           th:href="@{~/css/candidate/questionPageStyle.css}"/>
     <link th:href="@{/webjars/google-code-prettify/1.0.4/loader/src/prettify.css}" rel="stylesheet"/>
+
+    <th:block th:if="${answerable}">
+        <link rel="stylesheet" type="text/css" th:href="@{~/js/lib/wColorPicker-2.1.7/wColorPicker.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{~/js/lib/wPaint-2.5.0/wPaint.min.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{~/css/candidate/questionPageStyleAnswerable.css}"/>
+    </th:block>
+    <th:block th:if="${inMarking}">
+        <link rel="stylesheet" type="text/css" th:href="@{~/css/marker/attempt-mark.css}"/>
+    </th:block>
 </head>
 <body>
 
@@ -19,6 +28,11 @@
 
 <div layout:fragment="content" id="content" class="container-fluid">
     <div class="col-md-10 col-md-offset-1 style-main-content">
+        <h1>Question Preview:</h1>
+        <p th:text="${previewMessage}"></p>
+        <a class="btn btn-primary" th:text="${buttonText}" th:href="${buttonAddress}"></a>
+        <br/>
+        <hr/>
         <div th:replace="fragments/paper/question"></div>
     </div>
 </div>
@@ -27,6 +41,28 @@
     <script th:src="@{/webjars/google-code-prettify/1.0.4/src/prettify.js}"></script>
     <script th:src="@{/webjars/google-code-prettify/1.0.4/src/lang-sql.js}"></script>
     <script th:src="@{/webjars/google-code-prettify/1.0.4/src/run_prettify.js}"></script>
+
+    <th:block th:if="${answerable}">
+        <script th:src="@{~/js/candidate/candidatePaperAnswerable.js}"/>
+        <script th:src="@{~/js/candidate/timer.js}"/>
+
+        <!-- Dependencies for wPaint to answer drawing questions -->
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/core.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/widget.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/widgets/mouse.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/1.12.0-rc.2/ui/widgets/draggable.js}"></script>
+        <script th:src="@{~/js/lib/wColorPicker-2.1.7/wColorPicker.min.js}"></script>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/wPaint.min.js}"></script>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/plugins/main/wPaint.menu.main.min.js}"></script>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/plugins/text/wPaint.menu.text.min.js}"></script>
+        <script th:src="@{~/js/lib/wPaint-2.5.0/plugins/shapes/wPaint.menu.main.shapes.min.js}"></script>
+        <!-- Dependencies for wPaint to answer drawing questions -->
+
+        <script th:src="@{/webjars/ace/1.2.2/src-min-noconflict/ace.js}"></script>
+        <script th:src="@{/webjars/ace/ext-language_tools.js}"></script>
+    </th:block>
+
+    <script th:src="@{~/js/view/viewQuestion.js}"></script>
 </div>
 </body>
 </html>

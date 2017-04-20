@@ -90,8 +90,8 @@ public class PaperController {
 
     @RequestMapping(PAPER_VIEW_QUESTION)
     @PreAuthorize("hasAnyAuthority('Marker', 'Admin', 'Author','ModuleLeader')")
-    public ModelAndView viewQuestion(@PathVariable int questionId, @PathVariable int questionVersion) {
-        return service.getViewQuestion(questionId, questionVersion);
+    public ModelAndView viewQuestion(@PathVariable int questionId, @PathVariable int questionVersion, @RequestParam(defaultValue = "Answerable") String type) {
+        return service.getViewQuestion(questionId, questionVersion, type);
     }
 
     @RequestMapping(PAPER_VIEW_SECTION)

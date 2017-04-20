@@ -71,17 +71,17 @@ public class SimpleTest {
     public void A1viewingQuestionsWorksCorrectly() throws Exception {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-questions-link"));
+        click(By.id("BrowseQuestions"));
 
         findInTable("Id", "1").click();
-        click(By.linkText("View Selected"));
+
         assertEquals(driver.findElement(By.id("question-text-for-1-1")).getText(), "You have been asked to develop a function called IsEven that return true if a given integer parameter is even, or false if odd. Write this function below.");
         assertEquals("/test-paper/view-question/1/1", driver.getCurrentUrl().replace(baseUrl,""));
 
         driver.navigate().back();
         click(By.cssSelector("a[data-dt-idx='3']"));
         findInTable("Id", "40").click();
-        click(By.linkText("View Selected"));
+
         assertEquals(driver.findElement(By.id("question-text-for-40-1")).getText(), "Correct answer is A A) Some text\nB) Some text\nC) Some text");
         assertEquals("/test-paper/view-question/40/1", driver.getCurrentUrl().replace(baseUrl,""));
     }
@@ -90,10 +90,10 @@ public class SimpleTest {
     public void A2viewingSectionsWorksCorrectly() throws Exception {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-sections-link"));
+        click(By.id("BrowseSections"));
 
         findInTable("Id", "2").click();
-        click(By.linkText("View Selected"));
+
 
         WebElement nextQuestionBtn = driver.findElement(By.id("nextQuestion"));
         assertEquals("1: C# Language", driver.findElement(By.cssSelector("a[slickslide='1']")).getText());
@@ -115,10 +115,10 @@ public class SimpleTest {
     public void A3viewingPapersWorksCorrectly() {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-papers-link"));
+        click(By.id("BrowsePapers"));
 
         findInTable("Id", "2").click();
-        driver.findElement(By.linkText("View Selected")).click();
+
 
         assertTrue(driver.findElement(By.linkText("Interview Test-Graduate (C#)")).isDisplayed());
         assertTrue(driver.findElement(By.linkText("2: Problem Solving")).isDisplayed());
@@ -166,10 +166,10 @@ public class SimpleTest {
     public void A4viewingExamsWorksCorrectly() {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.id("view-exams-link"));
+        click(By.id("BrowseExams"));
 
         findInTable("id", "1").click();
-        click(By.linkText("View Selected"));
+
         String actual = driver.findElement(By.id("loadedContent")).getAttribute("innerHTML");
 
         assertTrue(actual.contains("Exam Date: 22/02/2017"));
@@ -410,7 +410,6 @@ public class SimpleTest {
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys("Selenium Section");
 
         findInTable("Name","Selenium Section").click();
-        click(By.linkText("View Selected"));
 
         assertTrue(driver.findElement(By.className("info-banner")).getText().contains("Sample selenium section"));
 
@@ -418,8 +417,7 @@ public class SimpleTest {
         click(By.linkText("Sections"));
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys("Selenium Section");
 
-        findInTable("Name","Selenium Section").click();
-        click(By.linkText("Edit Selected"));
+        findInTable("Name","Selenium Section").findElement(By.className("glyphicon-pencil")).click();
 
         driver.findElement(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input")).sendKeys("Selenium");
         click(By.xpath("//*[@id=\"554599056\"]/td[9]/a"));
@@ -458,80 +456,32 @@ public class SimpleTest {
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys("Selenium Section");
         findInTable("Name","Selenium Section").click();
 
-        click(By.linkText("View Selected"));
         click(By.xpath("//*[@id=\"8\"]/div[3]"));
 
         String actualQuestion3 = driver.findElement(By.xpath("//*[@id=\"carousell\"]/div/div/div[5]")).getAttribute("innerHTML");
 
         assertTrue(actualQuestion3.contains("Question 1.3"));
-        assertTrue(actualQuestion3.contains("This question was designed by selenium"));
-        assertTrue(actualQuestion3.contains("<p><em><u>This question was designed by selenium</u></em></p>"));
-        assertTrue(actualQuestion3.contains("<p><em><u>A) This answer gives you 1 Mark</u></em></p>"));
-        assertTrue(actualQuestion3.contains("<p><em><u>B) This answer gives you 2 Marks</u></em></p>"));
+        assertTrue(actualQuestion3.contains("<em><u>This question was designed by selenium</u></em>"));
+        assertTrue(actualQuestion3.contains("<em><u>A) This answer gives you 1 Mark</u></em>"));
+        assertTrue(actualQuestion3.contains("<em><u>B) This answer gives you 2 Marks</u></em>"));
 
         click(By.xpath("//*[@id=\"8\"]/div[4]"));
         String actualQuestion4 = driver.findElement(By.xpath("//*[@id=\"carousell\"]/div/div/div[6]")).getAttribute("innerHTML");
-        assertTrue(actualQuestion4.contains(
-                "    <div class=\"questionHeader\">\n" +
-                "        <p>Question 1.4</p>\n" +
-                "    </div>\n" +
-                "\n" +
-                "    <b><p>(1 minutes)</p></b>\n" +
-                "\n" +
-                "    <p id=\"question-text-for-45-1\"></p><p><em><u>This question was designed by selenium</u></em></p><p><em><u>A)&nbsp;</u></em></p><p><em><u>B)</u></em></p><p><em><u>C) D) Each answer gives you one mark.</u></em></p><p></p>\n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "        <th:box>\n" +
-                "           <th:box>\n" +
-                "                <div class=\"collapsible-elements\">\n" +
-                "                    \n" +
-                "                    \n" +
-                "    <div class=\"correct-answer-section collapsible-element\">\n" +
-                "        <div class=\"title collapsed\" data-toggle=\"collapse\" data-target=\"#panel-answer-section4\" aria-expanded=\"false\">\n" +
-                "            <a tabindex=\"0\">Marking Guide:</a>\n" +
-                "        </div>\n" +
-                "\n" +
-                "        <div class=\"panel-answer-section collapsible collapse\" id=\"panel-answer-section4\" aria-expanded=\"false\">\n" +
-                "            <div style=\"resize: none;\"><p>Sample marking guide.</p></div>\n" +
-                "        </div>\n" +
-                "    </div>\n"));
+        assertTrue(actualQuestion4.contains("<em><u>This question was designed by selenium</u></em>"));
+        assertTrue(actualQuestion4.contains("<em><u>A)&nbsp;</u></em>"));
+        assertTrue(actualQuestion4.contains("<em><u>B)</u></em>"));
+        assertTrue(actualQuestion4.contains("<em><u>C) D) Each answer gives you one mark.</u></em>"));
+
 
 
         click(By.xpath("//*[@id=\"8\"]/div[5]"));
         String actualQuestion5 = driver.findElement(By.xpath("//*[@id=\"carousell\"]/div/div/div[7]")).getAttribute("innerHTML");
 
-        assertTrue(actualQuestion5.contains(
-                "    <div class=\"questionHeader\">\n" +
-                "        <p>Question 1.5</p>\n" +
-                "    </div>\n" +
-                "\n" +
-                "    <b><p>(1 minutes)</p></b>\n" +
-                "\n" +
-                "    <p id=\"question-text-for-46-1\"></p><p><em><u>This question was designed by selenium</u></em></p><p><em><u>A)&nbsp;</u></em></p><p><em><u>B) a and b gives you 1 Mark&nbsp;</u></em></p><p><em><u>C) D) c and d give you 2 marks, a and d give you 3 marks, b and c give you 4 marks&nbsp;</u></em></p><p></p>\n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "\n" +
-                "    \n" +
-                "        <th:box>\n" +
-                "           <th:box>\n" +
-                "                <div class=\"collapsible-elements\">\n" +
-                "                    \n" +
-                "                    \n" +
-                "    <div class=\"correct-answer-section collapsible-element\">\n" +
-                "        <div class=\"title collapsed\" data-toggle=\"collapse\" data-target=\"#panel-answer-section5\" aria-expanded=\"false\">\n" +
-                "            <a tabindex=\"0\">Marking Guide:</a>\n" +
-                "        </div>\n" +
-                "\n" +
-                "        <div class=\"panel-answer-section collapsible collapse\" id=\"panel-answer-section5\" aria-expanded=\"false\">\n" +
-                "            <div style=\"resize: none;\"><p>Sample marking guide.</p></div>\n" +
-                "        </div>\n" +
-                "    </div>\n"));
+        assertTrue(actualQuestion5.contains("<em><u>This question was designed by selenium</u></em>"));
+        assertTrue(actualQuestion5.contains("<em><u>A)&nbsp;</u></em>"));
+        assertTrue(actualQuestion5.contains("<em><u>B) a and b gives you 1 Mark&nbsp;</u></em>"));
+        assertTrue(actualQuestion5.contains("<em><u>C) D) c and d give you 2 marks, a and d give you 3 marks, b and c give you 4 marks&nbsp;</u></em>"));
+
 
         if (backupUITestStages) {
             PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/testSectionCreated.sql'");
@@ -620,7 +570,6 @@ public class SimpleTest {
         click(By.linkText("Exams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
-        click(By.linkText("View Selected"));
 
         click(By.xpath("//*[@id=\"loadedContent\"]/div/form/input[1]"));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"dashboardWindow\"]")).contains("Status: Started"));
@@ -637,7 +586,6 @@ public class SimpleTest {
         click(By.linkText("Exams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
-        click(By.linkText("View Selected"));
 
         String userLogin = driver.findElement(By.xpath("//*[@id=\"loadedContent\"]/div/table/tbody/tr["+userNo+"]/td[3]")).getText();
         String userPass  = driver.findElement(By.xpath("//*[@id=\"loadedContent\"]/div/table/tbody/tr["+userNo+"]/td[4]")).getText();
@@ -1068,7 +1016,7 @@ public class SimpleTest {
         click(By.linkText("Exams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
-        click(By.linkText("View Selected"));
+
         click(By.xpath("//*[@id=\"loadedContent\"]/div/form/input[1]"));
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@id=\"loadedContent\"]/div/a"))));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"loadedContent\"]/div/a")).contains("Mark Exam"));
@@ -1109,7 +1057,7 @@ public class SimpleTest {
         click(By.linkText("Exams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
-        click(By.linkText("View Selected"));
+
 
         click(By.xpath("//*[@id=\"loadedContent\"]/div/a"));
         wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/exam/mark/2"));
@@ -1231,8 +1179,7 @@ public class SimpleTest {
         click(By.linkText("Questions"));
 
         clearType(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input"), "Selenium Multiple Choice Question 3");
-        click(By.xpath("//*[@id=\"viewListTable\"]/tbody/tr/td[3]"));
-        click(By.linkText("Edit Selected"));
+        findInTable("Name","Selenium Multiple Choice Question 3").findElement(By.className("glyphicon-pencil")).click();
 
         assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[2]/td[2]/input[1]")).isSelected());
         assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[2]/td[2]/input[2]")).isSelected());
@@ -1247,24 +1194,6 @@ public class SimpleTest {
         assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[5]/td[2]/input[3]")).isSelected());
     }
 
-    @Test
-    public void B5ExpressionWizardRegenerates() throws SQLException {
-        if (loadUITestStages) {
-            PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("DROP ALL OBJECTS; RUNSCRIPT FROM './src/test/resources/h2Back/examMarked.sql'");
-            statement.execute();
-        }
-
-        loginAs("sampleAll","pass", "Jack Brown");
-        click(By.id("nav-browse"));
-        click(By.linkText("Questions"));
-
-        clearType(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input"), "Selenium Expression Question");
-        click(By.xpath("//*[@id=\"viewListTable\"]/tbody/tr/td[3]"));
-        click(By.linkText("Edit Selected"));
-
-
-    }
-
     private void submitAnswer(By by) {
         WebDriverWait wait = new WebDriverWait(driver, 500);
         moveToBottomOfPage();
@@ -1277,8 +1206,14 @@ public class SimpleTest {
         click(By.linkText("Questions"));
 
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys(value);
-        findInTable(col,value).click();
-        click(By.linkText("Edit Selected"));
+        findInTable(col,value).findElement(By.className("glyphicon-pencil")).click();
+    }
+
+    private void moveToElement(By by) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(driver.findElement(by));
+        actions.sendKeys("");
+        actions.build().perform();
     }
 
     private void moveToBottomOfPage() {
@@ -1324,7 +1259,7 @@ public class SimpleTest {
 
     private void createQuestion(String language, String referenceName, String difficulty, String timeScale, String questionText, String markingGuide, String questionType) {
         click(By.id("nav-edit"));
-        click(By.linkText("Questions"));
+        click(By.id("CreateQuestions"));
         driver.findElement(By.id("language")).sendKeys(language);
         driver.findElement(By.id("referenceName")).sendKeys(referenceName);
         clearType(By.id("difficulty"), difficulty);
@@ -1335,6 +1270,7 @@ public class SimpleTest {
         click(By.xpath("//*[@id=\"underline-1\"]"));
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), questionText);
         typeInFroala(By.xpath("//*[@id=\"form-group-markingGuide\"]/div[1]/div[3]/div/p"),markingGuide);
+
 
         click(By.xpath("//*[@id=\"content\"]/div/form/input[4]"));
 
@@ -1349,7 +1285,7 @@ public class SimpleTest {
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys(referenceName);
 
         findInTable("Name",referenceName).click();
-        click(By.linkText("View Selected"));
+
         String questionContents = driver.findElement(By.xpath("//*[@id=\"content\"]/div/div")).getAttribute("innerHTML");
         assertTrue(questionContents.contains("<p><em><u>"+questionText+"</u></em></p>"));
         assertTrue(questionContents.replace("&nbsp;", " ").contains(markingGuide));
@@ -1386,6 +1322,8 @@ public class SimpleTest {
     }
 
     private void click(By by) {
+        moveToElement(by);
+        wait.until(ExpectedConditions.elementToBeClickable(by));
         driver.findElement(by).click();
     }
 
@@ -1422,6 +1360,11 @@ public class SimpleTest {
     }
 
     private void typeInFroala(By findBy, String keys) {
+        wait.until(ExpectedConditions.elementToBeClickable(findBy));
+        driver.findElement(findBy).click();
+        wait.until(ExpectedConditions.elementToBeClickable(findBy));
+        driver.findElement(findBy).click();
+        wait.until(ExpectedConditions.elementToBeClickable(findBy));
         driver.findElement(findBy).click();
         Actions action = new Actions(driver);
         action.sendKeys(keys);

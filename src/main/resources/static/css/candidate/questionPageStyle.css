@@ -278,7 +278,6 @@ div.accordion-active-question + div.collapse-panel-decorator {
 
 .collapsible-element {
     margin-bottom: 0.5em;
-    margin-bottom: 0.5em;
 }
 
 .collapsible-element textarea {
@@ -289,14 +288,40 @@ div.accordion-active-question + div.collapse-panel-decorator {
 
 .title {
     padding: 10px;
+    color: #FFFFFF;
+    font-size: medium;
+    font-weight: bold;
+    position: relative;
 }
 
 .title a {
     margin-left: 10px;
     color: #FFFFFF;
-    font-size: 12;
-    font-weight: bold;
 }
+
+.title span {
+    position: absolute;
+    right: 15px;
+    font-size: larger;
+}
+
+ div.collapsible-element > div.title > .glyphicon-triangle-bottom {
+     display: block;
+     top: 35%;
+ }
+
+ div.collapsible-element > div.title.collapsed > .glyphicon-triangle-bottom {
+     display: none;
+ }
+
+ div.collapsible-element > div.title > .glyphicon-triangle-top {
+     display: none;
+ }
+
+ div.collapsible-element > div.title.collapsed > .glyphicon-triangle-top {
+     display: block;
+     top: 25%;
+ }
 
 .correct-answer-section .title {
     background-color: #92C741;

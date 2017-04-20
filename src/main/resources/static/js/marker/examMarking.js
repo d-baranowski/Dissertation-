@@ -48,7 +48,7 @@ function handleFinishMarking() {
                 window.location.replace(ENDPOINTS.DASHBOARD_PREFIX + ENDPOINTS.DASHBOARD_GENERATE_TESTS);
             },
             error: function (request, status, error) {
-                buildErrorDialog(request.responseJSON.message)
+                buildDangerAlert(request.responseJSON.message)
             }
         })
     });

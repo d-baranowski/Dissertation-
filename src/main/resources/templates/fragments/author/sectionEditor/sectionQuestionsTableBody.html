@@ -1,5 +1,7 @@
 <tr th:each="questionNumber : ${sectionQuestionsTableList.keySet()}" xmlns:th="http://www.thymeleaf.org">
-    <td class="move-me" th:text="${questionNumber}"></td>
+    <td class="move-me"><th:block th:text="${questionNumber}"></th:block><span
+            data-help="CREATE_SECTION_SECTION_QUESTION_ORDER"
+            class="glyphicon glyphicon-align-right glyphicon-resize-vertical"></span></td>
     <td th:text="${sectionQuestionsTableList.get(questionNumber).getId()}"></td>
     <td th:text="${sectionQuestionsTableList.get(questionNumber).getVersionNo()}"></td>
     <td th:text="${sectionQuestionsTableList.get(questionNumber).getReferenceName()}"></td>

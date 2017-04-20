@@ -7,11 +7,17 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import uk.ac.ncl.daniel.baranowski.common.HelpConstants;
 import uk.ac.ncl.daniel.baranowski.models.admin.SetupExamFormModel;
 import uk.ac.ncl.daniel.baranowski.service.DashboardService;
+import uk.ac.ncl.daniel.baranowski.views.components.ThumbnailLink;
+import uk.ac.ncl.daniel.baranowski.views.components.ThumbnailLinkRow;
 
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.*;
@@ -96,21 +102,87 @@ public class DashboardController {
 
     @RequestMapping("/browse")
     public ModelAndView browse() {
-        ModelAndView mav = new ModelAndView("browse");
+        ModelAndView mav = new ModelAndView("thumbnailLinkPage");
         mav.addObject("dashboardContent","browse");
+        mav.addObject("title", "Browse");
+
+        mav.addObject("thumbnailLinkRows", Collections.singletonList(
+                new ThumbnailLinkRow()
+                    .add(new ThumbnailLink(
+                            "/images/createQuestionsThumbnail.png",
+                            "Questions",
+                            "In the questions section you'll be able to browse user created questions.",
+                            "/view-all/questions")
+                    )
+                    .add(new ThumbnailLink(
+                            "/images/createSectionsThumbnail.png",
+                            "Sections",
+                            "Exam Questions can be arranged into sections. You can browse existing sections here.",
+                            "/view-all/sections")
+                    )
+                    .add(new ThumbnailLink(
+                            "/images/createPapersThumbnail.png",
+                            "Papers",
+                            "Sections are arranged into exam papers. You can browse them here.",
+                            "/view-all/papers")
+                    )
+                    .add(new ThumbnailLink(
+                            "/images/browseAttempts.png",
+                            "Attempts",
+                            "A single attempt is a single candidate sitting a particular paper on a given date in a given venue. You can browse and mark existing attempts here.",
+                            "/dashboard/view-tests")
+                    )
+                    .add(new ThumbnailLink(
+                            "/images/browseExams.png",
+                            "Exams",
+                            "Exams are made up from multiple attempts for each student enrolled on a given module. If you prefer marking in large chunks rather than one student at once use this section. Also it lets you access details of ongoing exams.",
+                            "/view-all/exams")
+                    )
+        ));
+
         return mav;
     }
 
     @RequestMapping("/create")
     public ModelAndView create() {
-        ModelAndView mav = new ModelAndView("create");
+        ModelAndView mav = new ModelAndView("thumbnailLinkPage");
         mav.addObject("dashboardContent","edit");
+        mav.addObject("title", "Create");
+        mav.addObject("thumbnailLinkRows", Collections.singletonList(new ThumbnailLinkRow()
+                .add(new ThumbnailLink(
+                        "/images/createQuestionsThumbnail.png",
+                        "Questions",
+                        "In the questions section you'll be able to create exam questions.",
+                        "/test-paper/question-editor")
+                )
+                .add(new ThumbnailLink(
+                        "/images/createSectionsThumbnail.png",
+                        "Sections",
+                        "Exam Questions can be arranged into sections. Candidates can be required to answer part of the questions in each section.",
+                        "/test-paper/section-editor")
+                )
+                .add(new ThumbnailLink(
+                        "/images/createPapersThumbnail.png",
+                        "Papers",
+                        "Sections are arranged into exam papers.",
+                        "/test-paper/paper-editor")
+                )
+        ));
         return mav;
     }
 
     @RequestMapping("/help")
     public ModelAndView help() {
         ModelAndView mav = new ModelAndView("help");
+
+        for (Field field : HelpConstants.class.getDeclaredFields()) {
+            try {
+                mav.addObject(field.getName(), field.get(null));
+            } catch (IllegalAccessException e) {
+                continue;
+            }
+        }
+
         mav.addObject("dashboardContent","help");
         return mav;
     }

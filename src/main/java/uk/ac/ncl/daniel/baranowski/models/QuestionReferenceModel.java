@@ -66,7 +66,7 @@ public class QuestionReferenceModel {
         this.referenceName = referenceName;
     }
 
-    @ColumnGetter(name = "Difficulty", order = 4)
+    @ColumnGetter(name = "Marks", order = 4)
     public int getDifficulty() {
         return difficulty;
     }

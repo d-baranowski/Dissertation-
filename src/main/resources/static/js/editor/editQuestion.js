@@ -1,9 +1,11 @@
 $(document).ready(function(){
+    showLoading();
     enableFroalaEditor();
     bindCreationForm();
     $(window).load(function() {
+        PR.prettyPrint();
+        showExampleQuestion();
         hideLoading();
-        PR.prettyPrint()
     });
 
     var versionNumber = $('#versionNo').val();
@@ -17,6 +19,10 @@ $(document).ready(function(){
     }
 
     $('#type').val($('.js-change-type-hook').val());
+
+    $('#show-example-btn').click(function () {
+        showExampleQuestion(true);
+    });
 
     handleAnswerBuilder();
 });
@@ -74,6 +80,7 @@ function ajaxUpdate() {
             {
                 hideErrorMessages();
                 if ($('#versionNo').val() != data) {
+                    showLoading();
                     window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_QUESTION_EDITOR
                         + '?questionId='+$('#id').val()+'&questionVersion='+data;
                 }
@@ -115,52 +122,40 @@ function bindCreationForm() {
     })
 }
 
+function updateAutoMarkingWizards() {
+    var select = $('#question-type-select');
+
+    if (select.val() == 'Multiple Choice') {
+        var letters = getMultipleChoiceBlanksFromText();
+        if (letters != lettersInText) {
+            $('.js-insert-auto-marking-wizard').html('');
+            buildMultipleChoiceQuestionWizard();
+        }
+    }
+    else if (select.val() == 'Expression') {
+        var numbers  = getExpressionNumbersFromText();
+        if (blanksInText != numbers) {
+            $('.js-click-to-update').each(function () {
+                $(this).triggerHandler('click');
+            })
+        }
+    }
+}
+
+
 function enableFroalaEditor() {
     var editors = $('.js-hook-froala');
-    editors.froalaEditor({
-        paragraphStyles: {
-            'prettyprint lang-sql': 'SQL',
-            'prettyprint': 'Code'
-        },
-        fontSizeDefaultSelection: '18',
-        htmlRemoveTags: ['script','video','source','input','form','picture'],
-        htmlAllowedTags: ["a", "abbr", "address", "area", "article", "aside", "b", "base", "bdi", "bdo", "blockquote", "br", "button", "caption", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "i", "img", "ins", "kbd", "keygen", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem", "meter", "nav", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "queue", "rp", "rt", "ruby", "s", "samp", "style", "section", "select", "small", "source", "span", "strike", "strong", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "wbr"],
-        toolbarButtons: ['bold', 'italic', 'underline', 'specialCharacters', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
-        pluginsEnabled: null
-    });
-
-    editors.on('froalaEditor.commands.after', function (e, editor, cmd, param1, param2) {
-        if (param1 == 'prettyprint') {
-            PR.prettyPrint();
-        }
-    });
-
-    editors.on('froalaEditor.contentChanged', function (e, editor) {
-        var html = editor.html.get();
-        $('.'+$(this).data('paste-to')).val(html);
-    });
+    enableFroalaOnTarget($(editors[0]), ['|' ,'add-blank', 'add-letter'],updateAutoMarkingWizards);
+    enableFroalaOnTarget($(editors[1]));
 
     $('#froala-for-question-text').froalaEditor('html.set', $('#text').val());
     $('#froala-for-marking-guide').froalaEditor('html.set', $('#markingGuide').val());
 }
 
-function hideErrorMessages() {
-    $('.js-hook-error-msg').text('');
-    $(' .js-hook-form-status').removeClass('has-danger');
-}
-
-function displayErrorMessages(errors) {
-    errors.forEach(function(error) {
-        var formGroup = $('#form-group-' + error.field);
-        var field = $('#error-' + error.field);
-        field.text(error.defaultMessage);
-        formGroup.addClass('has-danger')
-    });
-}
-
 function showMultipleChoiceanswerBuilder() {
     $('.js-answer-builder').removeClass('hidden');
     buildMultipleChoiceQuestionWizard();
+    handleHelp();
 }
 
 function updatePreviewButton() {
@@ -172,6 +167,43 @@ function updatePreviewButton() {
 function showExpressionAnswerBuilder() {
     $('.js-answer-builder').removeClass('hidden');
     buildExpressionQuestionWizard();
+    handleHelp();
+}
+
+var exampleCodeQuestion = '<p>Using the IDE below write a program which greets the user using the following function:<br><br></p><pre class="prettyprint"><span class="kwd">function</span><span class="pln">&nbsp;write</span><span class="pun">(</span><span class="pln">msg</span><span class="pun">){</span>\n' +
+'<span class="pln">&nbsp; &nbsp; console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">&quot;The message is: &quot;</span><span class="pln">&nbsp;</span><span class="pun">+</span><span class="pln">&nbsp;msg</span><span class="pun">);</span>\n' +
+'<span class="pun">}</span></pre>';
+var exampleEssayQuestion = '<p>Using the space below describe the <strong><u>Hartford Coliseum Collapse (1978)</u> &nbsp;</strong>software disaster.<br><br>Include:</p><ul><li>Background of the disaster <em>(250 words)</em></li><li>Reasons of the system failure <em>(500 words)</em></li><li>How if could have been avoided <em>(500 words)</em></li></ul>';
+var exampleMultipleChoice = '<p>How many times is the following loop executed?</p><pre class="prettyprint"><span class="kwd">int</span><span class="pln">&nbsp;count&nbsp;</span><span class="pun">=</span><span class="pln">&nbsp;</span><span class="lit">1</span><span class="pun">;</span>\n' +
+    '<span class="kwd">while</span><span class="pln">&nbsp;</span><span class="pun">(</span><span class="pln">count&nbsp;</span><span class="pun">&lt;</span><span class="pln">&nbsp;</span><span class="lit">5</span><span class="pun">)</span><span class="pln">&nbsp;</span><span class="pun">{</span>\n' +
+    '<span class="pln">&nbsp;&nbsp;</span><span class="pln">&nbsp; &nbsp; count&nbsp;</span><span class="pun">+=</span><span class="pln">&nbsp;</span><span class="lit">3</span><span class="pun">;</span><span class="pln">&nbsp; &nbsp;</span>' +
+'<span class="pun">}</span><span class="pln">&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></pre><p>A) Just once.<br>B) Twice.<br>C) Three times.<br>D) Four times.&nbsp;</p>';
+var exampleDrawingQuestion = '<p><u><strong>Using the graphics tool below, draw a story board for restaurant reservation system.</strong></u></p>';
+var exampleExpressionQuestion = '<p>Fill the blanks below with meanings of the corresponding acronyms.</p><p><strong>Acronym &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Meaning</strong><br>LACP &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [[1]]<br>LAN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[[2]]<br>LAPB &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [[3]]<br>LAPF &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [[4]]</p>';
+
+function showExampleQuestion(force) {
+    var newValue = $('#question-type-select').val();
+    var mapTypeToText = {
+        'Multiple Choice': exampleMultipleChoice,
+        'Expression': exampleExpressionQuestion,
+        'Drawing': exampleDrawingQuestion,
+        'Essay': exampleEssayQuestion,
+        'Code': exampleCodeQuestion
+    };
+
+    var currentText = $('#froala-for-question-text').froalaEditor('html.get');
+    if (force == true ||
+        currentText == '' ||
+        currentText == exampleCodeQuestion ||
+        currentText == exampleEssayQuestion ||
+        currentText == exampleMultipleChoice ||
+        currentText == exampleDrawingQuestion||
+        currentText == exampleExpressionQuestion) {
+        $('#froala-for-question-text').froalaEditor('html.set', mapTypeToText[newValue]);
+
+        $('#text').val($('#froala-for-question-text').froalaEditor('html.get'));
+        $('#markingGuide').val($('#froala-for-marking-guide').froalaEditor('html.get'));
+    }
 }
 
 function handleAnswerBuilder() {
@@ -180,21 +212,24 @@ function handleAnswerBuilder() {
         $('#type').val(newValue);
 
         if (newValue == 'Multiple Choice') {
+            $('#add-blank-1').hide('bounce');
+            $('#add-letter-1').show('bounce', { times: 5 }, "slow");
             showMultipleChoiceanswerBuilder()
         } else if (newValue == 'Expression') {
+            $('#add-letter-1').hide('bounce');
+            $('#add-blank-1').show('bounce', { times: 5 }, "slow");
             showExpressionAnswerBuilder();
         } else {
+            $('#add-letter-1').hide('bounce');
+            $('#add-blank-1').hide('bounce');
             $('#correctAnswer').val('');
             $('.js-answer-builder').addClass('hidden');
             $('.js-insert-auto-marking-wizard').html('')
         }
-    });
-}
 
-function getPatternFromText(pattern) {
-    var questionText = $('#text').val();
-    var result = questionText.match(pattern);
-    return result ? result : [];
+        showExampleQuestion();
+
+    });
 }
 
 function getCurrentJson() {
@@ -217,14 +252,41 @@ function safeParse(someString) {
     }
 }
 
+function getMultipleChoiceBlanksFromText() {
+    var patt = /[A-Z]\)/g;
+    return getPatternFromText(patt);
+}
+
+function getExpressionNumbersFromText() {
+    var patt = /\[\[\d]]/g;
+    return getPatternFromText(patt);
+}
+
+var lettersInText;
 function buildMultipleChoiceQuestionWizard() {
-    var maxScore = $('#difficulty').val();
+    var difficulty = $('#difficulty');
+    var maxScore = difficulty.val();
     var tableBody = "";
 
-    for (i = 0; i < maxScore; i++) {
+    difficulty.unbind();
+    difficulty.change(function () {
+        $('.js-insert-auto-marking-wizard').html('');
+        buildMultipleChoiceQuestionWizard();
+    });
+
+    var label = $('#marking-wizard-label');
+    $(label).attr({'data-help': 'AUTO_MARKING_MULTIPLE_CHOICE'});
+    $(label).data('help','AUTO_MARKING_MULTIPLE_CHOICE');
+    flashElementGreen('#marking-wizard-label');
+
+
+    for (i = 1; i <= maxScore; i++) {
         tableBody +="<tr><td>"+i+"</td><td>";
-        var patt = /[A-Z]\)/g;
-        getPatternFromText(patt).forEach(function (val) {
+
+
+        var listOfLetters = getMultipleChoiceBlanksFromText();
+        lettersInText = listOfLetters;
+        listOfLetters.forEach(function (val) {
             function getChecked() {
                 var current = $('#correctAnswer').val();
                 if (current.length > 0) {
@@ -240,8 +302,7 @@ function buildMultipleChoiceQuestionWizard() {
             tableBody += " <b>" + val + "</b> <input class='js-build-score' data-score='" + i + "' data-letter-required='" + val + "' type='checkbox' " + getChecked() + ">"
         });
 
-
-        tableBody += "</td></tr>";
+        tableBody += (listOfLetters.length == 0 ? 'Please press "Add multiple-choice option" on question text editor toolbar.' : '') + "</td></tr>";
     }
 
     var wizardHtmlTemplate =
@@ -250,10 +311,10 @@ function buildMultipleChoiceQuestionWizard() {
         "       <tr><td>Score</td><td>Answers</td></tr>   " +
         "   </thead>" +
         "   <tbody>" +
-        tableBody +
+        tableBody + (maxScore > 0 ? '' : "Max mark is equal to 0. Increase the mark to enable the wizard. Press 'Refresh Wizard' when ready. ") +
         "   </tbody>" +
         "</table>" +
-        "<button id='js-rebuild-wizard' class='btn btn-primary'>Update</button>";
+        "<button data-help='AUTO_MARKING_MULTIPLE_CHOICE_REFRESH' id='js-rebuild-wizard' class='btn btn-primary'>Refresh Wizard</button>";
 
     $('.js-insert-auto-marking-wizard').html(wizardHtmlTemplate);
 
@@ -282,27 +343,41 @@ function buildMultipleChoiceQuestionWizard() {
         $('.js-insert-auto-marking-wizard').html('');
         buildMultipleChoiceQuestionWizard();
     });
+
+    $('#add-letter-1').unbind();
+    $('#add-letter-1').click(function () {
+        $('.js-insert-auto-marking-wizard').html('');
+        buildMultipleChoiceQuestionWizard();
+    })
 }
 
+var blanksInText;
 function buildExpressionQuestionWizard() {
+    var label = $('#marking-wizard-label');
+    $(label).attr({'data-help': 'AUTO_MARKING_EXPRESSION'});
+    $(label).data('help','AUTO_MARKING_EXPRESSION');
+    flashElementGreen('#marking-wizard-label');
+
     var getRegexBuilderRow = function(jsonRow, jsonRowNumber) {
         var getSelectForBlanks = function(id) {
             var optionTemplate = '<option value="{blankNo}" data-blank="{blankNo}" {selected}>{blankNo}</option>';
             var selectTemplate =
-                '<span class="input-group-addon" id="{describedBy}">Blank No</span>' +
+                '<span class="input-group-addon" id="{describedBy}">Blank No <span data-help="AUTO_MARKING_EXPRESSION_BLANK_NO" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></span>' +
                 '<select name="blankNo" class="form-control" id="{id}" aria-describedby="{describedBy}">{selectBody}</select>';
             var result = '';
-            getPatternFromText(patt).forEach(function (val) {
+            var numbers = getExpressionNumbersFromText();
+            numbers.forEach(function (val) {
                 result += optionTemplate.replaceAll('{blankNo}', val).replace('{selected}', (jsonRow ? jsonRow.blankNo : null) == val ? "selected" : "")
             });
+            blanksInText = numbers;
             return selectTemplate.replaceAll('{selectBody}', result).replace('{id}', id).replaceAll('{describedBy}', id + '-describing');
         };
 
         getRegexBuilderRow["getSelectForBlanks"] = getSelectForBlanks;
 
-        function getFormItem(id, name, label, type, value, style) {
+        function getFormItem(id, name, label, type, value, style, help) {
             var answerBoxTemplate =
-                '<span class="input-group-addon {style}" id="{describedBy}">{label}</span>' +
+                '<span  class="input-group-addon {style}" id="{describedBy}">{label} <span data-help="'+help+'" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></span>' +
                 '<input {value} name="{name}" id="{id}" type="{type}" class="form-control {style}" placeholder="{label}" aria-describedby="{describedBy}">';
 
             return answerBoxTemplate
@@ -315,12 +390,12 @@ function buildExpressionQuestionWizard() {
                 .replaceAll('{style}', style ? style : "")
         }
         
-        function getOption(id, option, label, checked) {
+        function getOption(id, option, label, checked, help) {
             var rowTemplate =
                 '<div class="checkbox">' +
                     '<label>' +
                         '<input name="{option}" type="checkbox" id="{id}" aria-describedby="{describeBy}" {checked}>{label}' +
-                    '</label>' +
+                    ' <span data-help="'+help+'" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>' +
                 '</div>';
 
             return rowTemplate
@@ -329,9 +404,10 @@ function buildExpressionQuestionWizard() {
                 .replace('{option}', option)
                 .replace('{label}', label)
                 .replace('{checked}', (checked ? 'checked' : ''))
+                .replace('{style}')
         }
 
-        var patt = /\[\[\d]]/g;
+
         var rowNo = jsonRowNumber ? jsonRowNumber : $('div.regex-builder-row').length + 1;
         var selectId = 'regex-builder-blank-select-' + rowNo;
         var answerId  = 'regex-builder-answer-' + rowNo;
@@ -341,26 +417,26 @@ function buildExpressionQuestionWizard() {
                 '<div class="col-md-12 margin-bottom">' +
                     '<div class="input-group">' +
                         getSelectForBlanks(selectId) +
-                        getFormItem(answerId,'answer','Answer', 'text', jsonRow ? jsonRow.answer : null) +
-                        getFormItem('regex-for-' + rowNo,'regex','Regex', 'text', jsonRow ? jsonRow.regex : null, 'hidden js-enable-regex') +
-                        getFormItem('mark-for-' + rowNo,'mark','Mark', 'number', jsonRow ? jsonRow.mark : null) +
+                        getFormItem(answerId,'answer','Answer', 'text', jsonRow ? jsonRow.answer : null, '' ,'AUTO_MARKING_EXPRESSION_ANSWER') +
+                        getFormItem('regex-for-' + rowNo,'regex','Regex', 'text', jsonRow ? jsonRow.regex : null, 'hidden js-enable-regex', 'AUTO_MARKING_EXPRESSION_REGEX') +
+                        getFormItem('mark-for-' + rowNo,'mark','Mark', 'number', jsonRow ? jsonRow.mark : null,'','AUTO_MARKING_EXPRESSION_MARK') +
                     '</div>' +
                 '</div>' +
                 '<div class="col-md-3">' +
                     '<div class="btn-group-vertical" role="group" aria-label="Regex-options">' +
-                        getOption(optionId,'whiteSpace','White Space Collapsing', (jsonRow ? jsonRow.options.space : false)) +
-                        getOption(optionId,'alternatePunctuation','Alternative Punctuation', (jsonRow ? jsonRow.options.punctuation : false)) +
-                        getOption(optionId,'caseInsensitive','Case Insensitive', (jsonRow ? jsonRow.options.case : false)) +
+                        getOption(optionId,'whiteSpace','White Space Collapsing', (jsonRow ? jsonRow.options.space : false), 'AUTO_MARKING_EXPRESSION_OPTION_WHITE_SPACE') +
+                        getOption(optionId,'alternatePunctuation','Alternative Punctuation', (jsonRow ? jsonRow.options.punctuation : false), 'AUTO_MARKING_EXPRESSION_OPTION_ALTERNATIVE_PUNCTUATION') +
+                        getOption(optionId,'caseInsensitive','Case Insensitive', (jsonRow ? jsonRow.options.case : false), 'AUTO_MARKING_EXPRESSION_OPTION_CASE_INSENSITIVE') +
                     '</div>' +
                 '</div>' +
                 '<div class="col-md-6">' +
                     '<div class="btn-group-vertical" role="group" aria-label="Regex-controls">' +
-                        '<button class="btn btn-success js-add-new-row">Add</button>' +
-                        '<button class="btn btn-primary js-click-to-customize">Customize Regex</button>' +
+                        '<button data-help="AUTO_MARKING_EXPRESSION_ADD" class="btn btn-success js-add-new-row">Add Answer</button>' +
+                        '<button data-help="AUTO_MARKING_EXPRESSION_CUSTOM_REGEX" class="btn btn-primary js-click-to-customize">Customize Regex</button>' +
                     '</div>' +
                     '<div class="btn-group-vertical" role="group" aria-label="Regex-controls">' +
-                        '<button class="btn btn-warning js-click-to-update">Update</button>' +
-                        '<button class="btn btn-danger js-click-to-remove">Remove</button>' +
+                        '<button data-help="AUTO_MARKING_EXPRESSION_UPADTE" class="btn btn-warning js-click-to-update">Update Blanks</button>' +
+                        '<button data-help="AUTO_MARKING_EXPRESSION_REMOVE" class="btn btn-danger js-click-to-remove">Remove Answer</button>' +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -516,32 +592,63 @@ function buildExpressionQuestionWizard() {
                 e.preventDefault();
                 $('.js-insert-auto-marking-wizard').append(getRegexBuilderRow());
                 bindJavaScript();
+                handleHelp();
             });
 
             var customizeRegex = $(row).find('.js-click-to-customize');
             $(customizeRegex).unbind();
-            $(customizeRegex).click(function (e) {
+
+            var initialFunction = function (e) {
+                var state = {};
                 e.preventDefault();
                 $(row).find('.js-enable-regex').removeClass('hidden');
-                $(answer).prop('checked', false);
+                state['answer'] = $(answer).val();
                 $(answer).attr("disabled", true);
                 $(answer).addClass('disabled');
+                state['whiteSpace'] = $(whiteSpace).prop('checked');
                 $(whiteSpace).prop('checked', false);
                 $(whiteSpace).attr("disabled", true);
                 $(whiteSpace).addClass('disabled');
+                state['caseInsensitive'] = $(caseInsensitive).prop('checked');
                 $(caseInsensitive).prop('checked', false);
                 $(caseInsensitive).attr("disabled", true);
                 $(caseInsensitive).addClass('disabled');
+                state['punctuation'] = $(punctuation).prop('checked');
                 $(punctuation).prop('checked', false);
                 $(punctuation).attr("disabled", true);
                 $(punctuation).addClass('disabled');
                 appendToCorrectAnswer(row);
                 var regex = $(row).find('[name=regex]');
+                state['regex'] = $(regex).val();
                 $(regex).unbind();
                 $(regex).keyup(function () {
                     appendToCorrectAnswer(row);
-                })
-            });
+                });
+                $(customizeRegex).text('Restore Wizard');
+                $(customizeRegex).unbind();
+                $(customizeRegex).click(function (e) {
+                    e.preventDefault();
+                    $(row).find('.js-enable-regex').addClass('hidden');
+                    $(answer).val(state['answer']);
+                    $(answer).attr("disabled", false);
+                    $(answer).removeClass('disabled');
+                    $(whiteSpace).prop('checked', state['whiteSpace']);
+                    $(whiteSpace).attr("disabled", false);
+                    $(whiteSpace).removeClass('disabled');
+                    $(caseInsensitive).prop('checked', state['caseInsensitive']);
+                    $(caseInsensitive).attr("disabled", false);
+                    $(caseInsensitive).removeClass('disabled');
+                    $(punctuation).prop('checked', state['punctuation']);
+                    $(punctuation).attr("disabled", false);
+                    $(punctuation).removeClass('disabled');
+                    $(regex).val(state['regex']);
+                    $(customizeRegex).text('Customize Regex');
+                    $(customizeRegex).unbind();
+                    $(customizeRegex).click(initialFunction);
+                });
+            };
+
+            $(customizeRegex).click(initialFunction);
 
             var removeBtn = $(row).find('.js-click-to-remove');
             $(removeBtn).unbind();
@@ -549,6 +656,10 @@ function buildExpressionQuestionWizard() {
                 e.preventDefault();
                 removeRowFromAnswer(row);
                 $(row).remove();
+                if ($('.js-click-to-remove').size() == 0) {
+                    $('.js-insert-auto-marking-wizard').append(getRegexBuilderRow());
+                    bindJavaScript();
+                }
             });
 
             var updateBtn = $(row).find('.js-click-to-update');
@@ -562,6 +673,10 @@ function buildExpressionQuestionWizard() {
                 $(currentBlanks).replaceWith(getRegexBuilderRow.getSelectForBlanks(blanksId))
             });
 
+
+            $('#add-blank-1').click(function () {
+                $(updateBtn).click()
+            });
         });
     }
 

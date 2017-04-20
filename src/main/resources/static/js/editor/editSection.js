@@ -1,9 +1,9 @@
 var sectionQuestionDataTable;
 $(document).ready(function () {
+    showLoading();
     enableFroalaEditor();
     bindCreationForm();
     $(window).load(function () {
-        hideLoading();
         var sectionQuestionsTable = $('#sectionQuestions');
         sectionQuestionDataTable = sectionQuestionsTable.DataTable(
             {
@@ -29,7 +29,7 @@ $(document).ready(function () {
                     "sectionVer": sectionVer,
                     "questionId": rowData[1],
                     "questionVerNo": rowData[2],
-                    "newRef": diff[i].newData
+                    "newRef": diff[i].newData[0]
                 })
             }
 
@@ -54,7 +54,8 @@ $(document).ready(function () {
         if (parseInt(versionNumber) > 0) {
             beginUpdating();
         }
-        PR.prettyPrint()
+        PR.prettyPrint();
+        hideLoading();
     });
 });
 
@@ -66,7 +67,10 @@ function getSectionQuestionFromRow(row, questionNumber) {
     });
 
     return "<tr>" +
-        "<td>" + result[0] + "</td>" +
+        "<td class='move-me'>" + result[0] +
+            "<span data-help='CREATE_SECTION_SECTION_QUESTION_ORDER' " +
+            "class='glyphicon glyphicon-align-right glyphicon-resize-vertical'></span>" +
+        "</td>" +
         "<td>" + result[1] + "</td>" +
         "<td>" + result[2] + "</td>" +
         "<td>" + result[3] + "</td>" +
@@ -75,7 +79,7 @@ function getSectionQuestionFromRow(row, questionNumber) {
         "<td>" + result[6] + "</td>" +
         "<td>" + result[7] + "</td>" +
         "<td>" + result[8] + "</td>" +
-        "<td><a class='js-remove-question-handle' href='test'>Remove</a></td>" +
+        "<td><a target='_blank' class='js-remove-question-handle' href='test'>Remove</a></td>" +
         "</tr>";
 }
 
@@ -169,6 +173,7 @@ function handleAddingQuestions(table) {
                     success: function (data) {
                         sectionQuestionDataTable.row
                             .add($(getSectionQuestionFromRow(parent, data))).draw();
+                        handleHelp();
                     },
                     error: function (data) {
                         var msg = "Failed to add question. " + (data.responseJSON.message ? data.responseJSON.message : "");
@@ -211,7 +216,8 @@ function beginUpdating(questionId, questionVersionNo) {
                 {"orderable": false, "targets": 8},
                 {"searchable": false, "targets": 7},
                 {"searchable": false, "targets": 8}
-            ]
+            ],
+            "order": [[ 0, "desc" ]]
         });
     availableQuestionsTable.removeClass('hidden');
 
@@ -249,8 +255,10 @@ function ajaxUpdate() {
                 buildSuccessAlert("Successfully Saved");
                 oldFormData = formData;
                 if ($('#versionNumber').val() != data) {
+                    showLoading();
                     window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + $('#id').val() + "&sectionVersion=" + parseInt(data);
                 }
+                hideErrorMessages();
             },
             error: function (data) {
                 displayErrorMessages(data.responseJSON);
@@ -275,6 +283,7 @@ function bindCreationForm() {
             success: function (data) {
                 beginUpdating(data, 1); // show response from the php script.
                 oldFormData = formData;
+                showLoading();
                 window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + data + "&sectionVersion=1";
             },
             error: function (data) {
@@ -287,37 +296,7 @@ function bindCreationForm() {
 
 function enableFroalaEditor() {
     var editor = $('#froala-for-instructions-text');
-    editor.froalaEditor({
-        paragraphStyles: {
-            'prettyprint lang-sql': 'SQL',
-            'prettyprint': 'Code'
-        },
-        fontSizeDefaultSelection: '18',
-        htmlRemoveTags: ['script', 'video', 'source', 'input', 'form', 'picture'],
-        htmlAllowedTags: ["a", "abbr", "address", "area", "article", "aside", "b", "base", "bdi", "bdo", "blockquote", "br", "button", "caption", "cite", "code", "col", "colgroup", "datalist", "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "i", "img", "ins", "kbd", "keygen", "label", "legend", "li", "main", "map", "mark", "menu", "menuitem", "meter", "nav", "object", "ol", "optgroup", "option", "output", "p", "param", "pre", "progress", "queue", "rp", "rt", "ruby", "s", "samp", "style", "section", "select", "small", "source", "span", "strike", "strong", "sub", "summary", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "wbr"],
-        toolbarButtons: ['bold', 'italic', 'underline','specialCharacters','strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', '|', 'specialCharacters', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'quote', 'insertHR', 'insertLink', 'insertImage', 'insertTable', '|', 'undo', 'redo', 'clearFormatting', 'selectAll', 'html', 'applyFormat', 'removeFormat', 'fullscreen'],
-        pluginsEnabled: null
-    });
+    enableFroalaOnTarget(editor);
 
-    editor.froalaEditor('html.set', $('#instructionsText').val());
-
-    editor.on('froalaEditor.commands.after', function (e, editor, cmd, param1, param2) {
-        if (param1 == 'prettyprint') {
-            PR.prettyPrint();
-        }
-    });
-
-    editor.on('froalaEditor.contentChanged', function (e, editor) {
-        var html = editor.html.get();
-        $('.' + $(this).data('paste-to')).val(html);
-    });
-}
-
-function displayErrorMessages(errors) {
-    errors.forEach(function (error) {
-        var formGroup = $('#form-group-' + error.field);
-        var field = $('#error-' + error.field);
-        field.text(error.defaultMessage);
-        formGroup.addClass('has-danger')
-    });
+    $(editor).froalaEditor('html.set', $('#instructionsText').val());
 }

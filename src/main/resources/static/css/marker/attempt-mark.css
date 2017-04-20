@@ -1,6 +1,7 @@
 .form-mark-select {
     margin-top: 5px;
-    padding: 3px;
+    padding: 5px;
+    padding-bottom: 12px;
     background-color: #5A4A4A;
     text-align: center;
 }

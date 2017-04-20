@@ -2,90 +2,41 @@
 Generic javascript functions common to all files.
 **/
 
-function buildWarningDialog(message){
-    $("#messageBanner").html('<div class="alert alert-warning"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error:</strong> ' + message + '</div>');
-    $(".carousell-content").animate({ scrollTop: 0 }, "slow");
+function getNotyTemplate(icon, title) {
+    return '<div class="noty_message">' +
+    '<h4>'+title+' <span class="glyphicon glyphicon-'+icon+'"></span></h4>' +
+    '<span class="noty_text"></span><div class="noty_close">' +
+    '</div>' +
+    '</div>'
 }
-
-function buildInfoDialog(message){
-    $("#messageBanner").html('<div class="alert alert-info"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Info:</strong> ' + message + '</div>');
-    $(".carousell-content").animate({ scrollTop: 0 }, "slow");
-}
-
-function buildErrorDialog(message){
-    $("#messageBanner").html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Warning:</strong> ' + message + '</div>');
-    $(".carousell-content").animate({ scrollTop: 0 }, "slow");
-}
-
-function buildSuccessDialog(message){
-    $("#messageBanner").html('<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success:</strong> ' + message + '</div>');
-    $(".carousell-content").animate({ scrollTop: 0 }, "slow");
-}
-
 
 function buildSuccessAlert(msg) {
+    var myTemplate = getNotyTemplate('ok', 'Success');
     if (msg) {
-        cleanPreviousClasses();
-        $('#alert').addClass('alert-success');
-        $('#alert p').html('<strong>Success!</strong> ' + msg);
-        showAlert(2000);
-    } else {
-        console.log('Please provide a message to display alert');
-    }
-}
-
-function buildInfoAlert(msg) {
-    if (msg) {
-        cleanPreviousClasses();
-        $('#alert').addClass('alert-info');
-        $('#alert p').html('<strong>Info!</strong> ' + msg);
-        showAlert(3000);
+        noty({text: msg, type: 'success', template:myTemplate});
     } else {
         console.log('Please provide a message to display alert');
     }
 }
 
 function buildWarningAlert(msg) {
+    var myTemplate = getNotyTemplate('exclamation-sign', 'Warning');
     if (msg) {
-        cleanPreviousClasses();
-        $('#alert').addClass('alert-warning');
-        $('#alert p').html('<strong>Warning!</strong> ' + msg);
-        showAlert(5000);
+        noty({text: msg, type: 'warning', template:myTemplate });
     } else {
         console.log('Please provide a message to display alert');
     }
 }
 
 function buildDangerAlert(msg) {
+    var myTemplate = getNotyTemplate('exclamation-sign', 'Danger');
     if (msg) {
-        cleanPreviousClasses();
-        $('#alert').addClass('alert-danger');
-        $('#alert p').html('<strong>Danger!</strong> ' + msg);
-        showAlert();
+        noty({text: msg, type: 'error', template: myTemplate});
     } else {
-        console.log('Please provide a message to display alert');
+        noty({text: "Something went wrong. Can't get error message.", type: 'error', template: myTemplate});
     }
 }
 
-function cleanPreviousClasses() {
-    $('#alert').removeClass('alert-success');
-    $('#alert').removeClass('alert-info');
-    $('#alert').removeClass('alert-warning');
-    $('#alert').removeClass('alert-danger');
-}
-
-function showAlert(hideAfter) {
-    $('#alert').fadeIn().show("puff", 100);
-    $('#alert button').click(function() {
-        $('#alert').fadeOut();
-    });
-
-    if (hideAfter) {
-        setTimeout(function() {
-            $('#alert').fadeOut();
-        }, hideAfter);
-    }
-}
 
 function getCsrfTokenValue() {
     var token = $('input#csrf-token').attr("content");

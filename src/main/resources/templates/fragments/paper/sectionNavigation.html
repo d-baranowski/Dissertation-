@@ -41,14 +41,14 @@
         </div>
         <th:block th:if="${answerable or inMarking}">
             <th:block th:unless="${examMarking}">
-                <div id="submitAllBtn" class="submit-all-btn"><p>Submit &amp; Complete</p></div>
+                <div data-help="MARKING_ATTEMPT_FINNISH" id="submitAllBtn" class="submit-all-btn">Submit &amp; Complete</div>
                 <th:block th:if="${inMarking}">
-                    <div id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+                    <div data-help="MARKING_ATTEMPT_UNLOCK" id="unlockBtn" class="submit-all-btn">Unlock &amp; Leave</div>
                 </th:block>
             </th:block>
             <th:block th:if="${examMarking}">
-                <div th:attr="data-exam-id=${examId}" id="submitAllBtn" class="submit-all-btn"><p>Finnish Marking</p></div>
-                <div th:attr="data-exam-id=${examId}" id="unlockBtn" class="submit-all-btn"><p>Unlock &amp; Leave</p></div>
+                <div data-help="MARKING_EXAM_FINNISH" th:attr="data-exam-id=${examId}" id="submitAllBtn" class="submit-all-btn">Finnish Marking</div>
+                <div data-help="MARKING_EXAM_UNLOCK" th:attr="data-exam-id=${examId}" id="unlockBtn" class="submit-all-btn">Unlock &amp; Leave</div>
             </th:block>
         </th:block>
     </div>

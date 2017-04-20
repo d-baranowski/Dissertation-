@@ -4,6 +4,7 @@
     <title>View Paper</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="dashboard.css" th:href="@{~/css/dashboard.css}"/>
+    <link rel="stylesheet" type="text/css" href="viewList.css" th:href="@{~/css/viewList.css}"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.13/b-1.2.4/r-2.1.1/se-1.2.0/datatables.min.css"/>
 </head>
 <body>
@@ -16,6 +17,8 @@
                     <thead>
                         <tr>
                             <th th:each="columnName : ${columnNames}" th:text="${columnName}"></th>
+                            <th th:if="${includeView != null}">View</th>
+                            <th th:if="${includeEdit != null}">Edit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,6 +27,8 @@
                             <th:block th:each="column : ${columnNames}">
                                 <td th:text="${rowData.get(column)}"></td>
                             </th:block>
+                            <td class="center-text" th:if="${includeView != null}"><a th:href="${rowData.get('VIEW_ENDPOINT')}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+                            <td class="center-text" th:if="${includeEdit != null}"><a th:href="${rowData.get('EDIT_ENDPOINT')}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                         </tr>
                     </th:block>
                     </tbody>

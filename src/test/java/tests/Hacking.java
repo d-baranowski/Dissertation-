@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 public class Hacking {
 
-    @Test
+
     public void caseInsensitiveJavaRegex() {
         String pattern = "(?i)(GoOGle)";
         String matchOn = "GoOGle";
@@ -15,7 +15,7 @@ public class Hacking {
         assertTrue(matchOn.matches(pattern));
     }
 
-    @Test
+
     public void customRegexInJavaRegex() {
         String pattern = "";
         String matchOn = "danielek4567@gmail.com";

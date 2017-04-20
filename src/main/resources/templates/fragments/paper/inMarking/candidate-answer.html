@@ -1,6 +1,8 @@
 <div class="candidate-answer collapsible-element" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="title" data-toggle="collapse" th:attr="data-target=${'#' + #ids.next('panel-candidate-answer')}">
         <a>Candidates Answer:</a>
+        <span class="glyphicon glyphicon-align-right glyphicon-triangle-bottom"></span>
+        <span class="glyphicon glyphicon-align-right glyphicon-triangle-top"></span>
     </div>
 
     <div th:id="${#ids.seq('panel-candidate-answer')}" class="panel-candidate-answer collapsible in">

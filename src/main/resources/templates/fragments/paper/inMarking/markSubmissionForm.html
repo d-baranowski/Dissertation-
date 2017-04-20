@@ -14,6 +14,8 @@
     <div class="form-comment-section collapsible-element">
         <div class="title" data-toggle="collapse" th:attr="data-target=${'#' + #ids.next('panel-comment-section')}">
             <a>Markers Comment:</a>
+            <span class="glyphicon glyphicon-align-right glyphicon-triangle-bottom"></span>
+            <span class="glyphicon glyphicon-align-right glyphicon-triangle-top"></span>
         </div>
 
         <div class="panel-comment-section collapsible in" th:id="${#ids.seq('panel-comment-section')}">

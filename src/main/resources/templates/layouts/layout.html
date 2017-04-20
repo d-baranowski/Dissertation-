@@ -6,11 +6,16 @@
     <link th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
     <link href="/static/css/print.css" th:href="@{/css/print.css}" rel="stylesheet"/>
     <link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" th:href="@{~/css/templatePageStyle.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{~/config/styles/colours.css}"/>
     <link rel="shortcut icon" th:href="@{~/images/favicon.ico}" />
     <link rel="icon" type="image/x-icon" th:href="@{~/images/favicon.ico}" />
+    <link rel="stylesheet" type="text/css" th:href="@{~/css/templatePageStyle.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <object layout:fragment="head" th:remove="tag"/>
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
     <input type="hidden" id= "csrf-token" th:name="${_csrf.parameterName}" th:content="${_csrf.token}" />
@@ -24,17 +29,27 @@
     </div>
 
     <div id="loading">
-        <img id="loading-image" src="../images/ajax-loader.gif" alt="Loading..." />
+        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
     </div>
 
     <div layout:fragment="modals"></div>
-    <script th:src="@{~/js/controllerEndpoints.js}"/>
+    <script th:inline="javascript">
+        /*[+
+
+         var MY_HELP_DATA  = [[${helpJson}]];
+
+         +]*/
+    </script>
+
     <script th:src="@{/webjars/jquery/2.1.4/jquery.min.js}"></script>
-    <script th:src="@{~/js/main.js}"/>
-    <script th:src="@{~/js/common/util.js}"/>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script th:src="@{/webjars/bootstrap/3.3.4/js/bootstrap.min.js}"></script>
-    <script src="https://cdn.jsdelivr.net/g/jquery.gritter@1.7.4(js/jquery.gritter.min.js+js/jquery.gritter.js)"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script th:src="@{~/js/lib/noty/noty.min.js}"></script>
+    <script th:src="@{~/js/common/util.js}"/>
+    <script th:src="@{~/js/controllerEndpoints.js}"/>
+    <script th:src="@{~/js/main.js}"/>
+
     <th:block layout:fragment="script"></th:block>
     <script>
         $(function () {

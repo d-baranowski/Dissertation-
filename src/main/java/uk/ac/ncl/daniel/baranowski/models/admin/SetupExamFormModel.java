@@ -6,6 +6,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Objects;
 
 import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.EXAM_PREFIX;
@@ -26,6 +30,10 @@ public final class SetupExamFormModel {
 
     @NotNull(message = "Pick a valid module")
     private int moduleId;
+
+    public SetupExamFormModel() {
+        day = new TestDayModel().setStartTime(getDefaultTime()).setDate(getDefaultDate());
+    }
 
     public Integer getModuleId() {
         return moduleId;
@@ -62,6 +70,20 @@ public final class SetupExamFormModel {
 
     public static String getENDPOINT() {
         return ENDPOINT;
+    }
+
+    public static String getDefaultDate() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate localDate = LocalDate.now();
+        String wtf = dtf.format(localDate);
+        return wtf;
+    }
+
+    public static String getDefaultTime() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String wtf =  sdf.format(cal.getTime());
+        return wtf;
     }
 
     @Override
