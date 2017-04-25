@@ -1,5 +1,9 @@
 package uk.ac.ncl.daniel.baranowski.models;
 
+import org.springframework.boot.json.JsonParser;
+import org.springframework.boot.json.JsonParserFactory;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -62,6 +66,23 @@ public class AnswersMapModel {
         }
 
         return noAnswerMsg;
+    }
+
+    //This method is used inside answerable template fragments
+    public Map<String,String> getExpressionAnswerMap(int sectionNo, int questionNo) {
+        final Map<Integer, AnswerModel> first = map.get(sectionNo);
+        if (first != null) {
+            final AnswerModel second = first.get(questionNo);
+            if (second != null) {
+                if (second.getText() != null) {
+                    String answer = second.getText();
+                    JsonParser jsonParser = JsonParserFactory.getJsonParser();
+                    Map<String,String> answersForBlanks = (Map) jsonParser.parseMap(answer);
+                    return answersForBlanks;
+                }
+            }
+        }
+        return Collections.emptyMap();
     }
 
     //This method is used inside answerable template fragments

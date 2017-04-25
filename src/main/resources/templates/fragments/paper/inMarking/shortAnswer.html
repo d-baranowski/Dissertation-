@@ -1,0 +1,33 @@
+<th:block  xmlns:th="http://www.thymeleaf.org">
+    <th:block th:switch="${currentQuestion.type}">
+        <th:block th:case="'Expression'">
+            <td th:with="blankToAnswerMap=${answers.getExpressionAnswerMap(sectionKey, questionKey)}">
+            <table th:if="${blankToAnswerMap.size() &gt; 0}" class="table table-condensed table-bordered">
+                <thead>
+                    <th>
+                        Blank No
+                    </th>
+                    <th>
+                        Answer
+                    </th>
+                </thead>
+                <tbody>
+                    <th:block th:each="blank : ${blankToAnswerMap.keySet()}">
+                        <tr>
+                            <td th:text="${blank}"></td>
+                            <td th:text="${blankToAnswerMap.get(blank)}"></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+            <th:block th:if="${blankToAnswerMap.size() &lt; 1}">Candidate did not answer this question.</th:block>
+            </td>
+        </th:block>
+        <th:block th:case="'Drawing'">
+            <td>This is a drawing question. The picture drawn is visible in the full answer view.</td>
+        </th:block>
+        <th:block th:case="*">
+            <td th:text="${answers.getNotNullAnswerTextShort(sectionKey, questionKey)}"></td>
+        </th:block>
+    </th:block>
+</th:block>

@@ -305,20 +305,24 @@ div.accordion-active-question + div.collapse-panel-decorator {
     font-size: larger;
 }
 
- div.collapsible-element > div.title > .glyphicon-triangle-bottom {
+div.collapsible-element > div.title {
+    cursor: pointer;
+}
+
+ div.collapsible-element > div.title.collapsed > .glyphicon-triangle-bottom {
      display: block;
      top: 35%;
  }
 
- div.collapsible-element > div.title.collapsed > .glyphicon-triangle-bottom {
-     display: none;
- }
-
- div.collapsible-element > div.title > .glyphicon-triangle-top {
+ div.collapsible-element > div.title > .glyphicon-triangle-bottom {
      display: none;
  }
 
  div.collapsible-element > div.title.collapsed > .glyphicon-triangle-top {
+     display: none;
+ }
+
+ div.collapsible-element > div.title > .glyphicon-triangle-top {
      display: block;
      top: 25%;
  }

@@ -279,3 +279,7 @@ div.fr-modal-body div.fr-image-list div.fr-image-container .fr-insert-img {
     z-index: 1031;
     padding-bottom: 30px;
 }
+
+.slick-slide:focus {
+    outline: none;
+}

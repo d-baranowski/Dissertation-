@@ -21,9 +21,9 @@
                         </thead>
                         <tbody>
                         <tr th:each="row : ${tableRows}">
-                            <th:box th:each="data : ${row}">
+                            <th:block th:each="data : ${row}">
                                 <td th:utext="${data}"></td>
-                            </th:box>
+                            </th:block>
                         </tr>
                         </tbody>
                     </table>
