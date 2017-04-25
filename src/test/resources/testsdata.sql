@@ -7,6 +7,7 @@ INSERT INTO User VALUES ('3ca33b4f-009a-4403-829b-e2d20b3d47c2','Bob','Smith','s
 INSERT INTO User VALUES ('fba6a561-8999-4b19-9c57-232895d024c6','Grzegorz','Brzenczyszczykiewicz','sampleAuthor','pass');
 INSERT INTO User VALUES ('94cbbbc4-f94d-40d2-b0cf-e642eb36e73a','Sam','Armstrong','sampleAdmin','pass');
 INSERT INTO User VALUES ('9f4db0ac-b18a-4777-8b04-b72a0eeccf5d','Jack','Brown','sampleAll','pass');
+INSERT INTO User VALUES ('AUTO-MARKER','Auto-Marker','','AeKdH4njtu3r4K7tDe2k4PxoIcQdXJW5JcWiGm70','L3F67YCO5CQHdQLNu1mDD8mmNLW2gzDvtEEzBI45');
 
 INSERT INTO UserRole VALUES ('3ca33b4f-009a-4403-829b-e2d20b3d47c2','Marker');
 INSERT INTO UserRole VALUES ('fba6a561-8999-4b19-9c57-232895d024c6','Author');

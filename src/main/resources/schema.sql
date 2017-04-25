@@ -1,7 +1,7 @@
 CREATE TABLE `User` (
   `_id` varchar(36) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `surname` varchar(50) NOT NULL,
+  `name` varchar(50),
+  `surname` varchar(50),
   `login` varchar(50) NOT NULL,
   `password` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`_id`)

@@ -31,6 +31,7 @@ import static uk.ac.ncl.daniel.baranowski.data.mappers.TestDayModelMapper.mapTes
 
 @Repository
 public class AttemptRepo {
+    private final UserRepo userRepo;
     private final PaperRepo paperRepo;
     private final PaperDAO paperDao;
     private final MarkDAO markDao;
@@ -47,7 +48,7 @@ public class AttemptRepo {
     @Autowired
     public AttemptRepo(PaperRepo paperRepo, MarkDAO markDao, AnswerDAO answerDao, AnswerAssetDAO assetDao, //NOSONAR
                        TestDayEntryDAO attemptDao, TestDayDAO dayDao, CandidateDAO candidateDao, PaperDAO paperDao,
-                       TermsAndConditionsDAO termsAndConditionsDAO, ExamDAO examDAO) {
+                       TermsAndConditionsDAO termsAndConditionsDAO, ExamDAO examDAO, UserRepo userRepo) {
         this.paperRepo = paperRepo;
         this.markDao = markDao;
         this.answerDao = answerDao;
@@ -57,6 +58,7 @@ public class AttemptRepo {
         this.candidateDao = candidateDao;
         this.paperDao = paperDao;
         this.examDAO = examDAO;
+        this.userRepo = userRepo;
         this.termsAndConditionsDAO = termsAndConditionsDAO;
     }
 
@@ -401,8 +403,13 @@ public class AttemptRepo {
         if (answer != null) {
             try {
                 if (answer.getMarkId() != null) {
-                    //TODO attach marker to mark
-                    mark = mapMarkModelFrom(markDao.read(answer.getMarkId()), null);
+                    Mark markTable = markDao.read(answer.getMarkId());
+                    UserReferenceModel marker = null;
+                    if (markTable.getMarkerId() != null) {
+                        marker = userRepo.getUserReference(markTable.getMarkerId());
+                    }
+
+                    mark = mapMarkModelFrom(markTable,marker);
                 }
 
                 return mapAnswerModelFrom(answer, mark, getAnswerAsset(answer.getQuestionId(), answer.getQuestionVersionNo(), answer.getTestDayEntryId()));

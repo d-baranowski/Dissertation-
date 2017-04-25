@@ -15,6 +15,8 @@ $(document).ready(function () {
 function updateMark(mark) {
     var formId = 'form-for-attempt-' + mark.testAttemptId + '-question-' + mark.questionId + '-version-' + mark.questionVersionNo;
 
+    var markedByTd = $('#marked-by-for-test-attempt-' + mark.testAttemptId + '-question-' + mark.questionId + '-version-' + mark.questionVersionNo);
+    $(markedByTd).text(mark.mark.marker.name + ' ' + mark.mark.marker.surname);
     $('select[form=' + formId + ']').val(mark.mark.mark);
     $('textarea[form=' + formId + ']').val(mark.mark.comment);
 }

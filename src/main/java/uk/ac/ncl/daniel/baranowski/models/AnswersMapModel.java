@@ -30,17 +30,19 @@ public class AnswersMapModel {
         map.get(sectionNo).put(questionNo, model);
     }
 
+    private static final String noAnswerMsg = "Candidate did not answer this question.";
     //This method is used inside answerable template fragments
     public String getNotNullAnswerText(int sectionNo, int questionNo) {
+
         final Map<Integer, AnswerModel> first = map.get(sectionNo);
         if (first != null) {
             final AnswerModel second = first.get(questionNo);
             if (second != null) {
-                return second.getText() == null ? "" : second.getText();
+                return second.getText() == null ? noAnswerMsg : second.getText();
             }
         }
 
-        return "";
+        return noAnswerMsg;
     }
 
     //This method is used inside answerable template fragments
@@ -55,11 +57,11 @@ public class AnswersMapModel {
                     }
                     return second.getText();
                 }
-                return "";
+                return noAnswerMsg;
             }
         }
 
-        return "";
+        return noAnswerMsg;
     }
 
     //This method is used inside answerable template fragments
@@ -111,6 +113,25 @@ public class AnswersMapModel {
         }
 
         return false;
+    }
+
+    //This method is used inside answerable template fragments
+    public String getNonNullMakerName(int sectionNo, int questionNo) {
+        final Map<Integer, AnswerModel> first = map.get(sectionNo);
+        if (first != null) {
+            final AnswerModel second = first.get(questionNo);
+            if (second != null) {
+                final MarkModel mark = second.getMark();
+                if (mark != null) {
+                    final UserReferenceModel marker =  mark.getMarker();
+                    if (marker != null) {
+                        return (marker.getName() != null ? marker.getName() : "")  + " " + (marker.getSurname() != null ? marker.getSurname() : "");
+                    }
+                }
+            }
+        }
+
+        return "Not Marked";
     }
 
     //This method is used inside answerable template fragments
