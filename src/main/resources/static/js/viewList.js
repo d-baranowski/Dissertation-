@@ -13,7 +13,8 @@ $(document).ready(function () {
             {"orderable": false, "targets": colNo - 1},
             {"searchable": false, "targets": colNo - 2},
             {"searchable": false, "targets": colNo - 1}
-        ]
+        ],
+        "order": [[ 0, "desc" ]]
     });
 
     $(table).on('click', 'tr', function(event) {

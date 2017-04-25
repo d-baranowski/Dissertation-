@@ -228,13 +228,22 @@ function assignShowSubmitDialogToButton(){
     });
 }
 
+function validateForm(form) {
+    if (form.text.value.length < 1) {
+        return false
+    }
+}
+
 function finishTestAttempt(){
     $("#areyousure").modal('hide');
     showLoading();
     var forms = document.getElementsByTagName("form");
 
     $(forms).each(function(){
-        $(this).submit();
+        var form = this;
+        if (validateForm(form)) {
+            $(form).submit();
+        }
     });
 
     $.ajax({
