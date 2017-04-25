@@ -28,13 +28,20 @@ public class MultiChoiceMarker implements AutoMarker {
 
     @Override
     public MarkModel getMark(QuestionModel question, AnswerModel answer) {
-        String answerText = answer.getText() != null ? answer.getText() : "";
+        MarkModel mark = new MarkModel();
+        mark.setComment("Auto Marked");
+
+        if (answer.getText() == null) {
+            mark.setMark(0);
+            return mark;
+        }
+
+        String answerText = answer.getText();
         Map<String, String> markMap;
         int markVal = 0;
         try {
             markMap = (Map) jsonParser.parseMap(question.getCorrectAnswer());
         } catch (IllegalArgumentException e) {
-            MarkModel mark = new MarkModel();
             mark.setComment("Auto marking failed because correct answer isn't in correct format.");
             mark.setMark(0);
             LOGGER.log(Level.WARNING, "Could not parse correct answer for multiple choice question", e);
@@ -48,8 +55,7 @@ public class MultiChoiceMarker implements AutoMarker {
                 }
             }
 
-            MarkModel mark = new MarkModel();
-            mark.setComment("Auto Marked");
+
             mark.setMark(markVal);
             return mark;
     }

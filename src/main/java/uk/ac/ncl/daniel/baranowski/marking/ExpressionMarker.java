@@ -31,8 +31,16 @@ public class ExpressionMarker implements AutoMarker {
 
     @Override
     public MarkModel getMark(QuestionModel question, AnswerModel answer) {
+        MarkModel mark = new MarkModel();
         try {
+            mark.setComment("Auto Marked");
             Row[] rows = objectMapper.readValue(question.getCorrectAnswer(),Row[].class);
+
+            if (answer.getText() == null) {
+                mark.setMark(0);
+                return mark;
+            }
+
             Map<String,String> answersForBlanks = (Map) jsonParser.parseMap(answer.getText());
             RowsByBlankNo rowsByBlank = new RowsByBlankNo();
 
@@ -58,12 +66,11 @@ public class ExpressionMarker implements AutoMarker {
             }
 
             int markVal = 0;
-            for (Integer mark : marksForBlank.values()) {
-                markVal += mark;
+            for (Integer iterationMark : marksForBlank.values()) {
+                markVal += iterationMark;
             }
 
-            MarkModel mark = new MarkModel();
-            mark.setComment("Auto Marked");
+
             mark.setMark(markVal);
             return mark;
 
@@ -71,7 +78,6 @@ public class ExpressionMarker implements AutoMarker {
             e.printStackTrace();
         }
 
-        MarkModel mark = new MarkModel();
         mark.setComment("Auto Marking failed");
         mark.setMark(0);
         return mark;
