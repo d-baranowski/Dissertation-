@@ -4,12 +4,14 @@
             <td th:with="blankToAnswerMap=${answers.getExpressionAnswerMap(sectionKey, questionKey)}">
             <table th:if="${blankToAnswerMap.size() &gt; 0}" class="table table-condensed table-bordered">
                 <thead>
-                    <th>
-                        Blank No
-                    </th>
-                    <th>
-                        Answer
-                    </th>
+                    <tr>
+                        <th>
+                            Blank No
+                        </th>
+                        <th>
+                            Answer
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
                     <th:block th:each="blank : ${blankToAnswerMap.keySet()}">

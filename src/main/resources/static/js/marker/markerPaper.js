@@ -19,6 +19,7 @@ function updateMark(mark) {
     $(markedByTd).text(mark.mark.marker.name + ' ' + mark.mark.marker.surname);
     $('select[form=' + formId + ']').val(mark.mark.mark);
     $('textarea[form=' + formId + ']').val(mark.mark.comment);
+    $('input[name="comment"][form=' + formId + ']').val(mark.mark.comment);
 }
 
 function handleMarkSubmissions() {
