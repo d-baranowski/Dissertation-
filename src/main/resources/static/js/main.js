@@ -69,7 +69,7 @@ function messageSlideOut() {
 }
 
 function flashElementGreen(target) {
-    $(target).animate({color: "#5CB85C"}).animate({color: '#000000'}, {duration: 800});
+    $(target).animate({color: "#5CB85C"}).animate({color: '#0069A0'}, {duration: 800});
 }
 
 var notifyHelpHolderChanged = function() {

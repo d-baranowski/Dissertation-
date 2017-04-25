@@ -207,6 +207,16 @@ a.disabled {
     -webkit-animation: spin2 2s infinite linear;
 }
 
+#help-for-question-type {
+    color: #0069A0;
+    cursor: help;
+}
+
+span.glyphicon.glyphicon-question-sign[data-help] {
+    color: #0069A0;
+    cursor: help;
+}
+
 @-webkit-keyframes spin2 {
     from { -webkit-transform: rotate(0deg);}
     to { -webkit-transform: rotate(360deg);}

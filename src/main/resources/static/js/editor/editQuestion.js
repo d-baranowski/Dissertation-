@@ -20,7 +20,8 @@ $(document).ready(function(){
 
     $('#type').val($('.js-change-type-hook').val());
 
-    $('#show-example-btn').click(function () {
+    $('#show-example-btn').click(function (e) {
+        e.preventDefault();
         showExampleQuestion(true);
     });
 

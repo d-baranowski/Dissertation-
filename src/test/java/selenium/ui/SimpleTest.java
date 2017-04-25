@@ -7,10 +7,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -250,9 +247,8 @@ public class SimpleTest {
         loginAs("sampleAll","pass", "Jack Brown");
 
         openEditorForQuestion("Name","Selenium Multiple Choice Question 1");
-        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "\nA) This answer gives you 1 Mark\nB) This answer gives you 2 Marks\nC)This answer gives you 0 marksD)This answer gives you 4 marks.");
-        click(By.id("js-rebuild-wizard"));
-        multiChoiceMark(0,3);
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "\nA) This answer gives you 1 Mark\nB) This answer gives you 2 Marks\nC)This answer gives you 0 marks\nD)This answer gives you 4 marks.");
+
         multiChoiceMark(1,1);
         multiChoiceMark(2,2);
         multiChoiceMark(4,4);
@@ -262,7 +258,7 @@ public class SimpleTest {
 
         openEditorForQuestion("Name","Selenium Multiple Choice Question 2");
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "\nA) \nB)\nC) D) Each answer gives you one mark.");
-        click(By.id("js-rebuild-wizard"));
+
         multiChoiceMark(1,1);
         multiChoiceMark(2,1);
         multiChoiceMark(2,2);
@@ -279,7 +275,7 @@ public class SimpleTest {
 
         openEditorForQuestion("Name","Selenium Multiple Choice Question 3");
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "\nA) \nB) a and b gives you 1 Mark \nC) D) c and d give you 2 marks, a and d give you 3 marks, b and c give you 4 marks ");
-        click(By.id("js-rebuild-wizard"));
+
         multiChoiceMark(1,1);
         multiChoiceMark(1,2);
 
@@ -292,24 +288,24 @@ public class SimpleTest {
         multiChoiceMark(4,2);
         multiChoiceMark(4,3);
         moveToBottomOfPage();
-        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+
         waitForSuccessAlert();
 
         openEditorForQuestion("Name","Selenium Expression Question 1");
-        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
-        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), " [[1]]");
+
         clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "Java");
         clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
         click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[1]"));
         clearType(By.xpath("//*[@id=\"regex-builder-answer-2\"]"), "C#");
         clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
         moveToBottomOfPage();
-        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+
         waitForSuccessAlert();
 
         openEditorForQuestion("Name","Selenium Expression Question 2");
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
-        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+
         clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "Hello World");
         clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
         click(By.xpath("//*[@id=\"regex-builder-option1-whiteSpace\"]"));
@@ -323,7 +319,7 @@ public class SimpleTest {
 
         openEditorForQuestion("Name","Selenium Expression Question 3");
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
-        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+
         clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "S.W.A.T");
         clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
         click(By.xpath("//*[@id=\"regex-builder-option1-alternatePunctuation\"]"));
@@ -332,12 +328,12 @@ public class SimpleTest {
         clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
         click(By.xpath("//*[@id=\"regex-builder-option2-alternatePunctuation\"]"));
         moveToBottomOfPage();
-        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+
         waitForSuccessAlert();
 
         openEditorForQuestion("Name","Selenium Expression Question 4");
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
-        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+
         clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "GoOGle");
         clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
         click(By.xpath("//*[@id=\"regex-builder-option1-caseInsensitive\"]"));
@@ -346,12 +342,12 @@ public class SimpleTest {
         clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
         click(By.xpath("//*[@id=\"regex-builder-option2-caseInsensitive\"]"));
         moveToBottomOfPage();
-        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+
         waitForSuccessAlert();
 
         openEditorForQuestion("Name","Selenium Expression Question 5");
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
-        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+
         clearType(By.xpath("//*[@id=\"regex-builder-answer-1\"]"), "F.E.A.R iS A GoOD   Game");
         clearType(By.xpath("//*[@id=\"mark-for-1\"]"), "50");
         click(By.xpath("//*[@id=\"regex-builder-option1-whiteSpace\"]"));
@@ -361,23 +357,27 @@ public class SimpleTest {
         clearType(By.xpath("//*[@id=\"regex-builder-answer-2\"]"), "Random");
         clearType(By.xpath("//*[@id=\"mark-for-2\"]"), "1");
         moveToBottomOfPage();
-        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
+
         waitForSuccessAlert();
 
         openEditorForQuestion("Name","Selenium Expression Question 6");
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "[[1]]");
-        click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[2]/button[1]"));
+        moveToBottomOfPage();
+
         click(By.xpath("//*[@id=\"{row-id}\"]/div[3]/div[1]/button[2]"));
         clearType(By.xpath("//*[@id=\"regex-for-1\"]"), "((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\]))|cheatSheet");
         driver.findElement(By.xpath("//*[@id=\"mark-for-1\"]")).sendKeys("50");
         moveToBottomOfPage();
-        click(By.xpath("//*[@id=\"content\"]/div/button[2]"));
         waitForSuccessAlert();
 
         if (backupUITestStages) {
             PreparedStatement statement = jdbc.getDataSource().getConnection().prepareStatement("SCRIPT TO './src/test/resources/h2Back/testQuestionsEdited.sql'");
             statement.execute();
         }
+    }
+
+    private void waitToLoad() {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading")));
     }
 
     @Test
@@ -389,39 +389,47 @@ public class SimpleTest {
 
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-edit"));
-        click(By.linkText("Sections"));
+        click(By.id("CreateSections"));
+        waitToLoad();
 
         driver.findElement(By.id("referenceName")).sendKeys("Selenium Section");
         clearType(By.id("noOfQuestionsToAnswer"),"6");
         clearType(By.id("timeScale"),"60");
 
-        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "Sample selenium section");
+        typeInFroala(By.xpath("//*[@id=\"form-group-instructionsText\"]/div[1]/div[3]/div"), "Sample selenium section");
 
-        click(By.xpath("//*[@id=\"content\"]/div/form/input[3]"));
+        click(By.cssSelector("input[type=\"submit\"]"));
 
         WebDriverWait wait = new WebDriverWait(driver, 500);
         Pattern p = Pattern.compile(PAPER_PREFIX + PAPER_SECTION_EDITOR + "\\?sectionId=\\d&sectionVersion=1");
         wait.until(ExpectedConditions.urlMatches(p.pattern()));
+        waitToLoad();
 
         assertEquals(driver.findElement(By.id("referenceName")).getAttribute("readonly"),"true");
 
         click(By.id("nav-browse"));
-        click(By.linkText("Sections"));
+        click(By.id("BrowseSections"));
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys("Selenium Section");
 
         findInTable("Name","Selenium Section").click();
 
+        waitToLoad();
         assertTrue(driver.findElement(By.className("info-banner")).getText().contains("Sample selenium section"));
 
         click(By.id("nav-browse"));
-        click(By.linkText("Sections"));
+        click(By.id("BrowseSections"));
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys("Selenium Section");
 
         findInTable("Name","Selenium Section").findElement(By.className("glyphicon-pencil")).click();
 
-        driver.findElement(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input")).sendKeys("Selenium");
+        waitToLoad();
+        driver.findElement(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input")).sendKeys("Selenium Java");
         click(By.xpath("//*[@id=\"554599056\"]/td[9]/a"));
+        driver.findElement(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input")).sendKeys(Keys.CONTROL,"a");
+        driver.findElement(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input")).sendKeys("Selenium C");
         click(By.xpath("//*[@id=\"134369432\"]/td[9]/a"));
+        driver.findElement(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input")).sendKeys(Keys.CONTROL,"a");
+        driver.findElement(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input")).sendKeys("Selenium");
         click(By.xpath("//*[@id=\"-1167953417\"]/td[9]/a"));
         click(By.xpath("//*[@id=\"-280419945\"]/td[9]/a"));
         click(By.xpath("//*[@id=\"607113527\"]/td[9]/a"));
@@ -438,12 +446,12 @@ public class SimpleTest {
 
         String actual = driver.findElement(By.xpath("//*[@id=\"sectionQuestions\"]/tbody")).getAttribute("innerHTML");
 
-        assertTrue(actual.contains("<a href=\"/test-paper/view-question/42/1\">View</a>"));
-        assertTrue(actual.contains("<a href=\"/test-paper/view-question/43/1\">View</a>"));
-        assertTrue(actual.contains("<a href=\"/test-paper/view-question/44/1\">View</a>"));
-        assertTrue(actual.contains("<a href=\"/test-paper/view-question/45/1\">View</a>"));
-        assertTrue(actual.contains("<a href=\"/test-paper/view-question/46/1\">View</a>"));
-        assertTrue(actual.contains("<a href=\"/test-paper/view-question/47/1\">View</a>"));
+        assertTrue(actual.contains("href=\"/test-paper/view-question/42/1\""));
+        assertTrue(actual.contains("href=\"/test-paper/view-question/43/1\""));
+        assertTrue(actual.contains("href=\"/test-paper/view-question/44/1\""));
+        assertTrue(actual.contains("href=\"/test-paper/view-question/45/1\""));
+        assertTrue(actual.contains("href=\"/test-paper/view-question/46/1\""));
+        assertTrue(actual.contains("href=\"/test-paper/view-question/47/1\""));
 
         clearType(By.xpath("//*[@id=\"availableQuestions_filter\"]/label/input"),"Develop IsOdd");
         click(By.xpath("//*[@id=\"-1982189055\"]/td[9]/a"));
@@ -452,7 +460,7 @@ public class SimpleTest {
         click(By.xpath("//*[@id=\"sectionQuestions\"]/tbody/tr/td[10]/a"));
 
         click(By.id("nav-browse"));
-        click(By.linkText("Sections"));
+        click(By.id("BrowseSections"));
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys("Selenium Section");
         findInTable("Name","Selenium Section").click();
 
@@ -498,19 +506,20 @@ public class SimpleTest {
 
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-edit"));
-        click(By.linkText("Papers"));
+        click(By.id("CreatePapers"));
 
+        waitToLoad();
         clearType(By.id("referenceName"), "Selenium Test Paper");
         clearType(By.id("timeAllowed"), "60");
 
-        typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), "This test paper has been generated by selenium");
+        typeInFroala(By.xpath("//*[@id=\"form-group-instructionsText\"]/div[1]/div[3]/div/p"), "This test paper has been generated by selenium");
 
-        driver.findElement(By.xpath("//*[@id=\"content\"]/div/form/input[3]")).click();
+        driver.findElement(By.cssSelector("input[type=\"submit\"]")).click();
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id=\"content\"]/div/form/input[3]")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("input[type=\"submit\"]")));
+        waitToLoad();
 
-        clearType(By.xpath("//*[@id=\"availableSections_filter\"]/label/input"), "Selenium");
-
+        clearType(By.cssSelector("#availableSections_filter > label > input"), "Selenium");
         click(By.xpath("//*[@id=\"-799534753\"]/td[7]/a"));
 
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//*[@id=\"paperSections\"]/tbody/tr")));
@@ -526,6 +535,14 @@ public class SimpleTest {
         }
     }
 
+    private void select2Type(By by ,String choice) {
+        click(by);
+        Actions actions = new Actions(driver);
+        actions.sendKeys(choice);
+        actions.sendKeys(Keys.ENTER);
+        actions.build().perform();
+    }
+
     @Test
     public void A8canSetupAnExam() throws SQLException {
         if (loadUITestStages) {
@@ -534,8 +551,10 @@ public class SimpleTest {
         }
 
         loginAs("sampleAll","pass", "Jack Brown");
-        click(By.id("pickPaperSelect"));
-        click(By.xpath("//*[@id=\"pickPaperSelect\"]/option[4]"));
+        click(By.id("nav-setup-exam"));
+
+        select2Type(By.id("select2-pickPaperSelect-container"), "Selenium Test Paper");
+
         click(By.id("datepicker"));
         click(By.className("ui-state-highlight"));
 
@@ -567,7 +586,7 @@ public class SimpleTest {
 
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.linkText("Exams"));
+        click(By.id("BrowseExams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
 
@@ -583,7 +602,7 @@ public class SimpleTest {
     private void loginToTakeExams(int userNo) {
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.linkText("Exams"));
+        click(By.id("BrowseExams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
 
@@ -1013,7 +1032,7 @@ public class SimpleTest {
 
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.linkText("Exams"));
+        click(By.id("BrowseExams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
 
@@ -1054,7 +1073,7 @@ public class SimpleTest {
 
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.linkText("Exams"));
+        click(By.id("BrowseExams"));
 
         findInTable("Test Paper", "Selenium Test Paper").click();
 
@@ -1176,22 +1195,22 @@ public class SimpleTest {
 
         loginAs("sampleAll","pass", "Jack Brown");
         click(By.id("nav-browse"));
-        click(By.linkText("Questions"));
+        click(By.id("BrowseQuestions"));
 
         clearType(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input"), "Selenium Multiple Choice Question 3");
         findInTable("Name","Selenium Multiple Choice Question 3").findElement(By.className("glyphicon-pencil")).click();
 
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[2]/td[2]/input[1]")).isSelected());
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[2]/td[2]/input[2]")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='1'][data-letter-required='A)']")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='1'][data-letter-required='B)']")).isSelected());
 
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[3]/td[2]/input[3]")).isSelected());
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[3]/td[2]/input[4]")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='2'][data-letter-required='C)']")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='2'][data-letter-required='D)']")).isSelected());
 
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[4]/td[2]/input[1]")).isSelected());
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[4]/td[2]/input[4]")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='3'][data-letter-required='A)']")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='3'][data-letter-required='D)']")).isSelected());
 
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[5]/td[2]/input[2]")).isSelected());
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr[5]/td[2]/input[3]")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='4'][data-letter-required='B)']")).isSelected());
+        assertTrue(driver.findElement(By.cssSelector("input[data-score='4'][data-letter-required='C)']")).isSelected());
     }
 
     private void submitAnswer(By by) {
@@ -1203,10 +1222,11 @@ public class SimpleTest {
 
     private void openEditorForQuestion(String col, String value) {
         click(By.id("nav-browse"));
-        click(By.linkText("Questions"));
+        click(By.id("BrowseQuestions"));
 
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys(value);
         findInTable(col,value).findElement(By.className("glyphicon-pencil")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading")));
     }
 
     private void moveToElement(By by) {
@@ -1258,17 +1278,20 @@ public class SimpleTest {
     }
 
     private void createQuestion(String language, String referenceName, String difficulty, String timeScale, String questionText, String markingGuide, String questionType) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading")));
         click(By.id("nav-edit"));
         click(By.id("CreateQuestions"));
         driver.findElement(By.id("language")).sendKeys(language);
         driver.findElement(By.id("referenceName")).sendKeys(referenceName);
         clearType(By.id("difficulty"), difficulty);
         clearType(By.id("timeScale"),timeScale);
-        click(By.xpath("//*[@id=\"form-group-type\"]/p/select"));
+        click(By.id("question-type-select"));
         click(By.cssSelector("option[value='"+questionType+"']"));
+        clearFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"));
         click(By.xpath("//*[@id=\"italic-1\"]"));
         click(By.xpath("//*[@id=\"underline-1\"]"));
         typeInFroala(By.xpath("//*[@id=\"form-group-text\"]/div[1]/div[3]/div/p"), questionText);
+        clearFroala(By.xpath("//*[@id=\"form-group-markingGuide\"]/div[1]/div[3]/div/p"));
         typeInFroala(By.xpath("//*[@id=\"form-group-markingGuide\"]/div[1]/div[3]/div/p"),markingGuide);
 
 
@@ -1280,19 +1303,26 @@ public class SimpleTest {
         assertEquals(driver.findElement(By.id("referenceName")).getAttribute("readonly"),"true");
         assertEquals(driver.findElement(By.id("difficulty")).getAttribute("readonly"),"true");
 
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("loading")));
         click(By.id("nav-browse"));
-        click(By.id("view-questions-link"));
+        click(By.id("BrowseQuestions"));
         driver.findElement(By.xpath("//*[@id=\"viewListTable_filter\"]/label/input")).sendKeys(referenceName);
 
         findInTable("Name",referenceName).click();
 
         String questionContents = driver.findElement(By.xpath("//*[@id=\"content\"]/div/div")).getAttribute("innerHTML");
-        assertTrue(questionContents.contains("<p><em><u>"+questionText+"</u></em></p>"));
-        assertTrue(questionContents.replace("&nbsp;", " ").contains(markingGuide));
+        assertTrue(questionContents.contains("<em><u>"+questionText+"</u></em>"));
+
+
+        click(By.linkText("View as Marker"));
+        click(By.linkText("Marking Guide:"));
+
+        String markingGuideContents = driver.findElement(By.id("panel-answer-section1")).getAttribute("innerHTML");
+        assertTrue(markingGuideContents.replace("&nbsp;", " ").contains(markingGuide));
     }
 
     private void multiChoiceMark(int mark, int letter) {
-        click(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr["+(mark + 1)+"]/td[2]/input["+letter+"]"));
+        click(By.xpath("//*[@id=\"form-group-correctAnswer\"]/div[1]/table/tbody/tr["+(mark)+"]/td[2]/input["+letter+"]"));
     }
 
     @After
@@ -1306,8 +1336,7 @@ public class SimpleTest {
 
     private void waitForSuccessAlert() {
         WebDriverWait wait = new WebDriverWait(driver, 5000);
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("alert")));
-        assertTrue(driver.findElement(By.id("alert")).getAttribute("class").contains("success"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.className("noty_type_success")));
     }
 
     private void loginAs(String userName, String password, String expectedName) {
@@ -1357,6 +1386,21 @@ public class SimpleTest {
         element.sendKeys(Keys.CONTROL,"a");
         element.sendKeys(Keys.DELETE);
         element.sendKeys(keys);
+    }
+
+    private void clearFroala(By findBy) {
+        wait.until(ExpectedConditions.elementToBeClickable(findBy));
+        driver.findElement(findBy).click();
+        wait.until(ExpectedConditions.elementToBeClickable(findBy));
+        driver.findElement(findBy).click();
+        wait.until(ExpectedConditions.elementToBeClickable(findBy));
+        driver.findElement(findBy).click();
+
+        Actions action = new Actions(driver);
+        String selectAll = Keys.chord(Keys.CONTROL, "a");
+        action.sendKeys(selectAll);
+        action.sendKeys(Keys.DELETE);
+        action.perform();
     }
 
     private void typeInFroala(By findBy, String keys) {
