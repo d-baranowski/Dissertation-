@@ -28,14 +28,16 @@
 
     <form role="form" method="post" th:action="${BEGIN_ENDPOINT}" th:if="${EXAM_STATUS.equals(CREATED) == true}">
         <input data-help="EXAM_VIEW_BEGIN_EXAM" class="btn btn-primary" value="Begin Exam" type="submit"/>
+        <br/>
     </form>
 
     <a data-help="EXAM_VIEW_LOGIN_CANDIDATE" class="btn btn-warning" th:if="${EXAM_STATUS.equals(STARTED) == true}" th:href="'/logout?redir=/test-attempt/' + ${exam.getId()} + '/login'">Log In as Candidate</a>
-
+    <br/>
     <form role="form" method="post" th:action="${END_ENDPOINT}" th:if="${EXAM_STATUS.equals(STARTED) == true}">
         <input data-help="EXAM_VIEW_BEGIN_EXAM"  class="btn btn-danger" value="End Exam" type="submit"/>
+        <br/>
     </form>
-    <br/>
+
     <button data-help="EXAM_VIEW_SIMULATE_EXAM" onclick="simulateExam(this)" th:if="${EXAM_STATUS.equals(CREATED) == true}" th:attr="data-exam-id=${exam.getId()}" class="btn btn-warning">Simulate Random Exam</button>
     <br/>
     <a data-help="EXAM_VIEW_MARK_EXAM" class="btn btn-primary" th:href="'/exam/mark/' + ${exam.getId()}" th:if="${EXAM_STATUS.equals(FINISHED) == true or EXAM_STATUS.equals(MARKING_ONGOING)}">Mark Exam</a>

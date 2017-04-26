@@ -42,7 +42,7 @@ public class UserDAOIntegrationTest {
 
     @Test
     public void canGetUserCount() {
-        assertEquals(8, userDao.getCount());
+        assertEquals(9, userDao.getCount());
     }
 
     @Test

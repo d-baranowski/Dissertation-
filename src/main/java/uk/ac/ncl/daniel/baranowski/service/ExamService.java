@@ -166,9 +166,28 @@ public class ExamService {
     public void finnishExam(int examId) {
         try {
             examRepo.endExam(examId);
+            finnishAllAttemptsForTheExam(examId);
             autoMarkExam(examId);
         } catch (AccessException e) {
             final String errorMsg = "Failed to end exam " + examId;
+            LOGGER.log(Level.WARNING, errorMsg, e);
+            throw new HttpServerErrorException(INTERNAL_SERVER_ERROR, errorMsg);
+        }
+    }
+
+    public void finnishAllAttemptsForTheExam(int examId) {
+        try {
+            List<AttemptReferenceModel> attempts = attemptRepo.getAllAttemptReferencesForExam(examId);
+
+            for (AttemptReferenceModel attempt : attempts) {
+                if (attempt.getStatus().equals(ExamStatus.FINISHED.name())) {
+                    return;
+                }
+                attemptRepo.setAttemptStatus(ExamStatus.FINISHED, attempt.getId());
+            }
+
+        } catch (AccessException e) {
+            final String errorMsg = "Failed to set status of attempts from exam " + examId + " to finished.";
             LOGGER.log(Level.WARNING, errorMsg, e);
             throw new HttpServerErrorException(INTERNAL_SERVER_ERROR, errorMsg);
         }

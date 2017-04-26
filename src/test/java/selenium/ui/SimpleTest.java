@@ -1,15 +1,15 @@
 package selenium.ui;
 
+
 import org.joda.time.LocalTime;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.support.events.WebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +40,12 @@ import static uk.ac.ncl.daniel.baranowski.common.ControllerEndpoints.PAPER_SECTI
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @WebIntegrationTest()
 public class SimpleTest {
-    private WebDriver driver;
+    private EventFiringWebDriver driver;
     private String baseUrl = "https://localhost:8900";
     private StringBuffer verificationErrors = new StringBuffer();
     private WebDriverWait wait;
-    Actions action;
+    private JavascriptExecutor executor;
+    private Actions action;
 
     @Autowired
     JdbcTemplate jdbc;
@@ -58,11 +59,133 @@ public class SimpleTest {
     @Before
     public void setUp() throws Exception {
         System.setProperty("webdriver.chrome.driver", "src\\test\\resources\\chromedriver.exe");
-        driver = new ChromeDriver();
+        driver = new EventFiringWebDriver(new ChromeDriver());
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
         wait = new WebDriverWait(driver, 500);
         action = new Actions(driver);
+        if (driver instanceof JavascriptExecutor) {
+            executor = ((JavascriptExecutor) driver);
+        }
+
+        driver.register(new WebDriverEventListener() {
+            @Override
+            public void beforeAlertAccept(WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterAlertAccept(WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterAlertDismiss(WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeAlertDismiss(WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeNavigateTo(String url, WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterNavigateTo(String url, WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeNavigateBack(WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterNavigateBack(WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeNavigateForward(WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterNavigateForward(WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeNavigateRefresh(WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterNavigateRefresh(WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeFindBy(By by, WebElement element, WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterFindBy(By by, WebElement element, WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeClickOn(WebElement element, WebDriver driver) {
+                hideHelpSliders();
+            }
+
+            @Override
+            public void afterClickOn(WebElement element, WebDriver driver) {
+
+            }
+
+            @Override
+            public void beforeChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
+
+            }
+
+            @Override
+            public void afterChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
+
+            }
+
+            @Override
+            public void beforeScript(String script, WebDriver driver) {
+
+            }
+
+            @Override
+            public void afterScript(String script, WebDriver driver) {
+
+            }
+
+            @Override
+            public void onException(Throwable throwable, WebDriver driver) {
+
+            }
+        });
     }
+
+    private void executeJavaScript(String javascript) {
+        executor.executeScript(javascript);
+    }
+
+    private void hideHelpSliders() {
+        executeJavaScript("console.log('Disabling slide in help for testing')");
+        executeJavaScript("for (i = 0; i < document.getElementsByClassName('js-footer-help-slide-out').length; i++) { document.getElementsByClassName('js-footer-help-slide-out')[0].remove() }");
+    }
+
+
 
     @Test
     public void A1viewingQuestionsWorksCorrectly() throws Exception {
@@ -70,13 +193,14 @@ public class SimpleTest {
         click(By.id("nav-browse"));
         click(By.id("BrowseQuestions"));
 
+        clearType(By.cssSelector("input[type='search']"), "Develop isEven()");
         findInTable("Id", "1").click();
 
         assertEquals(driver.findElement(By.id("question-text-for-1-1")).getText(), "You have been asked to develop a function called IsEven that return true if a given integer parameter is even, or false if odd. Write this function below.");
         assertEquals("/test-paper/view-question/1/1", driver.getCurrentUrl().replace(baseUrl,""));
 
         driver.navigate().back();
-        click(By.cssSelector("a[data-dt-idx='3']"));
+        clearType(By.cssSelector("input[type='search']"), "Sample multiple choice 9");
         findInTable("Id", "40").click();
 
         assertEquals(driver.findElement(By.id("question-text-for-40-1")).getText(), "Correct answer is A A) Some text\nB) Some text\nC) Some text");
@@ -583,8 +707,9 @@ public class SimpleTest {
 
         findInTable("Test Paper", "Selenium Test Paper").click();
 
-        String userLogin = driver.findElement(By.xpath("//*[@id=\"loadedContent\"]/div/table/tbody/tr["+userNo+"]/td[3]")).getText();
-        String userPass  = driver.findElement(By.xpath("//*[@id=\"loadedContent\"]/div/table/tbody/tr["+userNo+"]/td[4]")).getText();
+
+        String userLogin = driver.findElement(By.xpath("//*[@id=\"DataTables_Table_0\"]/tbody/tr["+userNo+"]/td[3]")).getText();
+        String userPass  = driver.findElement(By.xpath("//*[@id=\"DataTables_Table_0\"]/tbody/tr["+userNo+"]/td[4]")).getText();
         click(By.xpath("//*[@id=\"loadedContent\"]/div/a"));
 
 
@@ -594,12 +719,13 @@ public class SimpleTest {
         driver.findElement(By.xpath("//*[@id=\"inputPassword\"]")).sendKeys(userPass);
         click(By.xpath("//*[@id=\"main-login-btn\"]"));
 
-        wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/test-attempt/"+userNo+"/start"));
+        wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/test-attempt/\\d/start"));
         String html = getInnerHTML(By.xpath("/html/body/div[1]/div[2]/div/div/div"));
         assertTrue(html.contains("Test: Selenium Test Paper"));
         click(By.xpath("//*[@id=\"checkBoxID\"]"));
         click(By.xpath("//*[@id=\"buttonID\"]"));
         wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/test-attempt/ongoing"));
+        waitToLoad();
     }
 
     @Test
@@ -610,7 +736,7 @@ public class SimpleTest {
         }
 
         loginToTakeExams(1);
-
+        waitToLoad();
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[3]/div")).contains("Question 1.1"));
@@ -699,7 +825,7 @@ public class SimpleTest {
         click(By.id("buttonID"));
 
         loginToTakeExams(2);
-
+        waitToLoad();
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
         assertTrue(getInnerHTML(By.xpath("//*[@id=\"carousell\"]/div/div/div[3]/div")).contains("Question 1.1"));
@@ -1057,6 +1183,7 @@ public class SimpleTest {
 
         click(By.xpath("//*[@id=\"loadedContent\"]/div/a"));
         wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/exam/mark/2"));
+        waitToLoad();
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
@@ -1076,27 +1203,27 @@ public class SimpleTest {
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-3\"]")), "4");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-3\"]")), "2");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-3\"]")), "2");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-3\"]")), "0");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-3\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-3\"]")), "0");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-3\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-3\"]")), "4");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-4\"]")), "4");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-4\"]")), "3");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-4\"]")), "3");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-4\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-4\"]")), "2");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-4\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-4\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-4\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-4\"]")), "4");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-5\"]")), "4");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-5\"]")), "4");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-5\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-5\"]")), "2");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-5\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-5\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-5\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-5\"]")), "4");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
@@ -1109,51 +1236,52 @@ public class SimpleTest {
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-7\"]")), "50");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-7\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-7\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-7\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-7\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-7\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-7\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-7\"]")), "50");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-8\"]")), "50");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-8\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-8\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-8\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-8\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-8\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-8\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-8\"]")), "50");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-9\"]")), "50");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-9\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-9\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-9\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-9\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-9\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-9\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-9\"]")), "50");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-10\"]")), "50");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-10\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-10\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-10\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-10\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-10\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-10\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-10\"]")), "50");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-11\"]")), "50");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-11\"]")), "50");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-11\"]")), "1");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-11\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-11\"]")), "1");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-11\"]")), "0");
+        //assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-11\"]")), "1");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-11\"]")), "50");
 
         click(By.xpath("//*[@id=\"nextQuestion\"]/p"));
 
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-1-section-1-questions-12\"]")), "50");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-2-section-1-questions-12\"]")), "50");
         assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-3-section-1-questions-12\"]")), "50");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-12\"]")), "50");
-        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-12\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-4-section-1-questions-12\"]")), "0");
+        assertEquals(getValue(By.xpath("//*[@id=\"select-mark-for-test-attempt-5-section-1-questions-12\"]")), "50");
 
+        moveToTheTopOfThePage();
         click(By.xpath("//*[@id=\"submitAllBtn\"]"));
         wait.until(ExpectedConditions.urlMatches("https://localhost?(:\\d\\d\\d\\d)/dashboard/generate-test"));
 
@@ -1211,6 +1339,44 @@ public class SimpleTest {
         actions.moveToElement(driver.findElement(by));
         actions.sendKeys("");
         actions.build().perform();
+    }
+
+    private void moveToTheTopOfThePage() {
+        Actions actions = new Actions(driver);
+        driver.findElement(By.xpath("/html/body")).sendKeys("");
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.sendKeys(Keys.PAGE_UP);
+        actions.perform();
     }
 
     private void moveToBottomOfPage() {

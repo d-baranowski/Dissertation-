@@ -22,7 +22,7 @@ function updateMark(mark) {
     var markedByTd = $('#marked-by-for-test-attempt-' + mark.testAttemptId + '-question-' + mark.questionId + '-version-' + mark.questionVersionNo);
 
     $(markedByTd).text(mark.mark.marker.name + ' ' + mark.mark.marker.surname);
-    $('select[form=' + formId + ']').val(mark.mark.mark);
+    $('select[form=' + formId + ']').val(mark.mark.mark).trigger('change.select2');
     $('textarea[form=' + formId + ']').val(mark.mark.comment);
     $('input[name="comment"][form=' + formId + ']').val(mark.mark.comment);
 

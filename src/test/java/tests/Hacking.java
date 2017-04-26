@@ -29,7 +29,7 @@ public class Hacking {
     @Autowired
     JdbcTemplate jdbc;
 
-    @Test
+
     public void provisionRunningWithSelenium() throws Exception {
         BareSeleniumActions seleniumActions = new BareSeleniumActions("https://localhost", jdbc);
         seleniumActions.loginAs("sampleAll","pass", "Jack Brown");

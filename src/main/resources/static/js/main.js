@@ -10,7 +10,7 @@ $(document).ready(function () {
 
 
     $('#datepicker').datepicker({altFormat: "dd/mm/yy", dateFormat: "dd/mm/yy"});
-    $('.js-search-select').select2();
+    $('.js-search-select').select2({ width: '100%' });
     $('.js-data-table-default').DataTable();
     handleHelp();
 });

@@ -84,6 +84,7 @@ public class TestAttemptServiceUnit {
         when(attemptRepo.getAttemptModel(eq(1))).thenReturn(result);
 
         ModelAndView expected = new ModelAndView("paper");
+        expected.addObject("LOADING", true);
         expected.addObject("submitAnswerForm", new SubmitAnswerFormModel());
         expected.addObject("paper", TEST_ATTEMPT_MODEL_ID_1.getPaper());
         expected.addObject("answerable", true);
