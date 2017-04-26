@@ -43,7 +43,7 @@ public class MultiChoiceMarker implements AutoMarker {
             markMap = (Map) jsonParser.parseMap(question.getCorrectAnswer());
         } catch (IllegalArgumentException e) {
             mark.setComment("Auto marking failed because correct answer isn't in correct format.");
-            mark.setMark(0);
+
             LOGGER.log(Level.WARNING, "Could not parse correct answer for multiple choice question", e);
             return mark;
         }

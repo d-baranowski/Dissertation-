@@ -11,7 +11,7 @@ $(document).ready(function () {
 
     $('#datepicker').datepicker({altFormat: "dd/mm/yy", dateFormat: "dd/mm/yy"});
     $('.js-search-select').select2();
-
+    $('.js-data-table-default').DataTable();
     handleHelp();
 });
 

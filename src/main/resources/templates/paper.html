@@ -17,8 +17,7 @@
         <link rel="stylesheet" type="text/css" th:href="@{~/css/marker/attempt-mark.css}"/>
     </th:block>
     <th:block th:if="${examMarking}">
-        <link rel="stylesheet" type="text/css"
-              href="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.css"/>
+
     </th:block>
     <!-- print.css must always go last so its styles take precedence over others. -->
     <link rel="stylesheet" th:href="@{~/css/print.css}"/>
@@ -100,8 +99,6 @@
         <script th:src="@{~/js/candidate/print.js}"/>
     </th:block>
     <th:block th:if="${examMarking}">
-        <script type="text/javascript"
-                src="https://cdn.datatables.net/v/bs/dt-1.10.13/kt-2.2.0/r-2.1.1/rr-1.2.0/datatables.min.js"></script>
         <script th:src="@{~/js/lib/peity/jquery.peity.min.js}"></script>
         <script th:src="@{~/js/marker/examMarking.js}"></script>
     </th:block>

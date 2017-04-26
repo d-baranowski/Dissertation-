@@ -71,6 +71,11 @@ public class HelpConstants {
     public static final String MARKING_EXAM_DONUTS = "This donut chart represents the ration of answers marked by people to these who were marked automatically and not marked at all. Blue means marked automatically, yellow is not marked and green is marked by someone.";
     public static final String MARKING_EXAM_VIEW_FULL = "Press this to see the full answer. It will open in new tab. All changes will automatically synchronise between open tabs";
 
+    public static final String EXAM_VIEW_LOGIN_CANDIDATE = "WARNING This is here only for demo purposes! This button will log you out and show you the screen candidates use to log it. Make sure to note some credentials first.";
+    public static final String EXAM_VIEW_BEGIN_EXAM = "Once you press this button the exam will officially start and the candidates will be able to log it.";
+    public static final String EXAM_VIEW_MARK_EXAM = "Begin marking exam. Once you start no one else will be able to mark it until you unlock it.";
+    public static final String EXAM_VIEW_SIMULATE_EXAM = "WARNING This is here only for demo purposes! This button will simulate exam by providing random answers to all the questions. You will then be able to see marking screen.";
+
     public static Map<String, String> getHelpFields() {
         HashMap<String,String> result = new HashMap<>();
 

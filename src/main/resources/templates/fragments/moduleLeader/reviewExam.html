@@ -7,7 +7,7 @@
     <div th:text="${'End Time: ' + exam.getTestDayModel().getEndTimeAsLocalTime()}"></div>
     <div>Paper: <a th:href="${paperLink}" th:text="${exam.getPaperRef().getReferenceName()}"></a></div>
 
-    <table class="table table-striped">
+    <table class="table table-striped js-data-table-default">
         <thead>
             <tr>
                 <th>Name</th>
@@ -27,16 +27,16 @@
     </table>
 
     <form role="form" method="post" th:action="${BEGIN_ENDPOINT}" th:if="${EXAM_STATUS.equals(CREATED) == true}">
-        <input class="button btn-primary" value="Begin Exam" type="submit"/>
+        <input data-help="EXAM_VIEW_BEGIN_EXAM" class="btn btn-primary" value="Begin Exam" type="submit"/>
     </form>
 
-    <a th:if="${EXAM_STATUS.equals(STARTED) == true}" th:href="'/logout?redir=/test-attempt/' + ${exam.getId()} + '/login'">Log In as Candidate</a>
+    <a data-help="EXAM_VIEW_LOGIN_CANDIDATE" class="btn btn-warning" th:if="${EXAM_STATUS.equals(STARTED) == true}" th:href="'/logout?redir=/test-attempt/' + ${exam.getId()} + '/login'">Log In as Candidate</a>
 
     <form role="form" method="post" th:action="${END_ENDPOINT}" th:if="${EXAM_STATUS.equals(STARTED) == true}">
-        <input class="button btn-primary" value="End Exam" type="submit"/>
+        <input data-help="EXAM_VIEW_BEGIN_EXAM"  class="btn btn-danger" value="End Exam" type="submit"/>
     </form>
     <br/>
-    <button onclick="simulateExam(this)" th:if="${EXAM_STATUS.equals(CREATED) == true}" th:attr="data-exam-id=${exam.getId()}" class="button btn-warning">Simulate Random Exam</button>
+    <button data-help="EXAM_VIEW_SIMULATE_EXAM" onclick="simulateExam(this)" th:if="${EXAM_STATUS.equals(CREATED) == true}" th:attr="data-exam-id=${exam.getId()}" class="btn btn-warning">Simulate Random Exam</button>
     <br/>
-    <a th:href="'/exam/mark/' + ${exam.getId()}" th:if="${EXAM_STATUS.equals(FINISHED) == true or EXAM_STATUS.equals(MARKING_ONGOING)}">Mark Exam</a>
+    <a data-help="EXAM_VIEW_MARK_EXAM" class="btn btn-primary" th:href="'/exam/mark/' + ${exam.getId()}" th:if="${EXAM_STATUS.equals(FINISHED) == true or EXAM_STATUS.equals(MARKING_ONGOING)}">Mark Exam</a>
 </div>
