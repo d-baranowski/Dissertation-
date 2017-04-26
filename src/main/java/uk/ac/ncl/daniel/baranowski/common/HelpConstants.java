@@ -61,12 +61,15 @@ public class HelpConstants {
     public static final String NAVBAR_CREATE = "Design new questions and arrange them into sections and papers.";
     public static final String NAVBAR_HELP = "Read complete system help all in one place.";
 
+    public static final String MARKING_GUIDE = "Press here to show the marking guide for this question.";
+
     public static final String MARKING_ATTEMPT_FINNISH = "Set this attempt to marked. You will not be able to come back to it later.";
     public static final String MARKING_ATTEMPT_UNLOCK = "Unlock this attempt, so you or other privileged user can come back to mark it later.";
 
     public static final String MARKING_EXAM_FINNISH = "Set all attempts in this exam to marked. You will not be able to come back to it later.";
     public static final String MARKING_EXAM_UNLOCK = "Unlock all attempts in this exam, so you or other privileged user can come back to mark them later.";
-
+    public static final String MARKING_EXAM_DONUTS = "This donut chart represents the ration of answers marked by people to these who were marked automatically and not marked at all. Blue means marked automatically, yellow is not marked and green is marked by someone.";
+    public static final String MARKING_EXAM_VIEW_FULL = "Press this to see the full answer. It will open in new tab. All changes will automatically synchronise between open tabs";
 
     public static Map<String, String> getHelpFields() {
         HashMap<String,String> result = new HashMap<>();

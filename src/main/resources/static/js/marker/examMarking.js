@@ -40,8 +40,8 @@ $(document).ready(function(){
         var groupName = 'filter';
         var toolbar = $('div.toolbar-for-section-'+sectionNo+'-question-'+questionsNo+'');
 
-        toolbar.html('Show ' +
-            '<form>' +
+        toolbar.html('<div>Show </div>' +
+            '<form style="display: inline">' +
             '<label class="radio-inline"><input value="all" type="radio" checked="checked" name="'+groupName+'">All</label>' +
             '<label class="radio-inline"><input value="me" type="radio" name="'+groupName+'">Marked By Me</label>' +
             '<label class="radio-inline"><input value="auto" type="radio" name="'+groupName+'"">Marked Automatically</label>' +
@@ -94,6 +94,9 @@ function notifyAccordionOfMarkSubmission(slideIndex) {
     var chart = $('#peity-for-section-'+sectionNo+'-question-' + questionNo);
     $(chart).text(autoMarkedCount + ',' + humanMarkedCount + ',' + notMarkedCount);
     $(chart).peity('pie', {'fill': ["#0069A0", "#5CB85C", "#F0AD4E"],'radius': 18, 'innerRadius': 8});
+
+    $(chart).parent().find('svg').attr('data-help',"MARKING_EXAM_DONUTS");
+    handleHelp();
 }
 
 function attachSubmitOnChange() {

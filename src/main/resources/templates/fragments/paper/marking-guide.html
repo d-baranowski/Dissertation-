@@ -1,6 +1,6 @@
 <th:block th:if="${currentQuestion.getMarkingGuide() != null}">
     <div class="correct-answer-section collapsible-element" xmlns:th="http://www.w3.org/1999/xhtml">
-        <div class="title collapsed" data-toggle="collapse" th:attr="data-target=${'#' + #ids.next('panel-answer-section')}">
+        <div class="title collapsed" data-help="MARKING_GUIDE" data-toggle="collapse" th:attr="data-target=${'#' + #ids.next('panel-answer-section')}">
             <a>Marking Guide:</a>
             <span class="glyphicon glyphicon-align-right glyphicon-triangle-bottom"></span>
             <span class="glyphicon glyphicon-align-right glyphicon-triangle-top"></span>

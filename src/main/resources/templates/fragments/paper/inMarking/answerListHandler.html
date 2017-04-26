@@ -52,7 +52,7 @@
                                  data-attempt-id=${attempt.getId()}"
                         th:id="${'marked-by-for-test-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}"
                         th:text="${answers.getNonNullMakerName(sectionKey, questionKey)}"></td>
-                    <td><a class="btn btn-primary" th:id="${'view-test-attempt-' + attempt.getId() + '-section-' + sectionKey + '-questions-' + questionKey}" target="_blank" th:href="${'/test-attempt/' + attempt.getId() + '/mark?sectionNo=' + sectionKey + '&amp;questionNo=' + questionKey}">View Full Answer</a></td>
+                    <td><a data-help="MARKING_EXAM_VIEW_FULL" class="btn btn-primary" th:id="${'view-test-attempt-' + attempt.getId() + '-section-' + sectionKey + '-questions-' + questionKey}" target="_blank" th:href="${'/test-attempt/' + attempt.getId() + '/mark?sectionNo=' + sectionKey + '&amp;questionNo=' + questionKey}">View Full Answer</a></td>
                 </th:block>
             </tr>
         </tbody>

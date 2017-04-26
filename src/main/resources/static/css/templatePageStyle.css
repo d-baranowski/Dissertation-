@@ -217,6 +217,10 @@ span.glyphicon.glyphicon-question-sign[data-help] {
     cursor: help;
 }
 
+svg.peity[data-help] {
+    cursor: help;
+}
+
 @-webkit-keyframes spin2 {
     from { -webkit-transform: rotate(0deg);}
     to { -webkit-transform: rotate(360deg);}
