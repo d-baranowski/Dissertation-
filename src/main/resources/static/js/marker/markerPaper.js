@@ -10,7 +10,11 @@ $(document).ready(function () {
             updateMark(JSON.parse(mark.body))
         });
     });
+    $(window).load(function () {
+        hideLoading();
+    });
 });
+
 
 function updateMark(mark) {
     var formId = 'form-for-attempt-' + mark.testAttemptId + '-question-' + mark.questionId + '-version-' + mark.questionVersionNo;

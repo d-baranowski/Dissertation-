@@ -107,7 +107,6 @@ function handleHelp() {
 
 function showLoading() {
     $('#loading').show();
-    $('')
 }
 
 function hideLoading() {

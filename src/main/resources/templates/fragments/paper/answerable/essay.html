@@ -12,7 +12,7 @@
 
     <label th:for="${#ids.next('text')}">Answer:</label><br/>
     <textarea rows="10" cols="170" class="essayAnswerText" type="text" name="text"
-              th:text="${answers.getNotNullAnswerText(sectionKey, questionKey)}"
+              th:text="${answers.getNotNullAnswerText(sectionKey, questionKey, false)}"
     />
 
     <br/>

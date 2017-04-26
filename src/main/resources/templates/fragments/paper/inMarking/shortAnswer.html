@@ -29,7 +29,7 @@
             <td>This is a drawing question. The picture drawn is visible in the full answer view.</td>
         </th:block>
         <th:block th:case="*">
-            <td th:text="${answers.getNotNullAnswerTextShort(sectionKey, questionKey)}"></td>
+            <td th:text="${answers.getNotNullAnswerTextShort(sectionKey, questionKey, true)}"></td>
         </th:block>
     </th:block>
 </th:block>

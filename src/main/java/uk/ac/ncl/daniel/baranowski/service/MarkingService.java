@@ -46,6 +46,7 @@ public class MarkingService {
             model = attemptRepo.getAttemptModel(attemptId);
             mav = new TestAttemptViewModel(model);
 
+
         } catch (AccessException e) {
             LOGGER.log(Level.SEVERE, "Failed to get attempt from repository " + attemptId, e);
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -50,7 +50,7 @@
                 <option value="textile">Textile</option>
             </select>
             <div class="aceEditor" th:attr="code-language=${currentQuestion.language}"/>
-            <input type="hidden" name="text" th:value="${answers.getNotNullAnswerText(sectionKey, questionKey)}"/>
+            <input type="hidden" name="text" th:value="${answers.getNotNullAnswerText(sectionKey, questionKey, false)}"/>
         </div>
     </div>
     <br/>

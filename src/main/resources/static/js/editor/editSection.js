@@ -1,6 +1,5 @@
 var sectionQuestionDataTable;
 $(document).ready(function () {
-    showLoading();
     enableFroalaEditor();
     bindCreationForm();
     $(window).load(function () {

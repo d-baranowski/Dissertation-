@@ -42,7 +42,10 @@
                 </div>
             </div>
         </div>
-        <th:block th:if="${answerable or inMarking}">
+        <th:block th:if="${answerable}">
+            <div id="submitAllBtn" class="submit-all-btn">Submit &amp; Complete</div>
+        </th:block>
+        <th:block th:if="${inMarking}">
             <th:block th:unless="${examMarking}">
                 <div data-help="MARKING_ATTEMPT_FINNISH" id="submitAllBtn" class="submit-all-btn">Submit &amp; Complete</div>
                 <th:block th:if="${inMarking}">

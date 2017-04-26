@@ -146,6 +146,7 @@ public class PaperService {
             LOGGER.log(SEVERE, errorMsg, e);
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        mav.addObject("LOADING", true);
         mav.addObject("ENDPOINT", PAPER_PREFIX + PAPER_CREATE_SECTION);
         mav.addObject("UPDATE_ENDPOINT", PAPER_PREFIX + PAPER_UPDATE_SECTION);
         mav.addObject("ADD_QUESTION_ENDPOINT", PAPER_PREFIX + PAPER_ADD_QUESTION_TO_SECTION);
@@ -166,6 +167,7 @@ public class PaperService {
 
     public ModelAndView getQuestionEditor(int questionId, int questionVersion) {
         ModelAndView mav = new ModelAndView("questionEditor");
+        mav.addObject("LOADING", true);
         mav.addObject("ENDPOINT", PAPER_PREFIX + PAPER_CREATE_QUESTION);
         mav.addObject("UPDATE_ENDPOINT", PAPER_PREFIX + PAPER_UPDATE_QUESTION);
         mav.addObject("REMOVE_ENDPOINT", PAPER_PREFIX + PAPER_REMOVE_QUESTION_FROM_SECTION);
@@ -194,6 +196,7 @@ public class PaperService {
             LOGGER.log(SEVERE, errorMsg, e);
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        mav.addObject("LOADING", true);
         mav.addObject("ENDPOINT", PAPER_PREFIX + PAPER_CREATE_PAPER);
         mav.addObject("UPDATE_ENDPOINT", PAPER_PREFIX + PAPER_UPDATE_PAPER);
         mav.addObject("ADD_SECTION_ENDPOINT", PAPER_PREFIX + PAPER_ADD_SECTION_TO_PAPER);

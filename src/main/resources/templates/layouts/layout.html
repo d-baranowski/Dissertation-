@@ -28,7 +28,7 @@
         <div layout:fragment="content"/>
     </div>
 
-    <div id="loading">
+    <div th:attr="style=(${LOADING} ? '' : 'display:none')" id="loading">
         <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
     </div>
 

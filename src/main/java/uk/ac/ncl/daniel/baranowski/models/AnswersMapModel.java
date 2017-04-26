@@ -36,21 +36,21 @@ public class AnswersMapModel {
 
     private static final String noAnswerMsg = "Candidate did not answer this question.";
     //This method is used inside answerable template fragments
-    public String getNotNullAnswerText(int sectionNo, int questionNo) {
+    public String getNotNullAnswerText(int sectionNo, int questionNo, boolean notEmpty) {
 
         final Map<Integer, AnswerModel> first = map.get(sectionNo);
         if (first != null) {
             final AnswerModel second = first.get(questionNo);
             if (second != null) {
-                return second.getText() == null ? noAnswerMsg : second.getText();
+                return second.getText() == null ? (notEmpty ? noAnswerMsg : "") : second.getText();
             }
         }
 
-        return noAnswerMsg;
+        return notEmpty ? noAnswerMsg : "";
     }
 
     //This method is used inside answerable template fragments
-    public String getNotNullAnswerTextShort(int sectionNo, int questionNo) {
+    public String getNotNullAnswerTextShort(int sectionNo, int questionNo, boolean notEmpty) {
         final Map<Integer, AnswerModel> first = map.get(sectionNo);
         if (first != null) {
             final AnswerModel second = first.get(questionNo);
@@ -61,11 +61,11 @@ public class AnswersMapModel {
                     }
                     return second.getText();
                 }
-                return noAnswerMsg;
+                return notEmpty ? noAnswerMsg : "";
             }
         }
 
-        return noAnswerMsg;
+        return notEmpty ? noAnswerMsg : "";
     }
 
     //This method is used inside answerable template fragments
@@ -87,7 +87,7 @@ public class AnswersMapModel {
 
     //This method is used inside answerable template fragments
     public boolean isChecked(int sectionNo, int questionNo, char letter) {
-        final String answerText = getNotNullAnswerText(sectionNo, questionNo);
+        final String answerText = getNotNullAnswerText(sectionNo, questionNo, false);
         for (char c : answerText.toCharArray()) {
             if (letter == c) {
                 return true;

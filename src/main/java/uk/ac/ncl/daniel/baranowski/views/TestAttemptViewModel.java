@@ -12,6 +12,7 @@ public class TestAttemptViewModel {
 
 	public TestAttemptViewModel(AttemptModel testAttemptModel) {
 		this.testAttemptModel = testAttemptModel;
+		mav.addObject("LOADING", true);
         mav.addObject("paper", testAttemptModel.getPaper());
         mav.addObject("answerable", isAnswerable());
         mav.addObject("inMarking", isInMarking());

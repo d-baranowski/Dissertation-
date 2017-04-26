@@ -63,6 +63,9 @@ $(document).ready(function(){
         }
         sectionQuestionToTableMap[sectionNo][questionsNo] = dataTable;
     });
+    $(window).load(function () {
+        hideLoading();
+    });
 });
 
 //Overrides markerPaper.js implementation

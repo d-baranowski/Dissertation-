@@ -211,6 +211,7 @@ public class ExamService {
 
     public ModelAndView getMarkingModelAndView(int examId) {
         final ModelAndView mav = new ModelAndView("paper");
+        mav.addObject("LOADING", true);
         try {
             ExamModel exam = examRepo.getExam(examId);
             PaperModel paper = paperRepo.getPaper(exam.getPaperRef().getId(), exam.getPaperRef().getVersionNo());
