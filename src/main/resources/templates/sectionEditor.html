@@ -4,7 +4,7 @@
     <title>Edit Question</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <link th:href="@{/webjars/google-code-prettify/1.0.4/loader/src/prettify.css}" rel="stylesheet"/>
+    <link th:href="@{/js/lib/googleCodePrettify/prettify.css}" rel="stylesheet"/>
     <link th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}" rel="stylesheet"/>
 
     <!-- Include Editor style. -->
@@ -184,10 +184,9 @@
     <script type='text/javascript'
             src='https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.4.2/js/froala_editor.min.js'></script>
 
-    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/prettify.js}"></script>
-    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/lang-sql.js}"></script>
-    <script th:src="@{/webjars/google-code-prettify/1.0.4/src/run_prettify.js}"></script>
+    <script th:src="@{~/js/lib/googleCodePrettify/prettify.js}"></script>
+    <script th:src="@{~/js/lib/googleCodePrettify/run_prettify.js}"></script>
+    <script th:src="@{~/js/lib/googleCodePrettify/lang-sql.js}"></script>
 
     <!-- Include the plugins JS files. -->
     <script type="text/javascript"
