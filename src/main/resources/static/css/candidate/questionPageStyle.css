@@ -58,7 +58,7 @@
     right: 0;
 }
 
-div.accordion-active-question + div.collapse-panel-decorator {
+div.accordion-active-question + div.collapse-panel-decorator:not(.css-do-not-use-arrow) {
     background-image: url("/images/question_arrow.svg");
     background-repeat: no-repeat;
     background-size: 60%;
