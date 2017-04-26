@@ -2,6 +2,38 @@ $(document).ready(function(){
     attachSubmitOnChange();
 });
 
+function notifyAccordionOfMarkSubmission(slideIndex) {
+    var actualSlideIndex = parseInt(slideIndex);
+    var elementWithData = $("a[slickSlide=" + actualSlideIndex + "]");
+    var accordionElement = $(elementWithData).find(".panel-body")[0];
+
+    var questionNo = elementWithData.data('questionNo');
+    var sectionNo = elementWithData.parents('.panel-default').data('sectionNo');
+
+    var marks = $('select[data-section-no='+ sectionNo +'][data-question-no='+questionNo+']');
+    //$(accordionElement).addClass("accordion-question-submitted");
+
+    var humanMarkedCount = 0;
+    var autoMarkedCount = 0;
+    $(marks).each(function () {
+        var mark = this;
+        var attemptId = $(mark).data('attemptId');
+        if ($(mark).find(':selected').text() != 'Not Marked') {
+            var markedBy = $('.js-marked-by[data-attempt-id='+ attemptId +'][data-section-no='+ sectionNo +'][data-question-no='+questionNo+']').text();
+            if (markedBy == 'Auto-Marker ') {
+                autoMarkedCount++
+            } else {
+                humanMarkedCount++
+            }
+        }
+
+    });
+    var notMarkedCount = marks.length - humanMarkedCount - autoMarkedCount;
+    var chart = $('#peity-for-section-'+sectionNo+'-question-' + questionNo);
+    $(chart).text(autoMarkedCount + ',' + humanMarkedCount + ',' + notMarkedCount);
+    $(chart).peity('pie', {'fill': ["#0069A0", "#5CB85C", "#F0AD4E"],'radius': 18});
+}
+
 function attachSubmitOnChange() {
     $('.js-submit-on-change').change(function() {
         var form = $('#' + $(this).attr('form'));

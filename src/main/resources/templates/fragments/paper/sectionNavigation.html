@@ -19,8 +19,9 @@
                            th:text="${sectionKey + ': ' + paper.sections.get(sectionKey).getReferenceName()}">
                         </a>
                     </h4>
-                    <div class="heading-decorator-holder"><img class="heading-panel-decorator"
-                                                               src="/images/question_plus.svg"/></div>
+                    <div class="heading-decorator-holder">
+                        <img class="heading-panel-decorator" src="/images/question_plus.svg"/>
+                    </div>
                 </div>
                 <div class="panel-collapse collapse questionList"
                      th:id="${paper.sections.get(sectionKey).getId()}"
@@ -32,7 +33,9 @@
                                 <div class="panel-body"
                                      th:text="'Question ' + ${sectionKey} + '.' + ${questionKey}">
                                 </div>
-                                <div class="collapse-panel-decorator"></div>
+                                <div class="collapse-panel-decorator">
+                                    <span class="pie" th:id="${'peity-for-section-' + sectionKey + '-question-' + questionKey}" th:if="${examMarking}"></span>
+                                </div>
                             </a>
                         </div>
                     </th:block>

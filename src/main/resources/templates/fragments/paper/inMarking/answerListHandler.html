@@ -29,7 +29,15 @@
                     <td th:text="${attempt.getId()}"></td>
                     <td th:replace="/fragments/paper/inMarking/shortAnswer"></td>
                     <td>
-                        <select th:id="${'select-mark-for-test-attempt-' + attempt.getId() + '-section-' + sectionKey + '-questions-' + questionKey}" class="form-control js-submit-on-change js-search-select" th:attr="form=${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" name="mark">
+                        <select th:id="${'select-mark-for-test-attempt-' + attempt.getId() + '-section-' + sectionKey + '-questions-' + questionKey}"
+                                class="form-control js-submit-on-change js-search-select"
+                                th:attr=
+                                    "form=${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()},
+                                    data-question-no=${questionKey},
+                                    data-section-no=${sectionKey},
+                                    data-attempt-id=${attempt.getId()}"
+                                name="mark"
+                        >
                         <option th:text="${'Not Marked'}" th:value="${-1}" th:attr="selected=${-1 == answers.getNonNullMark(sectionKey, questionKey)}"></option>
                         <option th:each="i : ${#numbers.sequence( 0, currentQuestion.getDifficulty())}"
                                 th:value="${i}"
@@ -38,7 +46,12 @@
                         </select>
                     </td>
                     <td><input class="js-submit-on-change" th:value="${answers.getNonNullMarkComment(sectionKey, questionKey)}" th:attr="form=${'form-for-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" type="text" name="comment"/></td>
-                    <td th:id="${'marked-by-for-test-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}" th:text="${answers.getNonNullMakerName(sectionKey, questionKey)}"></td>
+                    <td class="js-marked-by"
+                        th:attr="data-question-no=${questionKey},
+                                 data-section-no=${sectionKey},
+                                 data-attempt-id=${attempt.getId()}"
+                        th:id="${'marked-by-for-test-attempt-' + attempt.getId() + '-question-' + currentQuestion.getId() + '-version-' + currentQuestion.getVersionNo()}"
+                        th:text="${answers.getNonNullMakerName(sectionKey, questionKey)}"></td>
                     <td><a class="btn btn-primary" th:id="${'view-test-attempt-' + attempt.getId() + '-section-' + sectionKey + '-questions-' + questionKey}" target="_blank" th:href="${'/test-attempt/' + attempt.getId() + '/mark?sectionNo=' + sectionKey + '&amp;questionNo=' + questionKey}">View Full Answer</a></td>
                 </th:block>
             </tr>
