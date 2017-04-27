@@ -12,6 +12,7 @@ $(document).ready(function () {
     $('#datepicker').datepicker({altFormat: "dd/mm/yy", dateFormat: "dd/mm/yy"});
     $('.js-search-select').select2({ width: '100%' });
     $('.js-data-table-default').DataTable();
+    $('.js-clockpicker').clockpicker({donetext: 'Done'});
     handleHelp();
 });
 
@@ -265,7 +266,14 @@ function enableFroalaOnTarget(target, additionalbuttons, contentChangedCallback)
     target.off('froalaEditor.contentChanged');
     target.on('froalaEditor.contentChanged', function (e, editor) {
         var html = editor.html.get();
-        $('.'+$(this).data('paste-to')).val(html);
+        var pasteTo = $('.'+$(this).data('paste-to'));
+
+        $(pasteTo).val(html);
+
+        if ($(pasteTo).parsley()) {
+            $(pasteTo).parsley().validate()
+        }
+
         if (contentChangedCallback) {
             contentChangedCallback()
         }

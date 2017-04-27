@@ -57,15 +57,26 @@
 
 <div layout:fragment="content" id="content" class="contentWrapper container">
     <div class="col-md-12 style-main-content">
-        <form class="js-ajax-form" role="form" method="post"
+        <form id="question-editor-form" class="js-ajax-form" role="form" method="post"
               th:action="${ENDPOINT}"
               th:object="${formObject}"
               th:attr="data-update-endpoint=${UPDATE_ENDPOINT}"
-              xmlns:th="http://www.w3.org/1999/xhtml">
+              xmlns:th="http://www.w3.org/1999/xhtml"
+              data-parsley-validate=""
+        >
 
-            <input class="js-hook-update-text" type="hidden" th:field="*{text}"/>
+            <input data-parsley-minlength="5"
+                   data-parsley-maxlength="5000"
+                   data-parsley-trigger="change"
+                   data-parsley-errors-container="#error-text"
+                   required="" class="js-hook-update-text" type="hidden" th:field="*{text}"/>
             <input class="form-control" type="hidden" th:field="*{versionNo}"/>
-            <input class="js-hook-update-marking-guide" type="hidden" th:field="*{markingGuide}"/>
+            <input data-parsley-minlength="5"
+                   data-parsley-maxlength="5000"
+                   data-parsley-trigger="change"
+                   data-parsley-errors-container="#error-markingGuide"
+                   required=""
+                   class="js-hook-update-marking-guide" type="hidden" th:field="*{markingGuide}"/>
 
             <div id="form-group-id" class="form-group js-hook-form-status-id hidden">
                 <label class="form-control-label" for="id">Id:</label>
@@ -77,7 +88,7 @@
                 <label class="form-control-label" for="language">Programming Language: <span
                         data-help="CREATE_QUESTION_LANGUAGE"
                         class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
-                <input class="form-control" type="text" th:field="*{language}" th:value="*{language}"/>
+                <input  class="form-control" type="text" th:field="*{language}" th:value="*{language}"/>
                 <div class="js-hook-error-msg text-danger" id="error-language"></div>
             </div>
 
@@ -85,23 +96,37 @@
                 <label class="form-control-label" for="referenceName">Reference Name: <span
                         data-help="CREATE_QUESTION_REFERENCE_NAME"
                         class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
-                <input class="form-control" type="text" th:field="*{referenceName}" th:value="*{referenceName}"/>
+                <input data-parsley-minlength="5"
+                       data-parsley-maxlength="100"
+                       data-parsley-trigger="change"
+                       data-parsley-errors-container="#error-referenceName"
+                       required=""
+                       class="form-control"
+                       type="text"
+                       th:field="*{referenceName}"
+                       th:value="*{referenceName}"
+                />
                 <div class="js-hook-error-msg text-danger" id="error-referenceName"></div>
             </div>
 
             <div id="form-group-difficulty" class="form-group js-hook-form-status-difficulty">
                 <label class="form-control-label" for="difficulty">Max Mark: <span data-help="CREATE_QUESTION_MAX_MARK"
                                                                                    class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
-                <input class="form-control" min="0" max="100" type="number" th:field="*{difficulty}"
+                <input required=""
+                       data-parsley-trigger="change"
+                       data-parsley-errors-container="#error-difficulty"
+                       class="form-control" min="1" max="100" type="number" th:field="*{difficulty}"
                        th:value="*{difficulty}"/>
                 <div class="js-hook-error-msg text-danger" id="error-difficulty"></div>
             </div>
 
             <div id="form-group-timeScale" class="form-group js-hook-form-status-timeScale">
-                <label class="form-control-label" for="timeScale">Proposed Time Scale (In Minutes): <span
+                <label class="form-control-label" for="timeScale">Proposed Time to Complete (In Minutes): <span
                         data-help="CREATE_QUESTION_PROPOSED_TIME_SCALE"
                         class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
-                <input class="form-control" min="0" type="number" th:field="*{timeScale}" th:value="*{timeScale}"/>
+                <input data-parsley-trigger="change"
+                       data-parsley-errors-container="#error-timeScale"
+                       class="form-control" min="1" max="60" type="number" th:field="*{timeScale}" th:value="*{timeScale}"/>
                 <div class="js-hook-error-msg text-danger" id="error-timeScale"></div>
             </div>
 
@@ -176,6 +201,8 @@
     <script th:src="@{~/js/lib/googleCodePrettify/prettify.js}"></script>
     <script th:src="@{~/js/lib/googleCodePrettify/run_prettify.js}"></script>
     <script th:src="@{~/js/lib/googleCodePrettify/lang-sql.js}"></script>
+    <script th:src="@{~/js/lib/parsley.min.js}"></script>
+
 
     <!-- Include the plugins JS files. -->
     <script type="text/javascript"

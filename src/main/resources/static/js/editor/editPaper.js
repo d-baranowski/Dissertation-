@@ -77,24 +77,27 @@ function bindCreationForm() {
     var url = form.action;
 
     $(form).submit(function (event) {
-        var formData = $(form).serialize();
+        $(form).parsley().validate();
         event.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: formData, // serializes the form's elements.
-            success: function (data) {
-                showLoading();
-                hideErrorMessages();
-                beginUpdating(data, 1);
-                oldFormData = formData;
-                updateUrl()
-            },
-            error: function (data) {
-                displayErrorMessages(data.responseJSON);
-                oldFormData = formData;
-            }
-        });
+        if ($('.parsley-error').length === 0) {
+            var formData = $(form).serialize();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData, // serializes the form's elements.
+                success: function (data) {
+                    showLoading();
+                    hideErrorMessages();
+                    beginUpdating(data, 1);
+                    oldFormData = formData;
+                    updateUrl()
+                },
+                error: function (data) {
+                    displayErrorMessages(data.responseJSON);
+                    oldFormData = formData;
+                }
+            });
+        }
     })
 }
 
@@ -106,8 +109,8 @@ function enableFroalaEditor() {
     $(editor).froalaEditor('html.set', $('#instructionsText').val());
 }
 function updatePreviewButton() {
-    var newHref = '/test-paper/view-section/{sectionId}/{sectionVer}'.replace('{sectionId}',$('#id').val());
-    newHref = newHref.replace('{sectionVer}',$('#versionNo').val());
+    var newHref = '/test-paper/{paperId}/{paperVersionNo}/view'.replace('{paperId}',$('#id').val());
+    newHref = newHref.replace('{paperVersionNo}',$('#versionNo').val());
     $('.js-preview').attr('href',newHref);
 }
 
@@ -223,29 +226,31 @@ function getSectionFromRow(row, sectionNumber) {
 var oldFormData;
 function ajaxUpdate() {
     var form = $('.js-ajax-form')[0];
-    var formData = $(form).serialize();
-    if (formData != oldFormData) {
-        var url = window.location.protocol + "//" + window.location.host + $(form).data('updateEndpoint');
+    if ($('.parsley-error').length === 0) {
+        var formData = $(form).serialize();
+        if (formData != oldFormData) {
+            var url = window.location.protocol + "//" + window.location.host + $(form).data('updateEndpoint');
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: formData, // serializes the form's elements.
-            success: function (data) {
-                hideErrorMessages();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData, // serializes the form's elements.
+                success: function (data) {
+                    hideErrorMessages();
 
-                if ($('#versionNo').val() != data) {
-                    $('#versionNo').val(data);
-                    updateUrl()
+                    if ($('#versionNo').val() != data) {
+                        $('#versionNo').val(data);
+                        updateUrl()
+                    }
+                    buildSuccessAlert("Successfully Saved");
+                    oldFormData = formData;
+                },
+                error: function (data) {
+                    displayErrorMessages(data.responseJSON);
+                    oldFormData = formData;
                 }
-                buildSuccessAlert("Successfully Saved");
-                oldFormData = formData;
-            },
-            error: function (data) {
-                displayErrorMessages(data.responseJSON);
-                oldFormData = formData;
-            }
-        });
+            });
+        }
     }
 }
 

@@ -23,7 +23,7 @@ public class QuestionReferenceModel {
     @Min(value = 1, message = "Minimum difficulty is 1")
     @Max(value = 100, message = "Max difficulty is 100")
     private int difficulty;
-    @Min(value = 0, message = "Minimum time scale is 0")
+    @Min(value = 1, message = "Minimum time scale is 1")
     private int timeScale;
 
     @Size(max = 20, min = 1)
@@ -48,7 +48,7 @@ public class QuestionReferenceModel {
         this.versionNo = versionNo;
     }
 
-    @ColumnGetter(name = "Language", order = 3)
+    @ColumnGetter(name = "Programming Language", order = 3)
     public String getLanguage() {
         return language != null ? language : "";
     }
@@ -66,7 +66,7 @@ public class QuestionReferenceModel {
         this.referenceName = referenceName;
     }
 
-    @ColumnGetter(name = "Marks", order = 4)
+    @ColumnGetter(name = "Max Marks", order = 4)
     public int getDifficulty() {
         return difficulty;
     }
@@ -75,7 +75,7 @@ public class QuestionReferenceModel {
         this.difficulty = difficulty;
     }
 
-    @ColumnGetter(name = "Time Scale", order = 5)
+    @ColumnGetter(name = "Proposed time to complete (In minutes)", order = 5)
     public int getTimeScale() {
         return timeScale;
     }

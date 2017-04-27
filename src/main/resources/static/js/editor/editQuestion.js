@@ -1,3 +1,4 @@
+var mainForm = $('#question-editor-form');
 $(document).ready(function(){
     enableFroalaEditor();
     bindCreationForm();
@@ -23,6 +24,14 @@ $(document).ready(function(){
         e.preventDefault();
         showExampleQuestion(true);
     });
+
+    //Display initial additional button.
+    var currentType = $('#type').val();
+    if (currentType == 'Multiple Choice') {
+        $('#add-letter-1').show('bounce', { times: 5 }, "slow");
+    } else if (currentType == 'Expression') {
+        $('#add-blank-1').show('bounce', { times: 5 }, "slow");
+    }
 
     handleAnswerBuilder();
 });
@@ -54,10 +63,13 @@ function beginUpdating(questionId, questionVersionNo) {
     $('.js-change-type-hook').attr('disabled', 'true');
 
     $('.js-save').click(function () {
-        var result = ajaxUpdate();
+        $(mainForm).parsley().validate();
+        if ($('.parsley-error').length === 0) {
+            var result = ajaxUpdate();
 
-        if (result == "up-to-date") {
-            buildSuccessAlert("Everything up to date.");
+            if (result == "up-to-date") {
+                buildSuccessAlert("Everything up to date.");
+            }
         }
     });
 
@@ -67,34 +79,37 @@ function beginUpdating(questionId, questionVersionNo) {
 
 var oldFormData;
 function ajaxUpdate() {
-    var form = $('.js-ajax-form')[0];
-    var formData = $(form).serialize();
-    if (formData != oldFormData) {
-        var url =  window.location.protocol + "//" + window.location.host + $(form).data('updateEndpoint');
+    $(mainForm).parsley().validate();
+    if ($('.parsley-error').length === 0) {
+        var form = $('.js-ajax-form')[0];
+        var formData = $(form).serialize();
+        if (formData != oldFormData) {
+            var url =  window.location.protocol + "//" + window.location.host + $(form).data('updateEndpoint');
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: formData, // serializes the form's elements.
-            success: function(data)
-            {
-                hideErrorMessages();
-                if ($('#versionNo').val() != data) {
-                    showLoading();
-                    window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_QUESTION_EDITOR
-                        + '?questionId='+$('#id').val()+'&questionVersion='+data;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData, // serializes the form's elements.
+                success: function(data)
+                {
+                    hideErrorMessages();
+                    if ($('#versionNo').val() != data) {
+                        showLoading();
+                        window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_QUESTION_EDITOR
+                            + '?questionId='+$('#id').val()+'&questionVersion='+data;
+                    }
+
+                    buildSuccessAlert("Successfully Saved");
+                    oldFormData = formData;
+                },
+                error: function (data) {
+                    displayErrorMessages(data.responseJSON);
+                    oldFormData = formData;
                 }
-
-                buildSuccessAlert("Successfully Saved");
-                oldFormData = formData;
-            },
-            error: function (data) {
-                displayErrorMessages(data.responseJSON);
-                oldFormData = formData;
-            }
-        });
-    } else {
-        return "up-to-date";
+            });
+        } else {
+            return "up-to-date";
+        }
     }
 }
 
@@ -105,20 +120,22 @@ function bindCreationForm() {
 
     $(form).submit(function (event) {
         event.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: $(form).serialize(), // serializes the form's elements.
-            success: function(data)
-            {
-                hideErrorMessages();
-                window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_QUESTION_EDITOR
-                    + '?questionId='+data+'&questionVersion='+1;
-            },
-            error: function (data) {
-                displayErrorMessages(data.responseJSON);
-            }
-        });
+        $(mainForm).parsley().validate();
+        if ($('.parsley-error').length === 0) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $(form).serialize(), // serializes the form's elements.
+                success: function (data) {
+                    hideErrorMessages();
+                    window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_QUESTION_EDITOR
+                        + '?questionId=' + data + '&questionVersion=' + 1;
+                },
+                error: function (data) {
+                    displayErrorMessages(data.responseJSON);
+                }
+            });
+        }
     })
 }
 
@@ -141,7 +158,6 @@ function updateAutoMarkingWizards() {
         }
     }
 }
-
 
 function enableFroalaEditor() {
     var editors = $('.js-hook-froala');
@@ -504,16 +520,18 @@ function buildExpressionQuestionWizard() {
     }
 
     function regenerateRegex(row) {
-        prepRegex(row);
+        if (!hasCustomRegexp(row)) {
+            prepRegex(row);
 
-        if ($(row).find('[name=whiteSpace]').prop('checked')) {
-            applyWhiteSpaceOption(row);
-        }
-        if ($(row).find('[name=alternatePunctuation]').prop('checked')) {
-            applyAlternativePunctuation(row);
-        }
-        if ($(row).find('[name=caseInsensitive]').prop('checked')) {
-            applyCaseInsensitive(row);
+            if ($(row).find('[name=whiteSpace]').prop('checked')) {
+                applyWhiteSpaceOption(row);
+            }
+            if ($(row).find('[name=alternatePunctuation]').prop('checked')) {
+                applyAlternativePunctuation(row);
+            }
+            if ($(row).find('[name=caseInsensitive]').prop('checked')) {
+                applyCaseInsensitive(row);
+            }
         }
     }
     
@@ -534,7 +552,16 @@ function buildExpressionQuestionWizard() {
         delete currentJson[parseInt(rowNo)];
         $(correct).val(JSON.stringify(currentJson));
     }
-    
+
+    function hasCustomRegexp(row) {
+        if (row.jsonRow) {
+            if (!row.jsonRow.answer && row.jsonRow.regex) {
+                return true
+            }
+        }
+        return false;
+    }
+
     function bindJavaScript() {
         $('.regex-builder-row').each(function(){
             regenerateRegex(this);
@@ -681,10 +708,8 @@ function buildExpressionQuestionWizard() {
                 $(updateBtn).click()
             });
 
-            if (row.jsonRow) {
-                if (!row.jsonRow.answer && row.jsonRow.regex) {
-                    initialFunction();
-                }
+            if (hasCustomRegexp(row)) {
+                initialFunction();
             }
         });
     }

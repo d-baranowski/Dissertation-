@@ -5,4 +5,7 @@ package uk.ac.ncl.daniel.baranowski.exceptions;
  * and server appropriate error page.
  */
 public class SessionAttributeMissingException extends Exception {
+    public SessionAttributeMissingException(String msg){
+        super(msg);
+    }
 }

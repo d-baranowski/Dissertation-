@@ -3,6 +3,7 @@
     <form id="setupExam" role="form" method="post"
           th:action="${formBody.getENDPOINT()}"
           th:object="${formBody}"
+          data-parsley-validate=""
     >
         <div>
             <label class="formLabel" th:for="${#ids.next('formBody.paperId')}">Paper:
@@ -30,6 +31,18 @@
         </div>
 
         <div>
+            <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Start Time: <span
+                    data-help="SETUP_EXAM_START_TIME"  class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
+            <div class="input-group js-clockpicker">
+                <input type="time" class="form-control formItem" th:field="${formBody.day.startTime}"/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+            <p th:if="${daydateError != null}" th:class="text-error" th:text="${daydateError}"></p>
+        </div>
+
+        <div>
             <label  class="formLabel" th:for="${#ids.next('formBody.day.date')}">Date: <span
                     data-help="SETUP_EXAM_DATE" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
             <input type="text" id="datepicker" format="dd/mm/yyyy" class="form-control formItem"
@@ -38,23 +51,25 @@
         </div>
 
         <div>
-            <label class="formLabel" th:for="${#ids.next('formBody.day.date')}">Start Time: <span
-                    data-help="SETUP_EXAM_START_TIME"  class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
-            <input type="time" class="form-control formItem" th:field="${formBody.day.startTime}"/>
-            <p th:if="${daydateError != null}" th:class="text-error" th:text="${daydateError}"></p>
-        </div>
-
-        <div>
             <label  class="formLabel" th:for="${#ids.next('formBody.day.location')}">Location: <span
                     data-help="SETUP_EXAM_LOCATION" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
-            <input type="text" class="form-control formItem" th:field="${formBody.day.location}"/>
-            <p th:if="${daylocationError != null}" th:class="text-error" th:text="${daylocationError}"></p>
+            <input type="text" class="form-control formItem" th:field="${formBody.day.location}"
+                   data-parsley-minlength="5"
+                   data-parsley-maxlength="100"
+                   data-parsley-trigger="change"
+                   data-parsley-errors-container="#error-location"
+                   required=""
+            />
+            <p id="error-location" th:if="${daylocationError != null}" th:class="text-error" th:text="${daylocationError}"></p>
         </div>
 
         <label class="formLabel" th:for="${#ids.next('formBody.timeAllowed')}">Time Allowed (Minutes): <span
                 data-help="SETUP_EXAM_TIME_ALLOWED" class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label><br/>
-        <input id="timeAllowedSelect" class="form-control formItem" type="number" th:field="${formBody.timeAllowed}"
+        <input data-parsley-trigger="change"
+               data-parsley-errors-container="#error-timeAllowed"
+               required="" id="timeAllowedSelect" class="form-control formItem" type="number" th:field="${formBody.timeAllowed}"
                min="10" max="1000" step="10"/>
+        <p id="error-timeAllowed" th:class="text-error"></p>
         <br/>
 
         <input id="create-exam-btn" th:classappend="${disableNotAdmin}? disabled : btn" type="submit"

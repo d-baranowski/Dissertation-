@@ -70,7 +70,7 @@ public class SessionUtility {
         if (attributeResult != null) {
             return (long) attributeResult;
         } else {
-            throw new SessionAttributeMissingException();
+            throw new SessionAttributeMissingException("Start time attribute is missing from session.");
         }
     }
 

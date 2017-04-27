@@ -60,11 +60,17 @@
 <div layout:fragment="content" id="content" class="contentWrapper container">
     <div class="col-md-12 style-main-content">
         <form id="create-section-form" class="js-ajax-form" role="form" method="post"
+              data-parsley-validate=""
               th:action="${ENDPOINT}"
               th:object="${formObject}"
               th:attr="data-update-endpoint=${UPDATE_ENDPOINT}">
 
-            <input class="js-hook-update-instructionsText" type="hidden" th:field="*{instructionsText}"/>
+            <input  required=""
+                    data-parsley-minlength="5"
+                    data-parsley-maxlength="5000"
+                    data-parsley-trigger="change"
+                    data-parsley-errors-container="#error-instructionsText"
+                    class="js-hook-update-instructionsText" type="hidden" th:field="*{instructionsText}"/>
             <input class="form-control" type="hidden" th:field="*{versionNumber}"/>
 
             <div id="form-group-id" class="form-group js-hook-form-id hidden">
@@ -76,7 +82,11 @@
                 <label class="form-control-label" for="referenceName">Reference Name: <span
                         data-help="CREATE_SECTION_REFERENCE_NAME"
                         class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
-                <input class="form-control" type="text" th:field="*{referenceName}"/>
+                <input data-parsley-minlength="5"
+                       data-parsley-maxlength="100"
+                       data-parsley-trigger="change"
+                       data-parsley-errors-container="#error-referenceName"
+                       required="" class="form-control" type="text" th:field="*{referenceName}"/>
                 <div class="js-hook-error-msg text-danger" id="error-referenceName"></div>
             </div>
 
@@ -84,7 +94,13 @@
                 <label class="form-control-label" for="noOfQuestionsToAnswer">No. of Questions to Answer: <span
                         data-help="CREATE_SECTION_NO_OF_QUESTIONS"
                         class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
-                <input class="form-control" type="number" th:field="*{noOfQuestionsToAnswer}"/>
+                <input data-parsley-errors-container="#error-noOfQuestionsToAnswer"
+                       data-parsley-trigger="change"
+                       required=""
+                       min="1"
+                       class="form-control"
+                       type="number"
+                       th:field="*{noOfQuestionsToAnswer}"/>
                 <div class="js-hook-error-msg text-danger" id="error-noOfQuestionsToAnswer"></div>
             </div>
 
@@ -92,7 +108,8 @@
                 <label class="form-control-label" for="timeScale">Proposed Time to Complete (In minutes): <span
                         data-help="CREATE_SECTION_TIME_TO_COMPLETE"
                         class="glyphicon glyphicon-align-right glyphicon-question-sign"></span></label>
-                <input class="form-control" type="number" th:field="*{timeScale}"/>
+                <input data-parsley-trigger="change"
+                       data-parsley-errors-container="#error-timeScale" min="1" max="60" class="form-control" type="number" th:field="*{timeScale}"/>
                 <div class="js-hook-error-msg text-danger" id="error-timeScale"></div>
             </div>
 
@@ -242,7 +259,7 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
 
-
+    <script th:src="@{~/js/lib/parsley.min.js}"></script>
     <script th:src="@{~/js/editor/editSection.js}"></script>
 </th:block>
 </body>

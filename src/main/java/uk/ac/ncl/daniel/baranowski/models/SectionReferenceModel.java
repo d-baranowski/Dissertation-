@@ -33,7 +33,7 @@ public class SectionReferenceModel {
         timeScale = 0;
     }
 
-    @ColumnGetter(name = "Questions To Answer", order = 4)
+    @ColumnGetter(name = "Number of Questions To Answer", order = 4)
     public int getNoOfQuestionsToAnswer() {
         return noOfQuestionsToAnswer;
     }
@@ -43,7 +43,7 @@ public class SectionReferenceModel {
         return this;
     }
 
-    @ColumnGetter(name = "Time Scale", order = 3)
+    @ColumnGetter(name = "Proposed time to complete (In minutes)", order = 3)
     public int getTimeScale() {
         return timeScale;
     }

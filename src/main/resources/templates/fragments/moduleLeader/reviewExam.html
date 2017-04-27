@@ -31,10 +31,10 @@
         <br/>
     </form>
 
-    <a data-help="EXAM_VIEW_LOGIN_CANDIDATE" class="btn btn-warning" th:if="${EXAM_STATUS.equals(STARTED) == true}" th:href="'/logout?redir=/test-attempt/' + ${exam.getId()} + '/login'">Log In as Candidate</a>
+    <a target="_blank" data-help="EXAM_VIEW_LOGIN_CANDIDATE" class="btn btn-warning" th:if="${EXAM_STATUS.equals(STARTED) == true}" th:href="'/logout?redir=/test-attempt/' + ${exam.getId()} + '/login'">Log In as Candidate</a>
     <br/>
     <form role="form" method="post" th:action="${END_ENDPOINT}" th:if="${EXAM_STATUS.equals(STARTED) == true}">
-        <input data-help="EXAM_VIEW_BEGIN_EXAM"  class="btn btn-danger" value="End Exam" type="submit"/>
+        <input data-help="EXAM_VIEW_END_EXAM"  class="btn btn-danger" value="End Exam" type="submit"/>
         <br/>
     </form>
 

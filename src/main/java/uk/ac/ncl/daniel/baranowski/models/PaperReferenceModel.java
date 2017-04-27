@@ -19,7 +19,7 @@ public class PaperReferenceModel {
     @Size(min = 5, max = 100, message = "Reference name needs to be between 5 and 100 characters long. ")
     private String referenceName;
     @Min(value = 1, message = "Minimum time scale is 1")
-    @Max(value = 100, message = "Maximum time scale is 99")
+    @Max(value = 240, message = "Maximum time scale is 240")
     private Integer timeAllowed;
 
     public PaperReferenceModel() {
@@ -57,7 +57,7 @@ public class PaperReferenceModel {
         return  this;
     }
 
-    @ColumnGetter(name = "Time Allowed", order = 3)
+    @ColumnGetter(name = "Proposed time to complete (In minutes)", order = 3)
     public Integer getTimeAllowed() {
         return timeAllowed;
     }

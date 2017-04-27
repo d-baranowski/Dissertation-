@@ -91,7 +91,7 @@ public class ExamModel {
         return day != null ? day.getEndTimeAsLocalTime().toString(TIME_PATTERN) : "";
     }
 
-    @ColumnGetter(name = "End Time Extra", order = 7)
+    @ColumnGetter(name = "End Time With Extra Time", order = 7)
     public String getEndTimeExtra() {
         return day != null ? day.getEndTimeWithExtraTimeAsLocalTime().toString(TIME_PATTERN) : "";
     }

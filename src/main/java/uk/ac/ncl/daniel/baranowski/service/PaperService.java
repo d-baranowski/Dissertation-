@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
 import uk.ac.ncl.daniel.baranowski.data.PaperRepo;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
+import uk.ac.ncl.daniel.baranowski.data.exceptions.ForbiddenActionException;
 import uk.ac.ncl.daniel.baranowski.exceptions.*;
 import uk.ac.ncl.daniel.baranowski.models.*;
 import uk.ac.ncl.daniel.baranowski.models.api.*;
@@ -184,6 +185,8 @@ public class PaperService {
             mav.addObject("formObject", new QuestionModel());
         }
 
+
+
         return mav;
     }
 
@@ -293,7 +296,7 @@ public class PaperService {
         try {
             return repo.addQuestionToSection(q.getQuestionId(), q.getQuestionVersion(), q.getSectionId(), q.getSectionVersion());
         }  catch (AccessException e) {
-            final String errorMsg = "Add question to section";
+            final String errorMsg = "Failed to add question to section";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToAddQuestionToSectionException(errorMsg);
         }
@@ -320,6 +323,10 @@ public class PaperService {
             final String errorMsg = "Failed to remove question from section";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToRemoveQuestionFromSectionException(errorMsg);
+        } catch (ForbiddenActionException e) {
+            final String errorMsg = e.getMessage();
+            LOGGER.log(SEVERE, errorMsg, e);
+            throw new FailedToRemoveQuestionFromSectionException(errorMsg);
         }
     }
 
@@ -334,6 +341,8 @@ public class PaperService {
             final String errorMsg = "Failed to remove question from section";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToRemoveSectionFromPaperException(errorMsg);
+        } catch (ForbiddenActionException e) {
+            throw new FailedToRemoveSectionFromPaperException(e.getMessage());
         }
     }
 
@@ -375,6 +384,8 @@ public class PaperService {
             final String errorMsg = "Failed to move question within section ";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToMoveQuestionWithinSectionException(errorMsg);
+        } catch (ForbiddenActionException e) {
+            throw new FailedToMoveQuestionWithinSectionException(e.getMessage());
         }
     }
 
@@ -392,6 +403,8 @@ public class PaperService {
             final String errorMsg = "Failed to move section within paper ";
             LOGGER.log(SEVERE, errorMsg, e);
             throw new FailedToMoveSectionWithinPaperException(errorMsg);
+        } catch (ForbiddenActionException e) {
+            throw new FailedToMoveSectionWithinPaperException(e.getMessage());
         }
     }
 

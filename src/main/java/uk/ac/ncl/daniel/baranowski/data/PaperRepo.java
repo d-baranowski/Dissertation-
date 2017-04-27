@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import uk.ac.ncl.daniel.baranowski.data.access.*;
 import uk.ac.ncl.daniel.baranowski.data.access.pojos.*;
 import uk.ac.ncl.daniel.baranowski.data.exceptions.AccessException;
+import uk.ac.ncl.daniel.baranowski.data.exceptions.ForbiddenActionException;
 import uk.ac.ncl.daniel.baranowski.data.mappers.QuestionModelMapper;
 import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddQuestionToSectionException;
 import uk.ac.ncl.daniel.baranowski.exceptions.FailedToAddSectionToPaperException;
@@ -93,8 +94,11 @@ public class PaperRepo {
         return result;
     }
 
-    public void removeQuestionFromSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException {
+    public void removeQuestionFromSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException, ForbiddenActionException {
         try {
+            if (sectionVersionDao.checkIfVersionIsUsed(sectionId, sectionVersion)) {
+                throw new ForbiddenActionException("Section version is in use. Create new version to modify.");
+            }
             questionVersionDao.deleteEntry(questionId, questionVersion, sectionId, sectionVersion);
         } catch (DataAccessException e) {
             LOGGER.log(Level.WARNING, "Failed to delete question version entry", e);
@@ -102,8 +106,11 @@ public class PaperRepo {
         }
     }
 
-    public void removeSectionFromPaper(int sectionId, int sectionVersion, int paperId, int paperVersion) throws AccessException {
+    public void removeSectionFromPaper(int sectionId, int sectionVersion, int paperId, int paperVersion) throws AccessException, ForbiddenActionException {
         try {
+            if (paperVersionDao.checkIfVersionIsUsed(paperId,paperVersion)) {
+                throw new ForbiddenActionException("You can't modify this paper because it is in use. Consider creating a new version to make changes.");
+            }
             sectionVersionDao.deleteEntry(sectionId, sectionVersion, paperId, paperVersion);
         } catch (DataAccessException e) {
             LOGGER.log(Level.WARNING, "Failed to delete question version entry", e);
@@ -371,8 +378,11 @@ public class PaperRepo {
         }
     }
 
-    public void moveQuestion(int questionId, int questionVerNo, int sectionId, int sectionVersion, int newRef) throws AccessException {
+    public void moveQuestion(int questionId, int questionVerNo, int sectionId, int sectionVersion, int newRef) throws AccessException, ForbiddenActionException {
         try {
+            if (sectionVersionDao.checkIfVersionIsUsed(sectionId, sectionVersion)) {
+                throw new ForbiddenActionException("This section version is in use. Consider making a new version to enable changes.");
+            }
             questionVersionDao.moveQuestion(questionId, questionVerNo, sectionId, sectionVersion, newRef);
         } catch (DataAccessException e) {
             LOGGER.log(Level.WARNING, "Failed to move question within section.");
@@ -380,8 +390,11 @@ public class PaperRepo {
         }
     }
 
-    public void moveSection(int sectionId, int sectionVer, int paperId, int paperVer, int newRef) throws AccessException {
+    public void moveSection(int sectionId, int sectionVer, int paperId, int paperVer, int newRef) throws AccessException, ForbiddenActionException {
         try {
+            if (paperVersionDao.checkIfVersionIsUsed(paperId,paperVer)) {
+                throw new ForbiddenActionException("This paper version is in use. Create new version to make changes.");
+            }
             sectionVersionDao.moveSection(sectionId, sectionVer, paperId, paperVer, newRef);
         } catch (DataAccessException e) {
             LOGGER.log(Level.WARNING, "Failed to move question within section.");
@@ -392,7 +405,7 @@ public class PaperRepo {
     public int addQuestionToSection(int questionId, int questionVersion, int sectionId, int sectionVersion) throws AccessException, FailedToAddQuestionToSectionException {
         try {
             if (sectionVersionDao.checkIfVersionIsUsed(sectionId,sectionVersion)) {
-                throw new FailedToAddQuestionToSectionException("This section is used in an exam you can't add more questions to this version");
+                throw new FailedToAddQuestionToSectionException("This section is use you can't add more questions to this version. Consider creating a new version to make changes.");
             }
             QuestionVersionEntry entry = questionVersionDao.getEntry(questionId, questionVersion, sectionId, sectionVersion);
 
@@ -562,6 +575,4 @@ public class PaperRepo {
             throw new AccessException(errorMsg);
         }
     }
-
-
 }

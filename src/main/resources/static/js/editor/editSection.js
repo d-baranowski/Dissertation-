@@ -244,29 +244,33 @@ function updatePreviewButton() {
 var oldFormData;
 function ajaxUpdate() {
     var form = $('.js-ajax-form')[0];
-    var formData = $(form).serialize();
-    if (formData != oldFormData) {
-        var url = window.location.protocol + "//" + window.location.host + $(form).data('updateEndpoint');
+    $(form).parsley().validate();
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: formData, // serializes the form's elements.
-            success: function (data) {
-                $('#versionNumber').val(data);
-                buildSuccessAlert("Successfully Saved");
-                oldFormData = formData;
-                if ($('#versionNumber').val() != data) {
-                    showLoading();
-                    window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + $('#id').val() + "&sectionVersion=" + parseInt(data);
+    if ($('.parsley-error').length === 0) {
+        var formData = $(form).serialize();
+        if (formData != oldFormData) {
+            var url = window.location.protocol + "//" + window.location.host + $(form).data('updateEndpoint');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData, // serializes the form's elements.
+                success: function (data) {
+                    $('#versionNumber').val(data);
+                    buildSuccessAlert("Successfully Saved");
+                    oldFormData = formData;
+                    if ($('#versionNumber').val() != data) {
+                        showLoading();
+                        window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + $('#id').val() + "&sectionVersion=" + parseInt(data);
+                    }
+                    hideErrorMessages();
+                },
+                error: function (data) {
+                    displayErrorMessages(data.responseJSON);
+                    oldFormData = formData;
                 }
-                hideErrorMessages();
-            },
-            error: function (data) {
-                displayErrorMessages(data.responseJSON);
-                oldFormData = formData;
-            }
-        });
+            });
+        }
     }
 }
 
@@ -276,23 +280,26 @@ function bindCreationForm() {
     var url = form.action;
 
     $(form).submit(function (event) {
-        var formData = $(form).serialize();
         event.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: formData, // serializes the form's elements.
-            success: function (data) {
-                beginUpdating(data, 1); // show response from the php script.
-                oldFormData = formData;
-                showLoading();
-                window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + data + "&sectionVersion=1";
-            },
-            error: function (data) {
-                displayErrorMessages(data.responseJSON);
-                oldFormData = formData;
-            }
-        });
+        $(form).parsley().validate();
+        if ($('.parsley-error').length === 0) {
+            var formData = $(form).serialize();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData, // serializes the form's elements.
+                success: function (data) {
+                    beginUpdating(data, 1); // show response from the php script.
+                    oldFormData = formData;
+                    showLoading();
+                    window.location.href = ENDPOINTS.PAPER_PREFIX + ENDPOINTS.PAPER_SECTION_EDITOR + "?sectionId=" + data + "&sectionVersion=1";
+                },
+                error: function (data) {
+                    displayErrorMessages(data.responseJSON);
+                    oldFormData = formData;
+                }
+            });
+        }
     })
 }
 

@@ -75,6 +75,7 @@ public class HelpConstants {
     public static final String EXAM_VIEW_BEGIN_EXAM = "Once you press this button the exam will officially start and the candidates will be able to log it.";
     public static final String EXAM_VIEW_MARK_EXAM = "Begin marking exam. Once you start no one else will be able to mark it until you unlock it.";
     public static final String EXAM_VIEW_SIMULATE_EXAM = "WARNING This is here only for demo purposes! This button will simulate exam by providing random answers to all the questions. You will then be able to see marking screen.";
+    public static final String EXAM_VIEW_END_EXAM = "Once you press this button the exam will end and the candidates will be logged off.";
 
     public static Map<String, String> getHelpFields() {
         HashMap<String,String> result = new HashMap<>();
