@@ -113,12 +113,15 @@ function handleDeletingQuestionsFromSection(table) {
 
         var row = table.row(this.parentElement.parentElement);
 
+        var orderString = row.data()[0];
+        var order = orderString.toString().match(/\d+/)[0];
+
         var jsonData = JSON.stringify({
             "questionId": row.data()[1],
             "questionVersion": row.data()[2],
             "sectionId": $('#id').val(),
             "sectionVersion": $('#versionNumber').val(),
-            "questionNo": row.data()[0]
+            "questionNo": order
         });
 
         $.ajax({

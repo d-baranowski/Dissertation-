@@ -441,8 +441,10 @@ function buildExpressionQuestionWizard() {
                 '</div>' +
             '</div>';
 
-
-        return rowTemplate.replace('{rowNo}', rowNo).replace('{rowId}', 'regex-builder-row-' + rowNo);
+        var html = rowTemplate.replace('{rowNo}', rowNo).replace('{rowId}', 'regex-builder-row-' + rowNo);
+        var objectResult = $.parseHTML(html)[0];
+        objectResult.jsonRow = jsonRow;
+        return objectResult;
     };
 
     function isCorrectFormat(json) {
@@ -600,7 +602,7 @@ function buildExpressionQuestionWizard() {
 
             var initialFunction = function (e) {
                 var state = {};
-                e.preventDefault();
+                if (e) {e.preventDefault();}
                 $(row).find('.js-enable-regex').removeClass('hidden');
                 state['answer'] = $(answer).val();
                 $(answer).attr("disabled", true);
@@ -619,7 +621,8 @@ function buildExpressionQuestionWizard() {
                 $(punctuation).addClass('disabled');
                 appendToCorrectAnswer(row);
                 var regex = $(row).find('[name=regex]');
-                state['regex'] = $(regex).val();
+                state['regex'] = $(regex).attr('value');
+                $(regex).val(state['regex']);
                 $(regex).unbind();
                 $(regex).keyup(function () {
                     appendToCorrectAnswer(row);
@@ -677,20 +680,35 @@ function buildExpressionQuestionWizard() {
             $('#add-blank-1').click(function () {
                 $(updateBtn).click()
             });
+
+            if (row.jsonRow) {
+                if (!row.jsonRow.answer && row.jsonRow.regex) {
+                    initialFunction();
+                }
+            }
         });
     }
 
-    var current = $('#correctAnswer').val();
+    var correctAnswer = $('#correctAnswer');
+    var current = correctAnswer.val();
     var currentJson = current.length > 0 ? JSON.parse(current) : [];
-    var rows = '';
+    currentJson = currentJson.filter(function(val){ return val });
+    correctAnswer.val(JSON.stringify(currentJson));
+    var rows = [];
     if (isCorrectFormat(currentJson)) {
         for (var i = 0; i < currentJson.length; i++) {
             if (currentJson[i]) {
-                rows += getRegexBuilderRow(currentJson[i], i)
+                rows.push(getRegexBuilderRow(currentJson[i], i));
             }
         }
     }
-    rows += getRegexBuilderRow(null, currentJson.length);
-    $('.js-insert-auto-marking-wizard').html(rows);
+    rows.push(getRegexBuilderRow(null, currentJson.length));
+
+    var destination = $('.js-insert-auto-marking-wizard');
+    for (var j = 0; j < rows.length; j++) {
+        destination.append($(rows[j]))
+    }
+
+    //$('.js-insert-auto-marking-wizard').html(rows);
     bindJavaScript();
 }

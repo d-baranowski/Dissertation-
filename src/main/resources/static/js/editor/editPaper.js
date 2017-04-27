@@ -259,12 +259,15 @@ function handleDeletingSectionsFromPaper(table) {
 
         var row = table.row(this.parentElement.parentElement);
 
+        var orderString = row.data()[0];
+        var order = orderString.toString().match(/\d+/)[0];
+
         var jsonData = JSON.stringify({
             "sectionId": row.data()[1],
             "sectionVersion": row.data()[2],
             "paperId": $('#id').val(),
             "paperVersion": $('#versionNo').val(),
-            "sectionNo": row.data()[0]
+            "sectionNo": order
         });
 
         $.ajax({
