@@ -13,7 +13,10 @@ $(document).ready(function () {
                     {"orderable": false, "targets": 7},
                     {"searchable": false, "targets": 6},
                     {"searchable": false, "targets": 7}
-                ]
+                ],
+                "language": {
+                    "emptyTable": "Press Create Paper first to enable adding sections to it!"
+                }
             }
         );
 
@@ -131,7 +134,11 @@ function beginUpdating(paperId, paperVer) {
     }
 
     $('.js-save').click(function () {
-        ajaxUpdate();
+        var result = ajaxUpdate();
+
+        if (result == "up-to-date") {
+            buildSuccessAlert("Everything up to date.");
+        }
     });
 
     $('#referenceName').attr('readonly', 'readonly');
@@ -250,6 +257,8 @@ function ajaxUpdate() {
                     oldFormData = formData;
                 }
             });
+        } else {
+            return "up-to-date";
         }
     }
 }

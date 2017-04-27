@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{~/css/templatePageStyle.css}"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.13/b-1.2.4/r-2.1.1/se-1.2.0/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.2.0/css/rowReorder.dataTables.min.css"/>
     <object layout:fragment="head" th:remove="tag"/>
 
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -56,6 +57,7 @@
     <script th:src="@{~/js/controllerEndpoints.js}"/>
     <script th:src="@{~/js/main.js}"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.13/b-1.2.4/r-2.1.1/se-1.2.0/datatables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.0/js/dataTables.rowReorder.min.js"></script>
 
     <th:block layout:fragment="script"></th:block>
     <script>

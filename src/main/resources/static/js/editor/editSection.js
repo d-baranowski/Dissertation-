@@ -12,7 +12,10 @@ $(document).ready(function () {
                     {"orderable": false, "targets": 9},
                     {"searchable": false, "targets": 8},
                     {"searchable": false, "targets": 9}
-                ]
+                ],
+                "language": {
+                    "emptyTable": "Press create section first to enable adding questions to it!"
+                }
             }
         );
 
@@ -227,7 +230,11 @@ function beginUpdating(questionId, questionVersionNo) {
     handleAddingQuestions(availableQuestionsDataTable);
 
     $('.js-save').click(function () {
-        ajaxUpdate();
+        var result = ajaxUpdate();
+
+        if (result == "up-to-date") {
+            buildSuccessAlert("Everything up to date.");
+        }
     });
     updatePreviewButton();
 
@@ -270,6 +277,8 @@ function ajaxUpdate() {
                     oldFormData = formData;
                 }
             });
+        } else {
+            return "up-to-date";
         }
     }
 }
