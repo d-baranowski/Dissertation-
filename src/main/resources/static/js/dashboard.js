@@ -3,8 +3,8 @@ $(document).ready(function () {
     updateTimeAllowed(getSelectedPaperTimeAllowed());
 
     $('#setupExam').submit(function (e) {
-        $(form).parsley().validate();
-        if ($('.parsley-error').length < 0) {
+        $('#setupExam').parsley().validate();
+        if ($('.parsley-error').length > 0) {
             e.preventDefault();
             return false;
         }

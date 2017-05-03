@@ -27,6 +27,8 @@ public class TestDayModel {
         return  startTime != null ? LocalTime.parse(startTime) : null;
     }
 
+
+
     public String getStartTime() {
         return startTime;
     }

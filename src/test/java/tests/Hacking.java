@@ -4,6 +4,7 @@ package tests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import selenium.ui.BareSeleniumActions;
 
 import static org.junit.Assert.assertTrue;
@@ -29,7 +30,6 @@ public class Hacking {
     @Autowired
     JdbcTemplate jdbc;
 
-
     public void provisionRunningWithSelenium() throws Exception {
         BareSeleniumActions seleniumActions = new BareSeleniumActions("https://localhost", jdbc);
         seleniumActions.loginAs("sampleAll","pass", "Jack Brown");
@@ -37,12 +37,15 @@ public class Hacking {
         seleniumActions.A6canEditQuestions();
         seleniumActions.A7canCreateSection();
         seleniumActions.A8canCreatePaper();
-        seleniumActions.A8canSetupAnExam();
-        seleniumActions.A9canStartAnExam();
-        seleniumActions.B1canTakeExam();
-        seleniumActions.B2CanFinnishExam();
-        seleniumActions.B3CanMarkExam();
-        seleniumActions.B4MultiChoiceWizardRegenerates();
     }
 
+    @Test
+    public void howLongIsTheSalt() {
+        String salt = "Kopytko123adsadsadsadsadsdsdqsqwdqwdqwdqwdqwdqfrevwrtwgttwrwwgr__$234234__";
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(salt);
+
+        System.out.print(hashedPassword.length());
+    }
 }
