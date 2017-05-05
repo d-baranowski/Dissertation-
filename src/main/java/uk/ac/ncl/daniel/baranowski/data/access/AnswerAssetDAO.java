@@ -102,7 +102,7 @@ public class AnswerAssetDAO {
                 .setQuestionVersionNo((int) row.get("questionVersionNumber"))
                 .setTestDayEntryId((int) row.get("testDayEntryId"))
                 .setReferenceName((String) row.get("referenceName"))
-                .setFile((byte[]) row.get("blob"))
+                .setFile((byte[]) row.get("_blob"))
                 .setFileType(fileType)
                 .build();
     }
