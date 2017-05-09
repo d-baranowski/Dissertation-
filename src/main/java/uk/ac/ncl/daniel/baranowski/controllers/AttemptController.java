@@ -50,7 +50,7 @@ public class AttemptController {
     private final ExamService examService;
     private static final Logger LOGGER = Logger.getLogger(AttemptController.class.getName());
     private static final double GRACE_PERIOD = -0.3;
-    private final SimpMessagingTemplate simpMessager;
+    private final SimpMessagingTemplate simpMessage;
 
     /**
      * Please do not use this constructor. Spring automatically initializes all classes annotated with @Controller.
@@ -65,7 +65,7 @@ public class AttemptController {
         this.markingService = markingService;
         this.paperService = paperService;
         this.examService = examService;
-        this.simpMessager = simpMessager;
+        this.simpMessage = simpMessager;
     }
 
     /**
@@ -273,7 +273,7 @@ public class AttemptController {
     }
 
     private void sendMarkMessage(int markId, SubmitMarkFormModel formBody) {
-        simpMessager.convertAndSend("/marking/mark-updated",  new MarkMessage()
+        simpMessage.convertAndSend("/marking/mark-updated",  new MarkMessage()
                 .setMark(markingService.get(markId))
                 .setQuestionId(formBody.getQuestionId())
                 .setQuestionVersionNo(formBody.getQuestionVersionNo())

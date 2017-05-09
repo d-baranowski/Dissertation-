@@ -2,7 +2,10 @@ package selenium.ui;
 
 
 import org.joda.time.LocalTime;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.*;

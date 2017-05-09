@@ -18,7 +18,6 @@ import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitAnswerFormModel;
 import uk.ac.ncl.daniel.baranowski.models.testattempt.SubmitMarkFormModel;
 import uk.ac.ncl.daniel.baranowski.views.TestLibraryViewModel;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;

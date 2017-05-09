@@ -18,9 +18,7 @@ import uk.ac.ncl.daniel.baranowski.views.GenericErrorPageViewModel;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static uk.ac.ncl.daniel.baranowski.common.Constants.*;
 
